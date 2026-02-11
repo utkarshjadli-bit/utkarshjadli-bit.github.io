@@ -1,10 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dr. Utkarsh Jadli | Portfolio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+      color: #111;
+    }
+    h1 { margin-bottom: 5px; }
+    h2 { margin-top: 40px; border-bottom: 2px solid #eee; padding-bottom: 6px; }
+    .subtitle { font-size: 16px; color: #444; margin-top: 0; }
+    .contact a { text-decoration: none; color: #0066cc; }
+    .project { margin-bottom: 25px; }
+    ul { margin-top: 10px; }
+  </style>
 </head>
 <body>
+
   <h1>Dr. Utkarsh Jadli</h1>
-  <p>Electronics Design Engineer | Intrinsically Safe Systems | PhD Power Semiconductor Devices</p>
+  <p class="subtitle">Electronics Engineer | Ph.D. Power Semiconductor Devices | PCB Design | Instrumentation | Intrinsically Safe Systems</p>
+
+  <p class="contact">
+    📍 Brisbane, Australia <br>
+    📧 <a href="mailto:utkarshjadli@gmail.com">utkarshjadli@gmail.com</a><br>
+    🔗 <a href="PASTE_LINKEDIN_HERE" target="_blank">LinkedIn</a><br>
+    📄 <a href="resume.pdf" target="_blank">Download Resume</a>
+  </p>
+
+  <h2>About Me</h2>
+  <p>
+    I’m an Electronics Engineer with a Ph.D. in Power Semiconductor Devices from Griffith University (Australia)
+    and 5+ years of hands-on experience designing and deploying electronics for industrial and field environments.
+  </p>
+  <p>
+    My work includes PCB design, analog and mixed-signal circuit development, sensor instrumentation,
+    signal conditioning, calibration, field testing, and compliance-driven design under IEC 60079 / IEC 80079 / UL standards.
+  </p>
+
+  <h2>Core Skills</h2>
+  <ul>
+    <li><b>PCB Design:</b> Altium Designer, KiCad, DFM/DFT</li>
+    <li><b>Analog & Mixed-Signal:</b> Signal conditioning, low-noise AFE, sensor interfaces</li>
+    <li><b>Simulation:</b> LTspice / SPICE, MATLAB / Simulink</li>
+    <li><b>Embedded Systems:</b> STM32, Embedded C, Python, Arduino</li>
+    <li><b>Compliance & Safety:</b> Intrinsically Safe (IS) design, IEC 60079, IEC 80079, UL</li>
+    <li><b>Testing & Validation:</b> Prototyping, calibration, environmental testing, field troubleshooting</li>
+  </ul>
+
+  <h2>Projects</h2>
+
+  <div class="project">
+    <h3>1) Strain Gauge Instrumentation System (Quarter-Bridge & Full-Bridge)</h3>
+    <p><b>Role:</b> Electronics Design + Firmware + Validation Testing</p>
+    <ul>
+      <li>Designed and developed multi-channel strain gauge instrumentation supporting quarter-bridge and full-bridge configurations.</li>
+      <li>Implemented precision acquisition using <b>ADS131M08 (24-bit ADC)</b> and <b>STM32L03CZT6 MCU</b>.</li>
+      <li>Developed excitation, filtering, and signal-conditioning architecture for stable field measurements.</li>
+      <li>Characterized system sensitivity: <b>0.00284 µε/LSB</b> (~352.5 LSB per µε) with ~<b>0.00127 µV/µε</b> effective input sensitivity.</li>
+      <li>Validated using beam bending tests: <b>RMSE ≈ 2.33 µε</b>, <b>SD ≈ 1.44 µε</b> across all channels, and thermal drift stability of <b>~22.5 ppm/°C</b>.</li>
+    </ul>
+  </div>
+
+  <div class="project">
+    <h3>2) Intrinsically Safe (IS) Electronics Design</h3>
+    <ul>
+      <li>Designed intrinsically safe electronics for downhole and industrial environments.</li>
+      <li>Supported compliance-driven design under <b>IEC 60079 / IEC 80079 / UL</b>.</li>
+    </ul>
+  </div>
+
+  <div class="project">
+    <h3>3) Downhole Instrumentation & Sensor Integration</h3>
+    <ul>
+      <li>Integrated IMU-based orientation sensing, strain gauge measurement, pressure and position sensing.</li>
+      <li>Developed telemetry-ready electronics for harsh field deployments.</li>
+    </ul>
+  </div>
+
+  <div class="project">
+    <h3>4) Power Semiconductor Device Characterisation (Ph.D. Research)</h3>
+    <ul>
+      <li>Designed and developed an in-house Double Pulse Tester (DPT) for Si, SiC MOSFETs and GaN HEMTs.</li>
+      <li>Developed SPICE models validated against experimental switching loss data.</li>
+    </ul>
+  </div>
+
+  <h2>Contact</h2>
+  <p>
+    Email: <a href="mailto:utkarshjadli@gmail.com">utkarshjadli@gmail.com</a><br>
+    LinkedIn: <a href="PASTE_LINKEDIN_HERE" target="_blank">LinkedIn Profile</a>
+  </p>
+
 </body>
 </html>
