@@ -118,6 +118,17 @@
     /* tighten lists inside qboxes */
     .qbox ul{margin:8px 0 0 20px}
     .qbox li{margin:5px 0}
+    .subheading-list{
+      margin: 18px 0 8px 25px;
+      padding: 0;
+    }
+    
+    .subheading-list li{
+      font-size: 16px;
+      font-weight: 700;
+      color: #111;
+      margin: 10px 0 6px;
+    }
   </style>
 </head>
 
@@ -239,21 +250,16 @@
       <div class="q-title">What was the Gain Selection &amp; Amplification Strategy?</div>
       <div class="q-sep"></div>
 
-      <!-- 5) Bullet point all subheadings -->
-      <ul>
-        <li><b>Offset-Based Gain Validation (Datasheet)</b></li>
-        <li><b>Offset-Based Gain Validation (Experimental Testing)</b></li>
-        <li><b>Strain Range and Saturation Considerations</b></li>
-        <li><b>Final Gain Strategy</b></li>
-      </ul>
-
       <p>
         Since quarter-bridge strain gauge outputs are typically in the microvolt to millivolt range, gain selection was critical to maximise ADC
         resolution without saturating the input. The system gain was selected based on two key factors: <b>offset tolerance of strain gauges</b>
         and the expected <b>full-scale strain range</b>.
       </p>
 
-      <div class="subhead">Offset-Based Gain Validation (Datasheet)</div>
+      <ul class="subheading-list">
+        <li><b>Offset-Based Gain Validation (Datasheet)</b></li>
+      </ul>
+
       <p>
         From the strain-gauge datasheet, the strain gauge resistance tolerance is <b>1000 ± 4 Ω</b>, meaning worst-case gauge resistance can be
         996 Ω to 1004 Ω. This produces a worst-case bridge offset of approximately:
@@ -274,7 +280,9 @@
       </ul>
       <p>Thus, based on datasheet offsets alone, all gain settings would remain within range.</p>
 
-      <div class="subhead">Offset-Based Gain Validation (Experimental Testing)</div>
+      <ul class="subheading-list">
+        <li><b>Offset-Based Gain Validation (Experimental Testing)</b></li>
+      </ul>
       <p>
         To validate real-world offsets, experimental testing was performed across <b>7 sets</b> of strain measurement systems, each containing
         <b>21 strain gauges</b>. The measured worst-case offset observed was:
@@ -291,7 +299,9 @@
         offset (−12.73 mV) exceeds the safe range for Gain 128 (±9.375 mV), <b>Gain 128 was eliminated</b> from the final design.
       </p>
 
-      <div class="subhead">Strain Range and Saturation Considerations</div>
+      <ul class="subheading-list">
+        <li><b>Offset-Strain Range and Saturation Considerations</b></li>
+      </ul>
       <p>
         From the datasheet, the ultimate strain rating is <b>20000 µm/m</b>, which corresponds to:
       </p>
@@ -303,7 +313,9 @@
         At this strain level, gains 64 and 128 would saturate, while gains 32 and 16 remain within range.
       </p>
 
-      <div class="subhead">Final Gain Strategy</div>
+      <ul class="subheading-list">
+        <li><b>Final Gain Strategy</b></li>
+      </ul>
       <p>Based on both datasheet analysis and real experimental data:</p>
       <ul>
         <li>Gain 128 was rejected due to excessive real-world offsets.</li>
