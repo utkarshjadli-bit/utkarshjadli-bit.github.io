@@ -331,22 +331,18 @@
       <div class="q-title">How was system accuracy validated experimentally?</div>
       <div class="q-sep"></div>
 
-      <!-- 6) Bullet point all subheadings -->
-      <ul>
+      <ul class="subheading-list">
         <li><b>Test setup</b></li>
-        <li><b>Analytical strain modelling (Euler–Bernoulli beam theory)</b></li>
-        <li><b>Experimental strain (ADC-based)</b></li>
-        <li><b>Results and comparison</b></li>
       </ul>
-
-      <div class="subhead">Test setup</div>
       <p>
         A beam bending calibration was performed by applying controlled end displacement in steps from <b>1 mm to 13 mm</b> while measuring strain
         from the strain gauge readout chain (bridge excitation → 24-bit ADC → STM32). The beam geometry used in the analytical model matched the test
         specimen parameters (e.g., length ≈ 340 mm, width ≈ 32 mm, thickness ≈ 3 mm, gauge location length ≈ 310 mm).
       </p>
-
-      <div class="subhead">Analytical strain modelling (Euler–Bernoulli beam theory)</div>
+      
+      <ul class="subheading-list">
+        <li><b>Analytical strain modelling (Euler–Bernoulli beam theory)</b></li>
+      </ul>
       <p>An analytical strain prediction was generated using standard small-deflection beam theory:</p>
       <ul>
         <li>Convert the applied displacement to bending curvature for the given loading/support condition.</li>
@@ -360,12 +356,16 @@
       </ul>
       <p>This produced the “Calculated µStrain” series in the plot.</p>
 
-      <div class="subhead">Experimental strain (ADC-based)</div>
+       <ul class="subheading-list">
+        <li><b>Experimental strain (ADC-based)</b></li>
+      </ul>
       <p>
         The experimental strain was derived from the ADC readings by converting output code → µstrain using the bridge-based equations (with 3 V excitation).
       </p>
 
-      <div class="subhead">Results and comparison</div>
+      <ul class="subheading-list">
+        <li><b>Results and comparison</b></li>
+      </ul>
       <ul>
         <li>The experimental curve closely overlays the analytical curve across 1–13 mm, showing strong linear agreement (near-identical lines).</li>
         <li>Error stayed small across the sweep:</li>
@@ -423,12 +423,9 @@
       <div class="q-sep"></div>
 
       <!-- 7) Bullet point all subheadings -->
-      <ul>
-        <li><b>How drift was quantified</b></li>
-        <li><b>How drift was compensated</b></li>
+      <ul class="subheading-list">
+        <li><b>How drift was quantified?</b></li>
       </ul>
-
-      <div class="subhead">How drift was quantified</div>
       <p>
         To measure real-world thermal drift, the complete system (bridge excitation + ADC + MCU) was left running overnight with no mechanical load change.
         During the test:
@@ -459,7 +456,9 @@
         <div class="caption">Microstrain vs time across channels during thermal drift test (no mechanical load change).</div>
       </div>
 
-      <div class="subhead">How drift was compensated</div>
+       <ul class="subheading-list">
+        <li><b>How drift was compensated?</b></li>
+      </ul>
       <p>
         Compensation was done by <b>Reference subtraction (common-mode cancellation)</b>. A dedicated reference channel was used as a baseline and subtracted from all active channels.
         The strain traces were processed as “Ref Subtracted”, meaning a reference channel / baseline term was subtracted from each measurement to cancel excitation/ADC/common-mode temperature effects shared across channels.
