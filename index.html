@@ -71,6 +71,53 @@
     }
     .muted{color:#555}
     .hr{height:1px;background:#eee;margin:18px 0}
+
+    /* ============================
+       Project formatting upgrades
+       ============================ */
+
+    /* 1) Project title: bigger, red, bold */
+    .project-title{
+      font-size:28px;
+      font-weight:800;
+      color:#c00000;
+      margin:0 0 10px;
+    }
+
+    /* 2) Questions: bigger, blue, bold */
+    .q-title{
+      font-size:18px;
+      font-weight:800;
+      color:#0b66c3;
+      margin:0;
+    }
+
+    /* 3) Box each question */
+    .qbox{
+      background:#fff;
+      border:1px solid #e8e8e8;
+      border-radius:12px;
+      padding:14px 16px;
+      margin:14px 0;
+    }
+
+    /* separator line after each question title */
+    .q-sep{
+      height:1px;
+      background:#eeeeee;
+      margin:10px 0 12px;
+    }
+
+    /* 4) Subheadings under a question: smaller than question, keep color */
+    .subhead{
+      font-size:15px;
+      font-weight:800;
+      margin:12px 0 6px;
+    }
+
+    /* tighten lists inside qboxes */
+    .qbox ul{margin:8px 0 0 20px}
+    .qbox li{margin:5px 0}
   </style>
 </head>
 
@@ -92,316 +139,361 @@
   <!-- PROJECT 1 -->
   <!-- ===================================================== -->
   <div class="project">
-    <h3>1) Strain Gauge Instrumentation System</h3>
+    <h3 class="project-title">1) Strain Gauge Instrumentation System</h3>
     <p><b>Role:</b> Electronics Design + Firmware + Validation Testing</p>
 
-    <h4>What was the goal?</h4>
-    <p>Built a multi-channel, low-noise, and low-power strain measurement system for harsh field use.</p>
-
-    <h4>What constraints mattered most?</h4>
-    <ul>
-      <li>Low noise and stability</li>
-      <li>Repeatable calibration</li>
-      <li>Thermal drift control</li>
-      <li>Robust operation in field conditions</li>
-      <li>Entire electronics assembly required to fit inside a <b>27 mm diameter</b> cylindrical tube, driving compact PCB layout and component placement strategy suitable for field-deployable instrumentation.</li>
-    </ul>
-
-    <h4>What did I design?</h4>
-    <p>End-to-end strain instrumentation: excitation + analog front-end conditioning + ADC acquisition + MCU control + calibration workflow.</p>
-
-    <div class="kpi">
-      <span><b>Excitation:</b> 3 V LDO</span>
-      <span><b>ADC OSR:</b> 256</span>
-      <span><b>Gain:</b> 32 (default), 16 (high-strain)</span>
-      <span><b>Beam test:</b> 1–13 mm displacement</span>
-      <span><b>RMSE:</b> 2.33 µε</span>
-      <span><b>Avg SD:</b> 1.44 µε</span>
-      <span><b>Thermal drift:</b> 22.52 ppm/°C</span>
-      <span><b>RMS noise:</b> 0.097 µV</span>
-      <span><b>ENOB:</b> ~17.8 bits</span>
-      <span><b>Current:</b> ~40 mA</span>
+    <div class="qbox">
+      <div class="q-title">What was the goal?</div>
+      <div class="q-sep"></div>
+      <p>Built a multi-channel, low-noise, and low-power strain measurement system for harsh field use.</p>
     </div>
 
-    <div class="hr"></div>
-
-    <h4>How the components were selected?</h4>
-
-    <h4>1. Strain gauge</h4>
-    <p>
-      To reduce excitation power while maintaining good signal sensitivity, <b>1000 Ω quarter-bridge strain gauges</b> were selected.
-      Compared to typical 120 Ω / 350 Ω gauges, the higher resistance significantly reduces current draw, improving overall battery
-      life without compromising measurement quality.
-    </p>
-
-    <h4>2. ADC + Amplification</h4>
-    <p>
-      For signal amplification and analog-to-digital conversion, the <b>Texas Instruments 24-bit ADC</b> was selected.
-      This device integrates a high-resolution multi-channel ADC along with an internal programmable gain amplifier (PGA),
-      making it well-suited for low-level strain gauge measurements.
-    </p>
-    <p class="muted">The ADC was chosen primarily because it supports:</p>
-    <ul>
-      <li>Simultaneous multi-channel sampling, enabling synchronised strain measurements across multiple sensors</li>
-      <li>High resolution conversion, allowing accurate capture of microvolt-level strain signals</li>
-      <li>Integrated PGA, reducing the need for external analog amplification stages</li>
-      <li>Low noise performance, improving measurement stability and repeatability</li>
-      <li>SPI digital interface, simplifying MCU communication and data acquisition</li>
-    </ul>
-
-    <h4>3. Microcontroller</h4>
-    <p>
-      The <b>STM32 ultra-low-power microcontroller</b> was selected as the main control unit of the strain gauge instrumentation system.
-      It was responsible for coordinating data acquisition, managing system calibration, and implementing power-optimised operation
-      for long-term field deployment.
-    </p>
-    <p class="muted">The STM32 MCU was chosen primarily due to its:</p>
-    <ul>
-      <li>Ultra-low power architecture, enabling extended battery life in remote environments</li>
-      <li>SPI peripheral support, required for reliable communication with the 24-bit ADC</li>
-      <li>Sufficient Flash and RAM, for firmware, calibration storage, and acquisition logic</li>
-      <li>Robust GPIO and timer peripherals, useful for system control, synchronization, and debugging</li>
-    </ul>
-
-    <h4>4. Excitation Source</h4>
-    <p>
-      A stable and low-noise excitation source was critical to ensure accurate and repeatable strain measurements, since any variation
-      in bridge excitation directly affects the measured output voltage.
-    </p>
-    <p>
-      The excitation stage was implemented using a <b>3 V LDO regulator</b>, which provided a clean and regulated excitation supply
-      for the Wheatstone bridge. This ensured stable operation under battery voltage variation, reduced supply ripple, and improved
-      overall measurement consistency.
-    </p>
-    <p>
-      Using the LDO-based excitation approach provided a reliable and low-noise bridge supply, supporting accurate strain measurements
-      in harsh field conditions.
-    </p>
-
-    <div class="hr"></div>
-
-    <h4>What was the Gain Selection &amp; Amplification Strategy?</h4>
-    <p>
-      Since quarter-bridge strain gauge outputs are typically in the microvolt to millivolt range, gain selection was critical to maximise ADC
-      resolution without saturating the input. The system gain was selected based on two key factors: <b>offset tolerance of strain gauges</b>
-      and the expected <b>full-scale strain range</b>.
-    </p>
-
-    <h4>Offset-Based Gain Validation (Datasheet)</h4>
-    <p>
-      From the strain-gauge datasheet, the strain gauge resistance tolerance is <b>1000 ± 4 Ω</b>, meaning worst-case gauge resistance can be
-      996 Ω to 1004 Ω. This produces a worst-case bridge offset of approximately:
-    </p>
-    <ul>
-      <li>+3.7 mV</li>
-      <li>−3.7 mV</li>
-    </ul>
-    <p>
-      This was calculated using the bridge output voltage error relative to the 1.5 V reference level. The 24-bit ADC full-scale range (FSR)
-      for different gain settings was evaluated:
-    </p>
-    <ul>
-      <li>Gain 16 → ±75 mV</li>
-      <li>Gain 32 → ±37.5 mV</li>
-      <li>Gain 64 → ±18.75 mV</li>
-      <li>Gain 128 → ±9.375 mV</li>
-    </ul>
-    <p>Thus, based on datasheet offsets alone, all gain settings would remain within range.</p>
-
-    <h4>Offset-Based Gain Validation (Experimental Testing)</h4>
-    <p>
-      To validate real-world offsets, experimental testing was performed across <b>7 sets</b> of strain measurement systems, each containing
-      <b>21 strain gauges</b>. The measured worst-case offset observed was:
-    </p>
-    <ul>
-      <li>−12.73 mV (worst-case)</li>
-    </ul>
-    <p>This corresponds to an effective resistance tolerance of approximately:</p>
-    <ul>
-      <li>1000 ± 18 Ω</li>
-    </ul>
-    <p>
-      This experimental offset is significantly higher than datasheet expectations and directly impacts gain selection. Because the worst-case
-      offset (−12.73 mV) exceeds the safe range for Gain 128 (±9.375 mV), <b>Gain 128 was eliminated</b> from the final design.
-    </p>
-
-    <h4>Strain Range and Saturation Considerations</h4>
-    <p>
-      From the datasheet, the ultimate strain rating is <b>20000 µm/m</b>, which corresponds to:
-    </p>
-    <ul>
-      <li>ΔR ≈ 42 Ω</li>
-      <li>Offset voltage shift ≈ +31.6 mV</li>
-    </ul>
-    <p>
-      At this strain level, gains 64 and 128 would saturate, while gains 32 and 16 remain within range.
-    </p>
-
-    <h4>Final Gain Strategy</h4>
-    <p>Based on both datasheet analysis and real experimental data:</p>
-    <ul>
-      <li>Gain 128 was rejected due to excessive real-world offsets.</li>
-      <li>Gain 64 was limited due to saturation risk at higher strain values.</li>
-      <li>Gain 32 and Gain 16 were selected as safe operating gains, providing a balance between resolution and measurement headroom.</li>
-    </ul>
-    <p>
-      This ensured robust strain acquisition under manufacturing tolerance variation, real-world offset conditions, and high-strain events in field operation.
-    </p>
-
-    <div class="hr"></div>
-
-    <h4>How was system accuracy validated experimentally?</h4>
-
-    <h4>Test setup</h4>
-    <p>
-      A beam bending calibration was performed by applying controlled end displacement in steps from <b>1 mm to 13 mm</b> while measuring strain
-      from the strain gauge readout chain (bridge excitation → 24-bit ADC → STM32). The beam geometry used in the analytical model matched the test
-      specimen parameters (e.g., length ≈ 340 mm, width ≈ 32 mm, thickness ≈ 3 mm, gauge location length ≈ 310 mm).
-    </p>
-
-    <h4>Analytical strain modelling (Euler–Bernoulli beam theory)</h4>
-    <p>An analytical strain prediction was generated using standard small-deflection beam theory:</p>
-    <ul>
-      <li>Convert the applied displacement to bending curvature for the given loading/support condition.</li>
-      <li>
-        Compute surface strain at the gauge location using:
-        <br/>
-        <code>ε(x) = κ(x) · (t/2)</code>
-        <br/>
-        where <code>t</code> is beam thickness and <code>κ(x)</code> is curvature from the model.
-      </li>
-    </ul>
-    <p>This produced the “Calculated µStrain” series in the plot.</p>
-
-    <h4>Experimental strain (ADC-based)</h4>
-    <p>
-      The experimental strain was derived from the ADC readings by converting output code → µstrain using the bridge-based equations (with 3 V excitation).
-    </p>
-
-    <h4>Results and comparison</h4>
-    <ul>
-      <li>The experimental curve closely overlays the analytical curve across 1–13 mm, showing strong linear agreement (near-identical lines).</li>
-      <li>Error stayed small across the sweep:</li>
+    <div class="qbox">
+      <div class="q-title">What constraints mattered most?</div>
+      <div class="q-sep"></div>
       <ul>
-        <li>Max |error| ≈ 3.37 µstrain</li>
-        <li>RMSE ≈ 2.33 µstrain</li>
-        <li>MSE ≈ 5.07 (µstrain²)</li>
-        <li>Average SD ≈ 1.44 µstrain</li>
+        <li>Low noise and stability</li>
+        <li>Repeatable calibration</li>
+        <li>Thermal drift control</li>
+        <li>Robust operation in field conditions</li>
+        <li>Entire electronics assembly required to fit inside a <b>27 mm diameter</b> cylindrical tube, driving compact PCB layout and component placement strategy suitable for field-deployable instrumentation.</li>
       </ul>
-    </ul>
-
-    <div class="figure">
-      <img src="assets/beam_bending_microstrain_highres.png" alt="Beam bending test: displacement vs microstrain"/>
-      <div class="caption">Beam bending validation: analytical vs ADC-derived microstrain (1–13 mm displacement).</div>
     </div>
 
-    <div class="hr"></div>
+    <div class="qbox">
+      <div class="q-title">What did I design?</div>
+      <div class="q-sep"></div>
+      <p>End-to-end strain instrumentation: excitation + analog front-end conditioning + ADC acquisition + MCU control + calibration workflow.</p>
 
-    <h4>What was system sensitivity?</h4>
-    <p>
-      System sensitivity was quantified through calibration testing by correlating theoretical strain (beam bending model) with raw ADC output codes.
-      The calibration results showed a linear response across the operating range, confirming stable excitation, consistent signal conditioning, and repeatable ADC performance.
-    </p>
-    <p class="muted">The measured system sensitivity was:</p>
-    <ul>
-      <li><b>0.00284 µε/LSB</b> (≈ 352.5 LSB per µε)</li>
-      <li>Equivalent effective input sensitivity of approximately <b>0.00127 µV/µε</b></li>
-    </ul>
-    <p>
-      This sensitivity enabled reliable sub-microstrain detection and provided sufficient resolution for low-strain field measurements while maintaining adequate headroom for offset and temperature drift effects.
-    </p>
-
-    <div class="hr"></div>
-
-    <h4>What was the Noise performance &amp; Effective Resolution?</h4>
-    <p>
-      To quantify the system noise floor and effective resolution, a zero-strain dataset was recorded with the beam unloaded.
-      The ADC sampled at <b>256 samples/sec</b>. The MCU collected ADC data continuously and reported one output sample every <b>2 seconds</b>.
-    </p>
-    <p class="muted">Noise measured from zero-strain data:</p>
-    <ul>
-      <li>RMS noise: <b>0.097 µV RMS</b></li>
-      <li>Noise density: <b>0.195 µV/√Hz</b></li>
-      <li>Effective resolution (ENOB): <b>~17.8 bits</b> (Gain = 32)</li>
-    </ul>
-    <p>
-      This test experimentally validated the system’s low-noise acquisition performance and confirmed that averaging-based sampling significantly improved the measurement resolution for long-duration strain monitoring in field conditions.
-    </p>
-
-    <div class="hr"></div>
-
-    <h4>How was thermal drift quantified and compensated?</h4>
-
-    <h4>How drift was quantified?</h4>
-    <p>
-      To measure real-world thermal drift, the complete system (bridge excitation + ADC + MCU) was left running overnight with no mechanical load change.
-      During the test:
-    </p>
-    <ul>
-      <li>Temperature was logged continuously, showing a natural swing of roughly <b>~14.3°C</b> (about ~26°C down to ~12–13°C and back up).</li>
-      <li>In parallel, strain output from all channels was recorded as “MicroStrain”, so any remaining change is dominated by temperature-driven drift rather than applied strain.</li>
-    </ul>
-    <p>
-      To convert the observed drift into an electrical quantity, the strain variations were mapped back to an equivalent resistance change (ΔR) of the 1000 Ω gauge (GF ≈ 2.1 was used in the sheet).
-      The results summary from the dataset:
-    </p>
-    <ul>
-      <li>Max deviation range (worst channel): ΔR ≈ <b>0.322 Ω</b></li>
-      <li>As % of 1000 Ω: <b>0.000322%</b></li>
-      <li>Equivalent drift: <b>≈ 322 ppm</b> over the test window</li>
-      <li>Drift per °C: <b>≈ 22.52 ppm/°C</b> (computed over the 14.3°C temperature span)</li>
-    </ul>
-    <p>This gives a clear, comparable “ppm/°C” figure for thermal stability.</p>
-
-    <div class="figure">
-      <img src="assets/temp_vs_time_highres.png" alt="Temperature vs time"/>
-      <div class="caption">Temperature vs time during overnight thermal drift test (~14.3°C swing).</div>
+      <div class="kpi">
+        <span><b>Excitation:</b> 3 V LDO</span>
+        <span><b>ADC OSR:</b> 256</span>
+        <span><b>Gain:</b> 32 (default), 16 (high-strain)</span>
+        <span><b>Beam test:</b> 1–13 mm displacement</span>
+        <span><b>RMSE:</b> 2.33 µε</span>
+        <span><b>Avg SD:</b> 1.44 µε</span>
+        <span><b>Thermal drift:</b> 22.52 ppm/°C</span>
+        <span><b>RMS noise:</b> 0.097 µV</span>
+        <span><b>ENOB:</b> ~17.8 bits</span>
+        <span><b>Current:</b> ~40 mA</span>
+      </div>
     </div>
 
-    <div class="figure">
-      <img src="assets/microstrain_calc_all_channels_highres.png" alt="Microstrain vs time across channels"/>
-      <div class="caption">Microstrain vs time across channels during thermal drift test (no mechanical load change).</div>
+    <div class="qbox">
+      <div class="q-title">How the components were selected?</div>
+      <div class="q-sep"></div>
+
+      <div class="subhead">1. Strain gauge</div>
+      <p>
+        To reduce excitation power while maintaining good signal sensitivity, <b>1000 Ω quarter-bridge strain gauges</b> were selected.
+        Compared to typical 120 Ω / 350 Ω gauges, the higher resistance significantly reduces current draw, improving overall battery
+        life without compromising measurement quality.
+      </p>
+
+      <div class="subhead">2. ADC + Amplification</div>
+      <p>
+        For signal amplification and analog-to-digital conversion, the <b>Texas Instruments 24-bit ADC</b> was selected.
+        This device integrates a high-resolution multi-channel ADC along with an internal programmable gain amplifier (PGA),
+        making it well-suited for low-level strain gauge measurements.
+      </p>
+      <p class="muted">The ADC was chosen primarily because it supports:</p>
+      <ul>
+        <li>Simultaneous multi-channel sampling, enabling synchronised strain measurements across multiple sensors</li>
+        <li>High resolution conversion, allowing accurate capture of microvolt-level strain signals</li>
+        <li>Integrated PGA, reducing the need for external analog amplification stages</li>
+        <li>Low noise performance, improving measurement stability and repeatability</li>
+        <li>SPI digital interface, simplifying MCU communication and data acquisition</li>
+      </ul>
+
+      <div class="subhead">3. Microcontroller</div>
+      <p>
+        The <b>STM32 ultra-low-power microcontroller</b> was selected as the main control unit of the strain gauge instrumentation system.
+        It was responsible for coordinating data acquisition, managing system calibration, and implementing power-optimised operation
+        for long-term field deployment.
+      </p>
+      <p class="muted">The STM32 MCU was chosen primarily due to its:</p>
+      <ul>
+        <li>Ultra-low power architecture, enabling extended battery life in remote environments</li>
+        <li>SPI peripheral support, required for reliable communication with the 24-bit ADC</li>
+        <li>Sufficient Flash and RAM, for firmware, calibration storage, and acquisition logic</li>
+        <li>Robust GPIO and timer peripherals, useful for system control, synchronization, and debugging</li>
+      </ul>
+
+      <div class="subhead">4. Excitation Source</div>
+      <p>
+        A stable and low-noise excitation source was critical to ensure accurate and repeatable strain measurements, since any variation
+        in bridge excitation directly affects the measured output voltage.
+      </p>
+      <p>
+        The excitation stage was implemented using a <b>3 V LDO regulator</b>, which provided a clean and regulated excitation supply
+        for the Wheatstone bridge. This ensured stable operation under battery voltage variation, reduced supply ripple, and improved
+        overall measurement consistency.
+      </p>
+      <p>
+        Using the LDO-based excitation approach provided a reliable and low-noise bridge supply, supporting accurate strain measurements
+        in harsh field conditions.
+      </p>
     </div>
 
-    <h4>How drift was compensated?</h4>
-    <p>
-      Compensation was done by <b>Reference subtraction (common-mode cancellation)</b>. A dedicated reference channel was used as a baseline and subtracted from all active channels.
-      The strain traces were processed as “Ref Subtracted”, meaning a reference channel / baseline term was subtracted from each measurement to cancel excitation/ADC/common-mode temperature effects shared across channels.
-    </p>
+    <div class="qbox">
+      <div class="q-title">What was the Gain Selection &amp; Amplification Strategy?</div>
+      <div class="q-sep"></div>
 
-    <div class="figure">
-      <img src="assets/microstrain_reference_subtracted_highres.png" alt="Microstrain reference-subtracted"/>
-      <div class="caption">Reference subtraction result (“Ref Subtracted”) showing common-mode temperature effects reduced.</div>
+      <!-- 5) Bullet point all subheadings -->
+      <ul>
+        <li><b>Offset-Based Gain Validation (Datasheet)</b></li>
+        <li><b>Offset-Based Gain Validation (Experimental Testing)</b></li>
+        <li><b>Strain Range and Saturation Considerations</b></li>
+        <li><b>Final Gain Strategy</b></li>
+      </ul>
+
+      <p>
+        Since quarter-bridge strain gauge outputs are typically in the microvolt to millivolt range, gain selection was critical to maximise ADC
+        resolution without saturating the input. The system gain was selected based on two key factors: <b>offset tolerance of strain gauges</b>
+        and the expected <b>full-scale strain range</b>.
+      </p>
+
+      <div class="subhead">Offset-Based Gain Validation (Datasheet)</div>
+      <p>
+        From the strain-gauge datasheet, the strain gauge resistance tolerance is <b>1000 ± 4 Ω</b>, meaning worst-case gauge resistance can be
+        996 Ω to 1004 Ω. This produces a worst-case bridge offset of approximately:
+      </p>
+      <ul>
+        <li>+3.7 mV</li>
+        <li>−3.7 mV</li>
+      </ul>
+      <p>
+        This was calculated using the bridge output voltage error relative to the 1.5 V reference level. The 24-bit ADC full-scale range (FSR)
+        for different gain settings was evaluated:
+      </p>
+      <ul>
+        <li>Gain 16 → ±75 mV</li>
+        <li>Gain 32 → ±37.5 mV</li>
+        <li>Gain 64 → ±18.75 mV</li>
+        <li>Gain 128 → ±9.375 mV</li>
+      </ul>
+      <p>Thus, based on datasheet offsets alone, all gain settings would remain within range.</p>
+
+      <div class="subhead">Offset-Based Gain Validation (Experimental Testing)</div>
+      <p>
+        To validate real-world offsets, experimental testing was performed across <b>7 sets</b> of strain measurement systems, each containing
+        <b>21 strain gauges</b>. The measured worst-case offset observed was:
+      </p>
+      <ul>
+        <li>−12.73 mV (worst-case)</li>
+      </ul>
+      <p>This corresponds to an effective resistance tolerance of approximately:</p>
+      <ul>
+        <li>1000 ± 18 Ω</li>
+      </ul>
+      <p>
+        This experimental offset is significantly higher than datasheet expectations and directly impacts gain selection. Because the worst-case
+        offset (−12.73 mV) exceeds the safe range for Gain 128 (±9.375 mV), <b>Gain 128 was eliminated</b> from the final design.
+      </p>
+
+      <div class="subhead">Strain Range and Saturation Considerations</div>
+      <p>
+        From the datasheet, the ultimate strain rating is <b>20000 µm/m</b>, which corresponds to:
+      </p>
+      <ul>
+        <li>ΔR ≈ 42 Ω</li>
+        <li>Offset voltage shift ≈ +31.6 mV</li>
+      </ul>
+      <p>
+        At this strain level, gains 64 and 128 would saturate, while gains 32 and 16 remain within range.
+      </p>
+
+      <div class="subhead">Final Gain Strategy</div>
+      <p>Based on both datasheet analysis and real experimental data:</p>
+      <ul>
+        <li>Gain 128 was rejected due to excessive real-world offsets.</li>
+        <li>Gain 64 was limited due to saturation risk at higher strain values.</li>
+        <li>Gain 32 and Gain 16 were selected as safe operating gains, providing a balance between resolution and measurement headroom.</li>
+      </ul>
+      <p>
+        This ensured robust strain acquisition under manufacturing tolerance variation, real-world offset conditions, and high-strain events in field operation.
+      </p>
     </div>
 
-    <div class="figure">
-      <img src="assets/change_in_resistance_highres.png" alt="Change in resistance vs time"/>
-      <div class="caption">Equivalent change in resistance (ΔR) derived from microstrain drift data.</div>
+    <div class="qbox">
+      <div class="q-title">How was system accuracy validated experimentally?</div>
+      <div class="q-sep"></div>
+
+      <!-- 6) Bullet point all subheadings -->
+      <ul>
+        <li><b>Test setup</b></li>
+        <li><b>Analytical strain modelling (Euler–Bernoulli beam theory)</b></li>
+        <li><b>Experimental strain (ADC-based)</b></li>
+        <li><b>Results and comparison</b></li>
+      </ul>
+
+      <div class="subhead">Test setup</div>
+      <p>
+        A beam bending calibration was performed by applying controlled end displacement in steps from <b>1 mm to 13 mm</b> while measuring strain
+        from the strain gauge readout chain (bridge excitation → 24-bit ADC → STM32). The beam geometry used in the analytical model matched the test
+        specimen parameters (e.g., length ≈ 340 mm, width ≈ 32 mm, thickness ≈ 3 mm, gauge location length ≈ 310 mm).
+      </p>
+
+      <div class="subhead">Analytical strain modelling (Euler–Bernoulli beam theory)</div>
+      <p>An analytical strain prediction was generated using standard small-deflection beam theory:</p>
+      <ul>
+        <li>Convert the applied displacement to bending curvature for the given loading/support condition.</li>
+        <li>
+          Compute surface strain at the gauge location using:
+          <br/>
+          <code>ε(x) = κ(x) · (t/2)</code>
+          <br/>
+          where <code>t</code> is beam thickness and <code>κ(x)</code> is curvature from the model.
+        </li>
+      </ul>
+      <p>This produced the “Calculated µStrain” series in the plot.</p>
+
+      <div class="subhead">Experimental strain (ADC-based)</div>
+      <p>
+        The experimental strain was derived from the ADC readings by converting output code → µstrain using the bridge-based equations (with 3 V excitation).
+      </p>
+
+      <div class="subhead">Results and comparison</div>
+      <ul>
+        <li>The experimental curve closely overlays the analytical curve across 1–13 mm, showing strong linear agreement (near-identical lines).</li>
+        <li>Error stayed small across the sweep:</li>
+        <ul>
+          <li>Max |error| ≈ 3.37 µstrain</li>
+          <li>RMSE ≈ 2.33 µstrain</li>
+          <li>MSE ≈ 5.07 (µstrain²)</li>
+          <li>Average SD ≈ 1.44 µstrain</li>
+        </ul>
+      </ul>
+
+      <div class="figure">
+        <img src="assets/beam_bending_microstrain_highres.png" alt="Beam bending test: displacement vs microstrain"/>
+        <div class="caption">Beam bending validation: analytical vs ADC-derived microstrain (1–13 mm displacement).</div>
+      </div>
     </div>
 
-    <div class="hr"></div>
+    <div class="qbox">
+      <div class="q-title">What was system sensitivity?</div>
+      <div class="q-sep"></div>
+      <p>
+        System sensitivity was quantified through calibration testing by correlating theoretical strain (beam bending model) with raw ADC output codes.
+        The calibration results showed a linear response across the operating range, confirming stable excitation, consistent signal conditioning, and repeatable ADC performance.
+      </p>
+      <p class="muted">The measured system sensitivity was:</p>
+      <ul>
+        <li><b>0.00284 µε/LSB</b> (≈ 352.5 LSB per µε)</li>
+        <li>Equivalent effective input sensitivity of approximately <b>0.00127 µV/µε</b></li>
+      </ul>
+      <p>
+        This sensitivity enabled reliable sub-microstrain detection and provided sufficient resolution for low-strain field measurements while maintaining adequate headroom for offset and temperature drift effects.
+      </p>
+    </div>
 
-    <h4>What was the power consumption of the system?</h4>
-    <p>
-      With a measured current consumption of <b>~40 mA</b>, the system achieves <b>~62.5 hours (~2.6 days)</b> continuous runtime using
-      <b>4×AA (2500 mAh)</b> batteries in series.
-    </p>
+    <div class="qbox">
+      <div class="q-title">What was the Noise performance &amp; Effective Resolution?</div>
+      <div class="q-sep"></div>
+      <p>
+        To quantify the system noise floor and effective resolution, a zero-strain dataset was recorded with the beam unloaded.
+        The ADC sampled at <b>256 samples/sec</b>. The MCU collected ADC data continuously and reported one output sample every <b>2 seconds</b>.
+      </p>
+      <p class="muted">Noise measured from zero-strain data:</p>
+      <ul>
+        <li>RMS noise: <b>0.097 µV RMS</b></li>
+        <li>Noise density: <b>0.195 µV/√Hz</b></li>
+        <li>Effective resolution (ENOB): <b>~17.8 bits</b> (Gain = 32)</li>
+      </ul>
+      <p>
+        This test experimentally validated the system’s low-noise acquisition performance and confirmed that averaging-based sampling significantly improved the measurement resolution for long-duration strain monitoring in field conditions.
+      </p>
+    </div>
 
-    <h4>What was the final engineering outcome?</h4>
-    <p>
-      A validated multi-channel strain measurement system demonstrating low-noise performance, strong analytical correlation, and thermal stability suitable for harsh industrial field deployment.
-      Overall, the design achieved the required balance of <b>high sensitivity</b>, <b>low noise</b>, <b>low power consumption</b>, and <b>field robustness</b>, delivering a practical instrumentation platform ready for real-world industrial use.
-    </p>
+    <div class="qbox">
+      <div class="q-title">How was thermal drift quantified and compensated?</div>
+      <div class="q-sep"></div>
 
-    <h4>What did the final hardware implementation look like?</h4>
-    <p>
-      Custom compact strain acquisition PCB designed to fit inside a <b>27 mm diameter tube</b>, with mounting holes,
-      integrating excitation supply, multi-channel ADC interface, and STM32 control.
-    </p>
+      <!-- 7) Bullet point all subheadings -->
+      <ul>
+        <li><b>How drift was quantified</b></li>
+        <li><b>How drift was compensated</b></li>
+      </ul>
 
-    <div class="figure">
-      <img src="assets/strain%20gauge%20adc%20board.png" style="width:100%; border-radius:10px; margin-top:10px;">
-      <div class="caption">Final hardware implementation: compact strain acquisition PCB (excitation, multi-channel ADC interface, STM32 control).</div>
+      <div class="subhead">How drift was quantified</div>
+      <p>
+        To measure real-world thermal drift, the complete system (bridge excitation + ADC + MCU) was left running overnight with no mechanical load change.
+        During the test:
+      </p>
+      <ul>
+        <li>Temperature was logged continuously, showing a natural swing of roughly <b>~14.3°C</b> (about ~26°C down to ~12–13°C and back up).</li>
+        <li>In parallel, strain output from all channels was recorded as “MicroStrain”, so any remaining change is dominated by temperature-driven drift rather than applied strain.</li>
+      </ul>
+      <p>
+        To convert the observed drift into an electrical quantity, the strain variations were mapped back to an equivalent resistance change (ΔR) of the 1000 Ω gauge (GF ≈ 2.1 was used in the sheet).
+        The results summary from the dataset:
+      </p>
+      <ul>
+        <li>Max deviation range (worst channel): ΔR ≈ <b>0.322 Ω</b></li>
+        <li>As % of 1000 Ω: <b>0.000322%</b></li>
+        <li>Equivalent drift: <b>≈ 322 ppm</b> over the test window</li>
+        <li>Drift per °C: <b>≈ 22.52 ppm/°C</b> (computed over the 14.3°C temperature span)</li>
+      </ul>
+      <p>This gives a clear, comparable “ppm/°C” figure for thermal stability.</p>
+
+      <div class="figure">
+        <img src="assets/temp_vs_time_highres.png" alt="Temperature vs time"/>
+        <div class="caption">Temperature vs time during overnight thermal drift test (~14.3°C swing).</div>
+      </div>
+
+      <div class="figure">
+        <img src="assets/microstrain_calc_all_channels_highres.png" alt="Microstrain vs time across channels"/>
+        <div class="caption">Microstrain vs time across channels during thermal drift test (no mechanical load change).</div>
+      </div>
+
+      <div class="subhead">How drift was compensated</div>
+      <p>
+        Compensation was done by <b>Reference subtraction (common-mode cancellation)</b>. A dedicated reference channel was used as a baseline and subtracted from all active channels.
+        The strain traces were processed as “Ref Subtracted”, meaning a reference channel / baseline term was subtracted from each measurement to cancel excitation/ADC/common-mode temperature effects shared across channels.
+      </p>
+
+      <div class="figure">
+        <img src="assets/microstrain_reference_subtracted_highres.png" alt="Microstrain reference-subtracted"/>
+        <div class="caption">Reference subtraction result (“Ref Subtracted”) showing common-mode temperature effects reduced.</div>
+      </div>
+
+      <div class="figure">
+        <img src="assets/change_in_resistance_highres.png" alt="Change in resistance vs time"/>
+        <div class="caption">Equivalent change in resistance (ΔR) derived from microstrain drift data.</div>
+      </div>
+    </div>
+
+    <div class="qbox">
+      <div class="q-title">What was the power consumption of the system?</div>
+      <div class="q-sep"></div>
+      <p>
+        With a measured current consumption of <b>~40 mA</b>, the system achieves <b>~62.5 hours (~2.6 days)</b> continuous runtime using
+        <b>4×AA (2500 mAh)</b> batteries in series.
+      </p>
+    </div>
+
+    <div class="qbox">
+      <div class="q-title">What was the final engineering outcome?</div>
+      <div class="q-sep"></div>
+      <p>
+        A validated multi-channel strain measurement system demonstrating low-noise performance, strong analytical correlation, and thermal stability suitable for harsh industrial field deployment.
+        Overall, the design achieved the required balance of <b>high sensitivity</b>, <b>low noise</b>, <b>low power consumption</b>, and <b>field robustness</b>, delivering a practical instrumentation platform ready for real-world industrial use.
+      </p>
+    </div>
+
+    <div class="qbox">
+      <div class="q-title">What did the final hardware implementation look like?</div>
+      <div class="q-sep"></div>
+      <p>
+        Custom compact strain acquisition PCB designed to fit inside a <b>27 mm diameter tube</b>, with mounting holes,
+        integrating excitation supply, multi-channel ADC interface, and STM32 control.
+      </p>
+
+      <div class="figure">
+        <img src="assets/strain%20gauge%20adc%20board.png" alt="Final strain gauge ADC board PCB" style="width:100%; border-radius:10px; margin-top:10px;">
+        <div class="caption">Final hardware implementation: compact strain acquisition PCB (excitation, multi-channel ADC interface, STM32 control).</div>
+      </div>
     </div>
 
   </div>
