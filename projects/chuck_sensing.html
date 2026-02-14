@@ -1,1 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dr. Utkarsh Jadli | Project: Drill Rig Chuck Sensing</title>
+
+  <style>
+    body{
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      max-width: 980px;
+      margin: 40px auto;
+      padding: 0 18px;
+      line-height: 1.65;
+      color:#111;
+      background:#fff;
+    }
+
+    h2{
+      margin-top:46px;
+      border-bottom:2px solid #eee;
+      padding-bottom:10px;
+      font-size:36px;
+      font-weight: 800;
+    }
+
+    .project{
+      padding:16px 18px;
+      border:1px solid #eee;
+      border-radius:12px;
+      background:#fafafa;
+      margin-bottom:18px;
+    }
+
+    /* Project title */
+    .project-title{
+      font-size: 34px;
+      font-weight: 800;
+      color: #c00000;
+      margin: 10px 0 18px;
+    }
+
+    /* Question blocks */
+    .q-title{
+      font-size:18px;
+      font-weight:800;
+      color:#0b66c3;
+      margin:0;
+    }
+    .qbox{
+      background:#fff;
+      border:1px solid #e8e8e8;
+      border-radius:12px;
+      padding:14px 16px;
+      margin:14px 0;
+    }
+    .q-sep{
+      height:1px;
+      background:#eeeeee;
+      margin:10px 0 12px;
+    }
+
+    /* Figures */
+    .figure{
+      margin:12px 0 0;
+      padding:10px;
+      background:#fff;
+      border:1px solid #eee;
+      border-radius:12px;
+    }
+    .figure img{
+      width:100%;
+      height:auto;
+      border-radius:10px;
+      display:block;
+    }
+    .caption{
+      font-size:13px;
+      color:#555;
+      margin-top:8px;
+    }
+
+    /* Lists */
+    ul{margin:8px 0 0 20px}
+    li{margin:6px 0}
+
+    .subheading-list{
+      margin: 18px 0 8px 25px;
+      padding: 0;
+    }
+    .subheading-list li{
+      font-weight: 400;
+      color: #222;
+      margin: 10px 0 6px;
+      font-size: 16px;
+    }
+    .subheading-list li i,
+    .subheading-list li b{
+      font-weight: 700;
+      font-style: italic;
+    }
+
+    .muted{color:#555}
+    .kpi{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+    }
+    .kpi span{
+      display:inline-block;
+      border:1px solid #e6e6e6;
+      background:#fff;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:13px;
+    }
+
+    .hr{height:1px;background:#eee;margin:18px 0}
+  </style>
+</head>
+
+<body>
+
+  <div class="project">
+    <div class="project-title">Drill Rig Chuck Direction, Rotation, and Movement Sensing</div>
+
+    <div class="kpi">
+      <span><b>Signals:</b> RPM, direction, linear stroke</span>
+      <span><b>Sensing:</b> Dual Hall latch + ToF (VL53L4CX)</span>
+      <span><b>Bench MCU:</b> Arduino Zero</span>
+      <span><b>Final HW:</b> STM32 + RS485 (Modbus RTU)</span>
+      <span><b>Safety:</b> Intrinsically safe design intent</span>
+    </div>
+
+    <!-- 1) Problem -->
+    <div class="qbox">
+      <div class="q-title">What problem did this project solve, and why did it matter?</div>
+      <div class="q-sep"></div>
+      <p>
+        On a drill rig, the chuck must rotate in the correct direction and at the correct speed when
+        <b>making</b> and <b>breaking</b> drill rods. A wrong rotation direction (or an uncontrolled reversal) can damage the rod,
+        overload the rig, and create safety risks for the operator.
+      </p>
+      <p>
+        Operators also maintain a logsheet to track rod count. By measuring the chuck’s <b>linear feed/stroke</b>,
+        rod count can be inferred automatically, and total feed can be accumulated to estimate drilling depth.
+        This reduces manual errors and improves traceability of drilling progress.
+      </p>
+    </div>
+
+    <!-- 2) Goal -->
+    <div class="qbox">
+      <div class="q-title">What was the goal?</div>
+      <div class="q-sep"></div>
+      <ul>
+        <li>Detect chuck <b>rotation speed</b> across typical drill-rig operating range (~10–700 RPM).</li>
+        <li>Detect chuck <b>rotation direction</b> (forward/reverse) robustly during start/stop and reversals.</li>
+        <li>Measure <b>linear stroke/feed</b> to infer rod insertion count and estimate drilling depth.</li>
+        <li>Provide a path to <b>industrial integration</b> via RS485 communications (Modbus RTU).</li>
+      </ul>
+      <p class="muted">
+        Extra value from direction detection: enables make/break verification, detects unintended reversals,
+        improves operator safety, and supports higher-level logic (e.g., gate depth accumulation only when
+        drilling is “active”).
+      </p>
+    </div>
+
+    <!-- 3) Constraints -->
+    <div class="qbox">
+      <div class="q-title">What constraints mattered most?</div>
+      <div class="q-sep"></div>
+      <ul>
+        <li><b>Harsh environment:</b> vibration, dust/mud, EMI, long cable runs, mechanical misalignment.</li>
+        <li><b>Wide dynamic range:</b> slow RPM (pulses far apart) to fast RPM (very small pulse periods).</li>
+        <li><b>Non-contact stroke sensing:</b> avoid mechanical coupling/encoders that wear or clog.</li>
+        <li><b>Intrinsic safety intent:</b> low-energy design practices suitable for mining environments.</li>
+        <li><b>Industrial comms:</b> robust multi-drop interface → RS485 with Modbus RTU.</li>
+      </ul>
+    </div>
+
+    <!-- 4) Approach -->
+    <div class="qbox">
+      <div class="q-title">What sensing approach did you take?</div>
+      <div class="q-sep"></div>
+      <ul>
+        <li><b>Rotation + direction:</b> Dual Hall-effect latch sensor (MLX92251LSE) and magnets on the chuck disk.</li>
+        <li><b>Linear feed/stroke:</b> Time-of-Flight (ToF) LiDAR module (VL53L4CX) measuring distance to a reflector.</li>
+        <li><b>Bench validation:</b> Arduino Zero used for rapid firmware development and experimental comparison.</li>
+        <li><b>Final integration:</b> Custom STM32 PCB with RS485 transceiver + sensor interfaces.</li>
+      </ul>
+    </div>
+
+    <!-- 5) Rotation sensing development -->
+    <div class="qbox">
+      <div class="q-title">How did chuck rotation + direction sensing evolve (preliminary thinking)?</div>
+      <div class="q-sep"></div>
+      <p>
+        Initially, the plan was to use two separate Hall-effect switches for rotation sensing; if needed,
+        increase to four sensors for quadrature-style detection. For fast iteration, a Hall-effect sensor module
+        (XC-4434) was connected to an Arduino platform for bench testing. Speed detection using a single magnet
+        was straightforward by measuring the time period between pulses. The concept was also validated on a
+        lathe over a broad speed range.
+      </p>
+      <p>
+        However, determining direction using two modules and a single magnet did not produce a stable, repeatable
+        reversal pattern. In addition, the XC-4434’s operating voltage made it less suitable for a low-voltage / IS-oriented
+        design. This drove the selection of a low-voltage Hall-effect dual latch sensor (MLX92251LSE), capable of providing
+        both speed and direction outputs in a single package.
+      </p>
+    </div>
+
+    <!-- 6) Direction challenge -->
+    <div class="qbox">
+      <div class="q-title">What was the main challenge in direction detection with a dual Hall latch sensor?</div>
+      <div class="q-sep"></div>
+      <p>
+        Speed extraction was similar to the earlier approach (period measurement from pulse edges). Direction detection,
+        however, was not trivial because the datasheet method assumes a magnetic disk with alternating N–S poles that
+        generates a specific output sequence. In this project, the chuck disk was physically large, and reproducing the
+        datasheet-style alternating pole pattern would have required an impractical number of magnets.
+      </p>
+      <p>
+        Direction output behaviour was also highly sensitive to sensor-to-magnet spacing and alignment, meaning the same
+        magnet arrangement could produce inconsistent direction sequences if the placement varied.
+      </p>
+    </div>
+
+    <!-- 7) Alternate direction solution -->
+    <div class="qbox">
+      <div class="q-title">How was the direction problem solved (alternate magnet arrangement)?</div>
+      <div class="q-sep"></div>
+      <p>
+        An alternate magnet arrangement was developed on the chuck’s magnet housing disk to force a repeatable waveform
+        signature during reversal. After trial-and-error testing on the lathe, an operating window was identified where the
+        sensor produced a consistent duty-cycle signature for each rotation direction:
+      </p>
+      <ul>
+        <li><b>Y offset:</b> ~22–24 mm</li>
+        <li><b>X offset:</b> ~1–3 mm</li>
+      </ul>
+      <p>
+        With this placement, clockwise and anticlockwise rotation produced measurably different duty cycles. That difference
+        was then used to detect direction with a simple threshold, while RPM was still derived from pulse period.
+      </p>
+      <p class="muted">
+        Key advantage: direction + speed could be extracted using only the DIR pulse output, reducing wiring complexity
+        (single signal line into the MCU).
+      </p>
+    </div>
+
+    <!-- 8) Firmware challenges — rotation/direction -->
+    <div class="qbox">
+      <div class="q-title">What were the firmware challenges and how was it solved? (Chuck rotation + direction)</div>
+      <div class="q-sep"></div>
+
+      <ul class="subheading-list">
+        <li>
+          <i><b>Challenge:</b></i> RPM must be accurate across a wide speed range (very slow to very fast).
+          <br>
+          <i><b>Solution:</b></i> Used an interrupt-based pulse timing approach (measure time between edges) and an adaptive
+          averaging strategy: average more pulses at high RPM for stability, fewer pulses at low RPM for responsiveness.
+          Added a configurable zero-speed timeout so RPM drops to 0 when pulses stop (stall/disengagement).
+        </li>
+
+        <li>
+          <i><b>Challenge:</b></i> Noise / false edges in a harsh industrial environment.
+          <br>
+          <i><b>Solution:</b></i> Implemented edge qualification logic (reject unrealistically short pulse periods), applied temporal
+          filtering (moving average/rolling window), and used a stateful direction decision (require a consistent signature over
+          multiple cycles) to prevent flicker.
+        </li>
+
+        <li>
+          <i><b>Challenge:</b></i> Direction detection must be reliable during start/stop and reversals.
+          <br>
+          <i><b>Solution:</b></i> Classified direction using a robust duty-cycle signature across multiple cycles (not a single edge),
+          then applied hysteresis + debounce (threshold margin + confirmation over consecutive cycles) before declaring a
+          direction change.
+        </li>
+
+        <li>
+          <i><b>Challenge:</b></i> “No pulse” detection must not lag too much (but also must not kill low-RPM readings).
+          <br>
+          <i><b>Solution:</b></i> Tuned timeout to expected minimum RPM and debounced the zero condition to avoid bouncing between
+          small RPM values and 0 near the threshold.
+        </li>
+
+        <li>
+          <i><b>Challenge:</b></i> Real-time sensing while also handling UI/communications.
+          <br>
+          <i><b>Solution:</b></i> Kept pulse timing in interrupt context (deterministic) and throttled non-critical work (display/logging)
+          to a fixed update rate so sensing remains reliable.
+        </li>
+      </ul>
+    </div>
+
+    <!-- 9) Linear stroke working principle -->
+    <div class="qbox">
+      <div class="q-title">How did the linear stroke measurement work (working principle)?</div>
+      <div class="q-sep"></div>
+
+      <p>
+        Linear feed/stroke measurement was implemented using a <b>Time-of-Flight (ToF)</b> ranging sensor (VL53L4CX),
+        which measures absolute distance by emitting an infrared pulse and timing the return from a target surface.
+        The ToF sensor was mounted to continuously measure distance to a fixed reflector attached to the moving chuck/rod.
+      </p>
+
+      <ul>
+        <li><b>Stroke position:</b> direct distance (mm) from ToF to reflector.</li>
+        <li><b>Stroke delta:</b> firmware computes Δx = x(n) − x(n−1) to track motion direction and movement magnitude.</li>
+        <li><b>Rod count + depth:</b> accumulate displacement per feed cycle to infer inserted rod count and total drilling depth.</li>
+      </ul>
+
+      <p class="muted">
+        Note: chuck typically advances a 3 m rod in ~1–2 seconds; for better resolution and smoother delta tracking,
+        the design target was set to <b>50 samples/sec</b> for stroke sensing.
+      </p>
+    </div>
+
+    <!-- 10) Firmware challenges — linear stroke -->
+    <div class="qbox">
+      <div class="q-title">What were the firmware challenges and how was it solved? (Linear movement: VL53L4CX)</div>
+      <div class="q-sep"></div>
+
+      <ul class="subheading-list">
+        <li>
+          <i><b>Challenge:</b></i> Noisy distance readings in reflective/dusty conditions.
+          <br>
+          <i><b>Solution:</b></i> Applied validity checks + outlier rejection (clamp unrealistic jumps) and filtering (moving average /
+          median) to stabilize distance without hiding real motion.
+        </li>
+
+        <li>
+          <i><b>Challenge:</b></i> Converting absolute distance into meaningful stroke/feed events.
+          <br>
+          <i><b>Solution:</b></i> Implemented a motion state machine (advancing vs retracting) with thresholds + hysteresis to detect
+          stroke endpoints, and accumulated stroke delta to compute per-stroke travel and total feed.
+        </li>
+
+        <li>
+          <i><b>Challenge:</b></i> Vibration and micro-movements causing false stroke counts.
+          <br>
+          <i><b>Solution:</b></i> Introduced a deadband (minimum movement threshold) and required persistence (exceed threshold for a
+          minimum sample count/time) before registering transitions.
+        </li>
+
+        <li>
+          <i><b>Challenge:</b></i> Avoid accumulating “depth” during idle or unrelated motion.
+          <br>
+          <i><b>Solution:</b></i> Used RPM/direction as a gating signal: only count strokes / accumulate depth when rotation indicates
+          active drilling or make/break operations.
+        </li>
+
+        <li>
+          <i><b>Challenge:</b></i> Robust fault detection (blocked sensor, out-of-range, comms errors).
+          <br>
+          <i><b>Solution:</b></i> Implemented health monitoring (valid-range flags, consecutive invalid count → fault) and exposed status
+          over telemetry so the controller/operator can see “valid/invalid” states rather than silently logging bad data.
+        </li>
+      </ul>
+    </div>
+
+    <!-- 11) Experimental validation — rotation -->
+    <div class="qbox">
+      <div class="q-title">How was chuck rotation speed and direction sensing validated experimentally?</div>
+      <div class="q-sep"></div>
+
+      <h4 class="muted">❖ Verification of clockwise and anticlockwise pattern (direction signature)</h4>
+      <p>
+        After implementing the alternate magnet arrangement and identifying the optimal sensor placement
+        (Y = 22–24 mm and X = 1–3 mm), the first step was to verify that the dual Hall latch sensor produces a
+        repeatable and unique waveform signature for both directions.
+      </p>
+      <p>
+        Oscilloscope captures confirmed a distinct duty-cycle difference between directions, enabling direction detection
+        using only the DIR output. In the experiments:
+      </p>
+      <ul>
+        <li><b>Forward duty cycle:</b> ~10%</li>
+        <li><b>Reverse duty cycle:</b> ~94%</li>
+      </ul>
+
+      <h4 class="muted">❖ Firmware validation using Arduino Zero (bench + lathe comparison)</h4>
+      <p>
+        After waveform verification, RPM + direction firmware was implemented on an <b>Arduino Zero</b>.
+        RPM was computed by measuring pulse period and converting to frequency/RPM, then compared against
+        the lathe set-speed and an independent tachometer reference.
+      </p>
+      <p>
+        Direction classification was validated in parallel by computing duty cycle and applying a threshold-based decision,
+        confirming stable Forward/Reverse detection across multiple rotational speeds.
+      </p>
+
+      <!-- Optional: add your waveform images here -->
+      <!--
+      <div class="figure">
+        <img src="./assets/chuck/oscilloscope_forward_reverse.png" alt="Oscilloscope waveforms showing forward vs reverse duty-cycle signature">
+        <div class="caption">Oscilloscope captures showing duty-cycle signature difference for direction classification.</div>
+      </div>
+      -->
+    </div>
+
+    <!-- 12) Experimental validation — linear stroke -->
+    <div class="qbox">
+      <div class="q-title">How was the linear stroke of the chuck validated experimentally?</div>
+      <div class="q-sep"></div>
+
+      <h4 class="muted">❖ Test setup</h4>
+      <p>
+        To validate stroke sensing feasibility, a controlled bench setup was built using a <b>2 m drill rod</b> on stands and a
+        flat reflector plate fixed to the rod. The ToF sensor was aligned at a fixed reference point and the reflector was moved
+        to known distances (simulating chuck feed motion). Firmware running on an <b>Arduino Zero</b> streamed distance readings
+        for logging and analysis.
+      </p>
+
+      <div class="figure">
+        <img src="./assets/chuck/tof_test_setup.png" alt="Bench test setup showing ToF sensor, reflector, and drill rod">
+        <div class="caption">Bench test setup: ToF sensor aligned to a reflector mounted on a drill rod to simulate chuck feed/stroke travel.</div>
+      </div>
+
+      <h4 class="muted">❖ Environmental protection (epoxy coating)</h4>
+      <p>
+        Since drill rig environments contain dust, mud, moisture, and debris, the LiDAR module was coated with a clear epoxy
+        layer to improve survivability (splash resistance, dust protection, and mechanical protection against impact/vibration).
+        Care was taken to avoid blocking the optical window while sealing exposed components.
+      </p>
+
+      <div class="figure">
+        <img src="./assets/chuck/vl53_epoxy.png" alt="VL53L4CX module coated with clear epoxy">
+        <div class="caption">Clear epoxy coating applied to improve field robustness while keeping the optical window unobstructed.</div>
+      </div>
+
+      <h4 class="muted">❖ Results and accuracy comparison</h4>
+      <p>
+        Two measurement sets were recorded: (1) without epoxy coating and (2) with epoxy coating.
+        The sensor showed a strong linear response across the tested range, and epoxy coating did not degrade performance.
+        In fact, the epoxy-coated configuration showed improved repeatability:
+      </p>
+      <ul>
+        <li><b>Without epoxy:</b> MSE = 326.18, Average SD = 12.29 mm</li>
+        <li><b>With epoxy:</b> MSE = 102.5, Average SD = 6.63 mm</li>
+      </ul>
+
+      <div class="figure">
+        <img src="./assets/chuck/lidar_results.png" alt="LiDAR results table and plot comparing with and without epoxy coating">
+        <div class="caption">Distance validation results: epoxy-coated sensor achieved lower deviation and improved repeatability.</div>
+      </div>
+    </div>
+
+    <!-- 13) Final hardware -->
+    <div class="qbox">
+      <div class="q-title">What did the final embedded hardware implementation look like?</div>
+      <div class="q-sep"></div>
+
+      <p>
+        After validating rotation sensing and stroke measurement using Arduino Zero bench testing, the concept was progressed
+        into a final embedded hardware revision designed for drill-rig integration. A compact custom PCB integrated:
+      </p>
+      <ul>
+        <li><b>STM32 microcontroller</b> (same MCU family used in the strain gauge instrumentation platform)</li>
+        <li><b>Dual Hall-effect latch sensors</b> for rotation speed + direction sensing</li>
+        <li><b>VL53L4CX ToF sensor</b> for linear feed/stroke measurement</li>
+        <li><b>RS485 interface</b> for industrial communication</li>
+        <li><b>Power conditioning + protection</b> for harsh environments</li>
+      </ul>
+
+      <div class="figure">
+        <img src="./assets/chuck/final_pcb.png" alt="Final PCB layout/render for chuck sensor board">
+        <div class="caption">Final PCB: integrated STM32 + dual Hall latch + VL53L4CX + RS485 transceiver.</div>
+      </div>
+
+      <h4 class="muted">❖ Intrinsic safety design considerations</h4>
+      <p>
+        The design intent was for use in potentially explosive mining environments, so the hardware was developed under intrinsic
+        safety principles: limit available electrical energy (stored and delivered) so it cannot ignite a hazardous atmosphere.
+        The PCB incorporated low-voltage sensors, protection/current limiting, TVS suppression, controlled supply conditioning,
+        and <b>careful routing with proper clearance and creepage</b> to support safe operation under harsh industrial conditions.
+      </p>
+
+      <h4 class="muted">❖ RS485 + Modbus RTU communication plan</h4>
+      <p>
+        RS485 was selected for robust multi-drop networking over long cable runs. On top of RS485, a <b>Modbus RTU</b> layer was
+        planned/implemented so the board could behave like a standard industrial node.
+      </p>
+      <ul>
+        <li><b>Physical layer:</b> differential A/B pair, half-duplex, termination + biasing as required.</li>
+        <li><b>Protocol:</b> Modbus RTU frames (address, function code, payload, CRC16) over UART-to-RS485.</li>
+        <li><b>Data model:</b> map key measurements to registers (e.g., RPM, direction state, stroke position, health/fault flags).</li>
+        <li><b>Operation:</b> rig controller polls the sensor node; node replies with latest filtered/validated measurements.</li>
+      </ul>
+
+      <p class="muted">
+        Status: the PCB was brought up and validated for basic functionality (sensor reading, timing capture, and comms interface),
+        but it was not deployed into a production drill rig.
+      </p>
+    </div>
+
+    <!-- 14) Short final section -->
+    <div class="qbox">
+      <div class="q-title">What was the outcome?</div>
+      <div class="q-sep"></div>
+      <p>
+        The project demonstrated a practical, low-wiring method to measure chuck <b>RPM</b> and <b>direction</b> using a duty-cycle
+        signature, and validated non-contact <b>stroke sensing</b> with VL53L4CX (including epoxy protection for field robustness).
+        A final STM32 + RS485 PCB integrated both sensing paths and established an integration-ready hardware platform.
+      </p>
+    </div>
+
+  </div>
+
+</body>
+</html>
 
