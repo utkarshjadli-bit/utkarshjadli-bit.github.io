@@ -268,17 +268,17 @@
           Initially, the design approach considered using two Hall-effect switches to detect chuck rotation. 
           If two sensors proved insufficient for reliable direction sensing, the fallback plan was to implement 
           a four-sensor quadrature-style arrangement for robust CW/CCW detection.
-          <br><br>
+          <br>
           For rapid prototyping, a commercial Hall-effect sensor module (XC-4434) was purchased and interfaced 
           with an Arduino MKR Zero. Early testing confirmed that rotation speed measurement was straightforward: 
           using a single magnet mounted on the rotating target, RPM could be computed accurately by measuring the 
           pulse period. The setup was later validated on a lathe machine, successfully detecting chuck speeds across 
           a wide range of approximately <b>35 RPM to 2000 RPM</b>.
-          <br><br>
+          <br>
           However, determining rotation direction proved more challenging. A configuration using two sensor modules 
           and one magnet was tested, but it did not produce a consistent or repeatable phase relationship. As a result, 
           there was no reliable signature to detect reversal, making direction classification unstable.
-          <br><br>
+          <br>
           To address this, a dedicated low-voltage dual Hall-effect latch sensor was selected, capable of supporting 
           both speed and direction detection. The device integrates an internal voltage regulator, two Hall sensing 
           elements with offset cancellation, and dual open-drain output drivers in a single package—providing a compact 
