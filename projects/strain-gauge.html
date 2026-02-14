@@ -380,51 +380,51 @@
       <ul class="subheading-list">
     
         <li>
-          <i>Challenge:</i> Reliable multi-channel acquisition without dropped samples or channel misalignment.
+          <i><b>Challenge:</b></i> Reliable multi-channel acquisition without dropped samples or channel misalignment.
           <br>
-          <i>Solution:</i> Implemented a deterministic sampling loop with fixed channel sequencing (read-all mode),
+          <i><b>Solution:</b></i> Implemented a deterministic sampling loop with fixed channel sequencing (read-all mode),
           ensuring every ADC frame contained synchronized readings from all channels.
         </li>
     
         <li>
-          <i>Challenge:</i> Maintaining timing stability while streaming large data frames over UART.
+          <i><b>Challenge:</b></i> Maintaining timing stability while streaming large data frames over UART.
           <br>
-          <i>Solution:</i> Used structured binary/encoded messages with a defined command-response protocol, allowing
+          <i><b>Solution:</b></i> Used structured binary/encoded messages with a defined command-response protocol, allowing
           the host to request channel reads, repetition mode, gain, and OSR configuration without disrupting sampling.
         </li>
     
         <li>
-          <i>Challenge:</i> Gain and OSR needed to be tunable during validation to balance noise performance vs signal headroom.
+          <i><b>Challenge:</b></i> Gain and OSR needed to be tunable during validation to balance noise performance vs signal headroom.
           <br>
-          <i>Solution:</i> Added firmware commands to dynamically configure gain and oversampling ratio (OSR), allowing rapid
+          <i><b>Solution:</b></i> Added firmware commands to dynamically configure gain and oversampling ratio (OSR), allowing rapid
           tuning during bench tests without reflashing firmware.
         </li>
     
         <li>
-          <i>Challenge:</i> Corrupted UART packets can silently invalidate strain measurements during long logging sessions.
+          <i><b>Challenge:</b></i> Corrupted UART packets can silently invalidate strain measurements during long logging sessions.
           <br>
-          <i>Solution:</i> Added CRC8 validation in every response packet. The Python script verifies CRC8 and rejects invalid
+          <i><b>Solution:</b></i> Added CRC8 validation in every response packet. The Python script verifies CRC8 and rejects invalid
           frames, preventing bad data from contaminating post-processing results.
         </li>
     
         <li>
-          <i>Challenge:</i> Long-duration experiments required machine-readable logs that could be automatically parsed for drift analysis.
+          <i><b>Challenge:</b></i> Long-duration experiments required machine-readable logs that could be automatically parsed for drift analysis.
           <br>
-          <i>Solution:</i> Streamed data in a consistent tagged format (timestamp, board type, response type, channel data, 
+          <i><b>Solution:</b></i> Streamed data in a consistent tagged format (timestamp, board type, response type, channel data, 
           gain states, sample state, CRC), enabling direct parsing and automated plotting in Python.
         </li>
     
         <li>
-          <i>Challenge:</i> Embedded firmware needed to remain lightweight while still supporting calibration and validation workflows.
+          <i><b>Challenge:</b></i> Embedded firmware needed to remain lightweight while still supporting calibration and validation workflows.
           <br>
-          <i>Solution:</i> Kept the microcontroller focused only on deterministic acquisition + transport, while higher-level processing
+          <i><b>Solution:</b></i> Kept the microcontroller focused only on deterministic acquisition + transport, while higher-level processing
           (reference subtraction, microstrain conversion, ΔR calculation, and drift plots) was handled offline in a Python pipeline.
         </li>
     
         <li>
-          <i>Challenge:</i> Ensuring measurement repeatability across multiple test setups and wiring conditions.
+          <i><b>Challenge:</b></i> Ensuring measurement repeatability across multiple test setups and wiring conditions.
           <br>
-          <i>Solution:</i> Included a board-ID and configuration reporting feature so every dataset captured the exact test configuration
+          <i><b>Solution:</b></i> Included a board-ID and configuration reporting feature so every dataset captured the exact test configuration
           (gain/OSR/sample count), improving traceability during validation.
         </li>
     
