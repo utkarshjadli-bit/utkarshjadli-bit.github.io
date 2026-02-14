@@ -177,6 +177,10 @@
       text-decoration: underline;
     
     }
+    .subheading-list li { font-weight: 500; }
+    .subheading-list li b { font-weight: 800; }
+    .subheading-list i { font-style: italic; font-weight: 700; }
+
   </style>
 </head>
 
@@ -363,6 +367,36 @@
       </p>
     </div>
 
+    <div class="qbox">
+  <div class="q-title">What was the firmware challenges and how was it solved?</div>
+  <div class="q-sep"></div>
+
+  <p>
+    Although strain calculations were performed offline, firmware acted as a real-time acquisition engine:
+    stable ADC sampling, deterministic timing, and error-checked UART streaming for post-processing.
+  </p>
+
+  <ul class="subheading-list">
+    <li><i>Challenge:</i> Reliable multi-channel acquisition without dropped samples or channel misalignment.</li>
+    <li><i>Solution:</i> Implemented a deterministic acquisition loop and fixed channel-read sequencing to keep sampling repeatable across tests.</li>
+
+    <li><i>Challenge:</i> Gain and OSR needed to be adjustable during validation (offset/headroom vs noise trade-off).</li>
+    <li><i>Solution:</i> Added a command-based interface to set gain/OSR and switch between single-channel and read-all modes during experiments.</li>
+
+    <li><i>Challenge:</i> UART packets can corrupt in noisy environments; silent errors would invalidate strain results.</li>
+    <li><i>Solution:</i> Used a structured UART protocol with CRC8 verification; invalid frames are detected and discarded.</li>
+
+    <li><i>Challenge:</i> Long-duration logging must stay machine-readable for automated plots and drift calculations.</li>
+    <li><i>Solution:</i> Streamed raw ADC codes in a fixed log format (timestamp, response type, channel data, NTC, gains, sample state, CRC8),
+      decoded by a Python script.</li>
+
+    <li><i>Challenge:</i> Keeping embedded firmware lightweight while still supporting calibration and drift workflows.</li>
+    <li><i>Solution:</i> Kept MCU focused on acquisition + comms; performed reference subtraction, microstrain conversion,
+      ΔR extraction, and plotting offline in Python.</li>
+  </ul>
+</div>
+
+    
     <div class="qbox">
       <div class="q-title">How was system accuracy validated experimentally?</div>
       <div class="q-sep"></div>
