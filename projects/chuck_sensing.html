@@ -635,7 +635,80 @@
       </ul>
     </div>
     
+    <div class="qbox">
+      <div class="q-title">How was chuck rotation speed and direction sensing validated experimentally?</div>
+      <div class="q-sep"></div>
     
+      <ul>
+        <li>
+          <b>Verification of Clockwise and Anticlockwise Pattern (Direction Signature)</b><br><br>
+    
+          After implementing the alternate magnet arrangement and identifying the optimal sensor placement distance
+          (Y = 22–24 mm and X = 1–3 mm), the first experimental step was to verify whether the Hall-effect dual latch
+          sensor produces a repeatable and unique sequence for both clockwise and anticlockwise rotation.
+          <br><br>
+    
+          The measured output sequences obtained from oscilloscope testing are shown below.
+          <br><br>
+    
+          <div class="figure img-medium">
+            <img src="../assets/56 RPM Duty 10 percent.png" alt="Forward steering at 56 RPM waveform">
+            <div class="caption">Figure 1: Forward steering at 56 RPM</div>
+          </div>
+    
+          <div class="figure img-medium">
+            <img src="../assets/56 RPM Duty 94 percent.png" alt="Reverse steering at 56 RPM waveform">
+            <div class="caption">Figure 2: Reverse steering at 56 RPM</div>
+          </div>
+    
+          <div class="figure img-medium">
+            <img src="../assets/136.2 RPM Duty 10 percent.png" alt="Forward steering at 136.2 RPM waveform">
+            <div class="caption">Figure 3: Forward steering at 136.2 RPM</div>
+          </div>
+    
+          <div class="figure img-medium">
+            <img src="../assets/136.2 RPM Duty 94 percent.png" alt="Reverse steering at 136.2 RPM waveform">
+            <div class="caption">Figure 4: Reverse steering at 136.2 RPM</div>
+          </div>
+    
+          <div class="figure img-medium">
+            <img src="../assets/208 RPM Duty 10 percent.png" alt="Forward steering at 208 RPM waveform">
+            <div class="caption">Figure 5: Forward steering at 208 RPM</div>
+          </div>
+    
+          <div class="figure img-medium">
+            <img src="../assets/208 RPM Duty 94 percent.png" alt="Reverse steering at 208 RPM waveform">
+            <div class="caption">Figure 6: Reverse steering at 208 RPM</div>
+          </div>
+    
+          <div class="figure img-medium">
+            <img src="../assets/480 RPM Duty 10 percent.png" alt="Forward steering at 480 RPM waveform">
+            <div class="caption">Figure 7: Forward steering at 480 RPM</div>
+          </div>
+    
+          <div class="figure img-medium">
+            <img src="../assets/480 RPM Duty 94 percent.png" alt="Reverse steering at 480 RPM waveform">
+            <div class="caption">Figure 8: Reverse steering at 480 RPM</div>
+          </div>
+    
+          From observed waveform behaviour, it was confirmed that the sensor produces a distinct pattern during reversal.
+          Most importantly, the waveform duty cycle differed significantly between the two directions, enabling direction
+          detection using only the DIR output.
+          <br><br>
+    
+          As noted in the experiments, the anticlockwise duty cycle is much smaller than the clockwise duty cycle,
+          meaning direction can be extracted using a simple duty-cycle threshold logic.
+          <br><br>
+    
+          The output waveforms captured at various speeds on the oscilloscope showed:
+          <ul>
+            <li><b>Forward steering duty cycle ≈ 10%</b></li>
+            <li><b>Reverse steering duty cycle ≈ 94%</b></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
   </div>
 
 </body>
