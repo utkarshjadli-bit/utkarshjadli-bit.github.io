@@ -507,7 +507,7 @@
         </li>
 
         <li>
-          <b>Firmware challenges and solutions</b><br><br>
+          <b>Firmware challenges and solutions</b><br>
         
         <ul class="subheading-list">
         
@@ -547,10 +547,93 @@
               debounced zero detection to prevent oscillation between low-RPM readings and zero near the threshold.
             </li>
         </ul>
-        
       </ul>
     </div>
 
+    <div class="qbox">
+      <div class="q-title">How did the linear stroke measurement work?</div>
+      <div class="q-sep"></div>
+      <p>
+        Linear feed/stroke measurement was implemented using a Time-of-Flight (ToF) ranging sensor, which provides absolute
+        distance measurement by emitting an infrared laser pulse and measuring the return time from the target surface.
+        This approach enabled non-contact displacement sensing, making it suitable for harsh drill rig environments where
+        Mechanical encoders or contact-based sensors are prone to wear and contamination.
+      </p>
+      <ul class="subheading-list"
+        <li>
+          <b>Stroke position measurement</b><br><br>
+          The ToF was mounted to continuously measure the distance between the sensor and a fixed reference surface on the moving
+          chuck assembly. As the chuck advanced or retracted, the measured distance changed proportionally, providing a direct
+          measurement of stroke position in millimetres.
+        </li>
+    
+        <li>
+          <b>Stroke delta and motion tracking</b><br><br>
+          To track movement, firmware computed the stroke delta, defined as the change in measured position between consecutive samples:
+          <br><br>
+    
+          <div style="text-align:center; font-weight:700; font-size:18px;">
+            Δx = x(n) − x(n−1)
+          </div>
+    
+          <br>
+          This enabled detection of both the direction of travel (forward vs backward stroke) and the magnitude of movement over time.
+          By accumulating stroke delta over multiple samples, the firmware derived total feed displacement and estimated the net travel
+          distance during drilling.
+        </li>
+    
+        <li>
+          <b>Rod counting and depth estimation</b><br><br>
+          By continuously monitoring stroke displacement, the system could detect full feed cycles and estimate the total drilling progress.
+          This enabled automated calculation of:
+          <ul>
+            <li><b>Rod count</b> (based on accumulated feed distance per rod insertion)</li>
+            <li><b>Drilling depth</b> (based on total measured feed travel)</li>
+          </ul>
+          This stroke sensing method provided a robust and scalable foundation for automated drill depth tracking and operator logsheet
+          replacement, without requiring direct mechanical coupling to the chuck mechanism.
+        </li>
+    
+        <li>
+          <b>Firmware Challenges and Solutions</b><br><br>
+    
+          <div style="margin-left: 6px;">
+            <i><b>Challenge:</b></i> Noisy distance readings in reflective and dusty field conditions<br>
+            Drill rig environments introduce dust, vibration, surface reflectivity variation, and intermittent obstructions, resulting in jitter and occasional
+            outlier readings from the ToF sensor.<br>
+            <i><b>Solution:</b></i> Implemented outlier rejection using range validity flags and threshold-based clamping of unrealistic step changes.
+            Additional digital filtering (moving average) was applied to stabilise the displacement signal while maintaining true motion response.
+            <br><br>
+    
+            <i><b>Challenge:</b></i> Converting raw distance measurements into meaningful stroke/feed events<br>
+            The ToF sensor provides absolute distance readings, but the system required extraction of higher-level drilling metrics such as stroke length,
+            stroke count, and net travel for rod counting and depth estimation.<br>
+            <i><b>Solution:</b></i> Implemented a state-machine-based motion tracking algorithm that classified chuck movement as advancing or retracting,
+            detected stroke endpoints using thresholds with hysteresis, and accumulated displacement increments to compute per-stroke travel and total feed distance.
+            <br><br>
+    
+            <i><b>Challenge:</b></i> Preventing false stroke detection due to vibration and micro-movements<br>
+            Mechanical vibration and small oscillations can appear as motion if the signal is differentiated directly, leading to false stroke transitions and accumulated depth error.<br>
+            <i><b>Solution:</b></i> Introduced a configurable deadband (minimum movement threshold) and applied persistence logic, requiring motion to exceed
+            the threshold for a defined number of samples before a stroke transition was registered.
+            <br><br>
+    
+            <i><b>Challenge:</b></i> Synchronizing linear movement tracking with chuck rotation activity<br>
+            Stroke movement data must represent real drilling activity rather than idle fluctuations, particularly when the chuck is stationary or disengaged.<br>
+            <i><b>Solution:</b></i> Used the chuck RPM and direction state as a gating condition, enabling stroke accumulation only when the system confirmed
+            active drilling or rod make/break operations. This improved reliability and reduced false depth accumulation during idle periods.
+            <br><br>
+    
+            <i><b>Challenge:</b></i> Fault detection and sensor health monitoring<br>
+            ToF sensors may return invalid readings when blocked, out of range, or affected by a poor target return signal. Without fault handling, the system could silently
+            accumulate incorrect depth or rod count.<br>
+            <i><b>Solution:</b></i> Implemented sensor health monitoring checks, including consecutive invalid sample counters and range-status verification.
+            Fault states were designed to be exposed over the RS485 telemetry interface, allowing the controller/operator to distinguish valid measurements from sensor error conditions.
+          </div>
+        </li>
+      </ul>
+    </div>
+    
     
   </div>
 
