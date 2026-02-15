@@ -347,6 +347,147 @@
             <img src="../assets/x_y_pos.png" alt=" Sensor offset distance X and Y used for direction detection">
             <div class="caption">Figure 4: Sensor placement window (X and Y offset) identified through lathe testing.</div>
           </div>
+          <br><br>
+
+          Using this optimized geometry, distinct pulse patterns were observed for clockwise and anticlockwise rotation.
+          The measured sequences are summarized in <b>Table 1</b> and illustrated in <b>Figure 5</b>.
+          
+          <div class="figure">
+            <div class="caption"><b>Table 1:</b> Specific sequence for direction detection</div>
+          
+            <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:15px;">
+              <thead>
+                <tr style="border-top:2px solid #111; border-bottom:2px solid #111;">
+                  <th style="text-align:left; padding:8px;">Direction</th>
+                  <th style="text-align:center; padding:8px;">Step</th>
+                  <th style="text-align:center; padding:8px;">H1</th>
+                  <th style="text-align:center; padding:8px;">Output State</th>
+                  <th style="text-align:center; padding:8px;">H2</th>
+                  <th style="text-align:center; padding:8px;">Output State</th>
+                </tr>
+              </thead>
+          
+              <tbody>
+                <!-- Anticlockwise -->
+                <tr>
+                  <td rowspan="6" style="text-align:left; padding:8px; font-weight:600;">Anticlockwise</td>
+                  <td style="text-align:center; padding:8px;"><i>St(t)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                </tr>
+          
+                <tr>
+                  <td style="text-align:center; padding:8px;"><i>St(t+1)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
+                  <td style="text-align:center; padding:8px;">0</td>
+                </tr>
+          
+                <tr>
+                  <td style="text-align:center; padding:8px;"><i>St(t+2)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
+                  <td style="text-align:center; padding:8px;">0</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
+                  <td style="text-align:center; padding:8px;">0</td>
+                </tr>
+          
+                <tr>
+                  <td style="text-align:center; padding:8px;"><i>St(t+3)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                </tr>
+          
+                <tr>
+                  <td style="text-align:center; padding:8px;"><i>St(t+4)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
+                  <td style="text-align:center; padding:8px;">0</td>
+                </tr>
+          
+                <tr style="border-bottom:2px solid #111;">
+                  <td style="text-align:center; padding:8px;"><i>St(t+5)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
+                  <td style="text-align:center; padding:8px;">0</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
+                  <td style="text-align:center; padding:8px;">0</td>
+                </tr>
+          
+                <!-- Clockwise -->
+                <tr>
+                  <td rowspan="6" style="text-align:left; padding:8px; font-weight:600;">Clockwise</td>
+                  <td style="text-align:center; padding:8px;"><i>St(t)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
+                  <td style="text-align:center; padding:8px;">0</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
+                  <td style="text-align:center; padding:8px;">0</td>
+                </tr>
+          
+                <tr>
+                  <td style="text-align:center; padding:8px;"><i>St(t+1)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                </tr>
+          
+                <tr>
+                  <td style="text-align:center; padding:8px;"><i>St(t+2)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                </tr>
+          
+                <tr>
+                  <td style="text-align:center; padding:8px;"><i>St(t+3)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
+                  <td style="text-align:center; padding:8px;">0</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
+                  <td style="text-align:center; padding:8px;">0</td>
+                </tr>
+          
+                <tr>
+                  <td style="text-align:center; padding:8px;"><i>St(t+4)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                </tr>
+          
+                <tr style="border-bottom:2px solid #111;">
+                  <td style="text-align:center; padding:8px;"><i>St(t+5)</i></td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
+                  <td style="text-align:center; padding:8px;">1</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="figure">
+            <img src="../Direction_working_principle.png" alt=" Pulse sequence and duty cycle difference for CW vs CCW rotation">
+            <div class="caption">Figure 5: DIR pulse sequence showing duty-cycle difference for clockwise vs anticlockwise rotation.</div>
+          </div>
+          
+          A key outcome of this approach was that the pulse duty cycle became direction-dependent. Specifically, the pulse duty
+          cycle during <b>anticlockwise</b> rotation was significantly smaller than during <b>clockwise</b> rotation, creating a clear and
+          repeatable signature for direction classification. This duty-cycle difference provided a robust method to determine:
+          <ul>
+            <li><b>Direction (CW vs CCW)</b> from duty-cycle thresholding</li>
+            <li><b>Speed (RPM)</b> from pulse period measurement</li>
+          </ul>
+          
+          An additional advantage of this configuration was that both speed and direction information could be extracted using only
+          the open-drain <b>DIR</b> output, eliminating the need to use a second output pin. This reduced wiring complexity and enabled
+          a simpler interface to the microcontroller—requiring only a single digital input line to determine both RPM and direction state.
+
           
         </li>
 
