@@ -492,42 +492,44 @@
         <li>
           <b>Firmware challenges and solutions</b><br><br>
         
-          <i><b>Challenge:</b></i> RPM must be accurate across a wide speed range (very slow to very fast).<br>
-          At low RPM, pulses are widely spaced, which reduces update rate and makes the speed estimate appear sluggish.
-          At high RPM, pulse periods become very short, increasing susceptibility to timing jitter and interrupt overhead.<br>
+        <ul class="subheading-list">
         
-          <i><b>Solution:</b></i> Implemented an interrupt-driven pulse period measurement approach using edge-to-edge timing.
-          To improve stability, an adaptive averaging strategy was applied, where multiple pulse periods are averaged at higher speeds
-          (for noise reduction), while fewer pulses are averaged at lower speeds (for responsiveness). A zero-speed timeout mechanism
-          was also implemented to ensure the RPM output reliably drops to zero during stall or disengagement events.<br><br>
+            <li>
+              <i><b>Challenge:</b></i> RPM must be accurate across a wide speed range (very slow to very fast).<br>
+              At low RPM, pulses are widely spaced, which reduces update rate and makes the speed estimate appear sluggish.
+              At high RPM, pulse periods become very short, increasing susceptibility to timing jitter and interrupt overhead.<br>
+              <i><b>Solution:</b></i> Implemented an interrupt-driven pulse period measurement approach using edge-to-edge timing.
+              To improve stability, an adaptive averaging strategy was applied, where multiple pulse periods are averaged at higher
+              speeds (for noise reduction), while fewer pulses are averaged at lower speeds (for responsiveness). A zero-speed timeout
+              mechanism was also implemented to ensure the RPM output reliably drops to zero during stall or disengagement events.
+            </li>
         
+            <li>
+              <i><b>Challenge:</b></i> Noise / false edges in a harsh industrial environment.<br>
+              Electrical noise, long cable runs, mechanical vibration, and EMI from drill rig equipment can introduce false transitions,
+              leading to incorrect RPM or unstable direction state detection.<br>
+              <i><b>Solution:</b></i> Added edge qualification logic to reject unrealistically short pulse periods, combined with temporal
+              filtering (moving average). Direction classification was implemented as a state-based decision process, requiring a consistent
+              direction signature over multiple cycles before switching state, preventing flickering due to noise.
+            </li>
         
-          <i><b>Challenge:</b></i> Noise / false edges in a harsh industrial environment.<br>
-          Electrical noise, long cable runs, mechanical vibration, and EMI from drill rig equipment can introduce false transitions,
-          leading to incorrect RPM or unstable direction state detection.<br>
+            <li>
+              <i><b>Challenge:</b></i> Direction detection must be reliable during start/stop and reversals.<br>
+              During reversals and transient operation, pulse timing characteristics can become irregular, making direction classification
+              unreliable if based on a single pulse or edge.<br>
+              <i><b>Solution:</b></i> Direction was determined using a robust duty-cycle signature derived from multiple pulse cycles rather
+              than instantaneous edge timing. Hysteresis and debouncing were applied by enforcing duty-cycle threshold margins and confirming
+              direction changes over several consecutive cycles before updating the reported direction state.
+            </li>
         
-          <i><b>Solution:</b></i> Added edge qualification logic to reject unrealistically short pulse periods, combined with temporal
-          filtering (moving average). Direction classification was implemented as a state-based decision process, requiring a consistent
-          direction signature over multiple cycles before switching state, preventing flickering due to noise.<br><br>
-        
-        
-          <i><b>Challenge:</b></i> Direction detection must be reliable during start/stop and reversals.<br>
-          During reversals and transient operation, pulse timing characteristics can become irregular, making direction classification
-          unreliable if based on a single pulse or edge.<br>
-        
-          <i><b>Solution:</b></i> Direction was determined using a robust duty-cycle signature derived from multiple pulse cycles rather than
-          instantaneous edge timing. Hysteresis and debouncing were applied by enforcing duty-cycle threshold margins and confirming direction
-          changes over several consecutive cycles before updating the reported direction state.<br><br>
-        
-        
-          <i><b>Challenge:</b></i> “No pulse” and stall detection must not lag too much.<br>
-          If the stall detection threshold is too long, the system continues reporting the last valid RPM after rotation stops.
-          If it is too short, very low RPM operation may be incorrectly classified as zero.<br>
-        
-          <i><b>Solution:</b></i> Implemented a configurable timeout window tied to the minimum expected rotational speed, along with debounced
-          zero detection to prevent oscillation between low-RPM readings and zero near the threshold.
-        </li>
-
+            <li>
+              <i><b>Challenge:</b></i> “No pulse” and stall detection must not lag too much.<br>
+              If the stall detection threshold is too long, the system continues reporting the last valid RPM after rotation stops.
+              If it is too short, very low RPM operation may be incorrectly classified as zero.<br>
+              <i><b>Solution:</b></i> Implemented a configurable timeout window tied to the minimum expected rotational speed, along with
+              debounced zero detection to prevent oscillation between low-RPM readings and zero near the threshold.
+            </li>
+        </ul>
         
       </ul>
     </div>
