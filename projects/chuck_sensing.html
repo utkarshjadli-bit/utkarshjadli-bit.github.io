@@ -817,13 +817,13 @@
     
           To experimentally validate the feasibility of measuring chuck feed/stroke travel, a Time-of-Flight (ToF)
           LiDAR sensor was tested in a controlled bench environment.
-          <br><br>
+          <br>
     
           A 2 m drill rod was mounted on stands, and a flat reflector plate was fixed to the rod to provide a stable
           reflective surface for ranging measurements. The ToF sensor was positioned at a fixed reference point
           and aligned toward the reflector to measure the distance variation as the rod was moved linearly
           (simulating drill rig chuck feed motion).
-          <br><br>
+          <br>
     
           The experimental setup is shown below:
     
@@ -846,7 +846,6 @@
             <li>Mechanical protection against impact/vibration</li>
           </ul>
     
-          <br>
           The epoxy coating was applied carefully to avoid blocking the sensor optical window while still sealing
           the PCB and components.
         </li>
@@ -856,7 +855,6 @@
     
           The ToF sensor was tested by placing the reflector at known distances from the sensor. The actual distance
           was measured manually, and the corresponding LiDAR distance readings were recorded.
-          <br>
     
           Two sets of measurements were performed:
           <ul>
@@ -932,7 +930,92 @@
       </ul>
     </div>
 
+    <div class="qbox">
+      <div class="q-title">What did the final embedded hardware implementation look like?</div>
+      <div class="q-sep"></div>
     
+      <p>
+        After validating the chuck rotation sensing and linear stroke measurement concepts through bench testing using an Arduino Zero,
+        the project was progressed into a final embedded hardware revision designed for industrial drill-rig integration.
+      </p>
+    
+      <p>
+        A dedicated custom PCB was developed to integrate the complete sensing and communication stack into a compact embedded module.
+        The final board combined:
+      </p>
+    
+      <ul>
+        <li>STM32 microcontroller (same MCU family as the strain gauge instrumentation platform)</li>
+        <li>Dual Hall-effect latch sensors for chuck rotation speed + direction sensing</li>
+        <li>ToF LiDAR sensor for feed/stroke measurement</li>
+        <li>RS485 communication interface for robust industrial networking</li>
+        <li>Power conditioning, filtering, and protection circuitry for harsh environments</li>
+      </ul>
+    
+      <p>
+        This PCB was brought up and tested for basic functional validation (sensor reading, timing capture, and communication interface),
+        establishing a working hardware platform. Although it was not deployed into a production drill rig, it demonstrated successful
+        integration readiness.
+      </p>
+    
+      <ul class="subheading-list">
+    
+        <li>
+          <b>Intrinsic Safety Design Considerations</b><br><br>
+    
+          Since the system was intended for use in a potentially explosive mining environment, the hardware design was developed under
+          intrinsic safety principles, where the key requirement is ensuring the circuit cannot store or deliver enough electrical energy
+          to ignite a hazardous atmosphere.
+    
+          To support intrinsically safe system integration, the PCB design incorporated:
+    
+          <ul>
+            <li>Low-power embedded architecture using STM32 + low-voltage sensors</li>
+            <li>Input protection and current limiting elements to reduce fault energy risk</li>
+            <li>Transient suppression (TVS protection) to manage surge conditions</li>
+            <li>Controlled supply conditioning (IS barrier) to limit available energy under fault scenarios</li>
+            <li>Careful routing with proper clearance and creepage was implemented to support safe operation and reduce risk of insulation failure under harsh industrial conditions</li>
+          </ul>
+    
+          These design practices helped ensure that the sensing module could be integrated into an intrinsically safe-certified system by
+          controlling energy storage (capacitance/inductance) and limiting fault-current pathways.
+        </li>
+    
+        <li>
+          <b>RS485 + Modbus RTU Communication Implementation</b><br><br>
+    
+          To enable reliable communication between the sensing module and the drill rig controller, RS485 was selected as the primary interface.
+          A Modbus RTU protocol layer was planned/implemented on top of RS485, allowing the sensor board to behave as a structured industrial node.
+          In this approach:
+    
+          <ul>
+            <li>The STM32 acts as a Modbus slave device</li>
+            <li>The drill rig controller acts as the Modbus master</li>
+            <li>
+              Sensor values (RPM, direction state, stroke distance, rod count estimate, sensor status flags) are mapped into Modbus
+              holding/input registers
+            </li>
+            <li>
+              The master polls the sensor board at a fixed interval, ensuring deterministic updates and simple system integration
+            </li>
+          </ul>
+    
+          This architecture makes the system scalable and deployment-friendly, since additional sensors can be added later without redesigning
+          the communication layer.
+        </li>
+    
+        <li>
+          <b>Final PCB Prototype</b><br><br>
+    
+          <div class="figure">
+            <img src="../assets/lidar_pcb.png" alt="Final custom PCB integrating chuck sensing, ToF stroke measurement, and RS485 communication">
+            <div class="caption">Figure 25: Final custom PCB implementation integrating chuck sensing, ToF stroke measurement, and RS485 communication.</div>
+          </div>
+        </li>
+    
+      </ul>
+    </div>
+
     
   </div>
 
