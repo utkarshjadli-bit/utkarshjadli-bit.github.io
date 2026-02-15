@@ -653,42 +653,42 @@
     
           <div class="figure img-medium">
             <img src="../assets/56 RPM Duty 10 percent.png" alt="Forward steering at 56 RPM waveform">
-            <div class="caption">Figure 1: Forward steering at 56 RPM</div>
+            <div class="caption">Figure 6: Forward steering at 56 RPM</div>
           </div>
     
           <div class="figure img-medium">
             <img src="../assets/56 RPM Duty 94 percent.png" alt="Reverse steering at 56 RPM waveform">
-            <div class="caption">Figure 2: Reverse steering at 56 RPM</div>
+            <div class="caption">Figure 7: Reverse steering at 56 RPM</div>
           </div>
     
           <div class="figure img-medium">
             <img src="../assets/136.2 RPM Duty 10 percent.png" alt="Forward steering at 136.2 RPM waveform">
-            <div class="caption">Figure 3: Forward steering at 136.2 RPM</div>
+            <div class="caption">Figure 8: Forward steering at 136.2 RPM</div>
           </div>
     
           <div class="figure img-medium">
             <img src="../assets/136.2 RPM Duty 94 percent.png" alt="Reverse steering at 136.2 RPM waveform">
-            <div class="caption">Figure 4: Reverse steering at 136.2 RPM</div>
+            <div class="caption">Figure 9: Reverse steering at 136.2 RPM</div>
           </div>
     
           <div class="figure img-medium">
             <img src="../assets/208 RPM Duty 10 percent.png" alt="Forward steering at 208 RPM waveform">
-            <div class="caption">Figure 5: Forward steering at 208 RPM</div>
+            <div class="caption">Figure 10: Forward steering at 208 RPM</div>
           </div>
     
           <div class="figure img-medium">
             <img src="../assets/208 RPM Duty 94 percent.png" alt="Reverse steering at 208 RPM waveform">
-            <div class="caption">Figure 6: Reverse steering at 208 RPM</div>
+            <div class="caption">Figure 11: Reverse steering at 208 RPM</div>
           </div>
     
           <div class="figure img-medium">
             <img src="../assets/480 RPM Duty 10 percent.png" alt="Forward steering at 480 RPM waveform">
-            <div class="caption">Figure 7: Forward steering at 480 RPM</div>
+            <div class="caption">Figure 12: Forward steering at 480 RPM</div>
           </div>
     
           <div class="figure img-medium">
             <img src="../assets/480 RPM Duty 94 percent.png" alt="Reverse steering at 480 RPM waveform">
-            <div class="caption">Figure 8: Reverse steering at 480 RPM</div>
+            <div class="caption">Figure 13: Reverse steering at 480 RPM</div>
           </div>
     
           From observed waveform behaviour, it was confirmed that the sensor produces a distinct pattern during reversal.
@@ -706,6 +706,78 @@
             <li><b>Reverse steering duty cycle ≈ 94%</b></li>
           </ul>
         </li>
+
+        <li>
+          <b>Firmware Validation using Arduino Zero (Bench + Lathe Comparison)</b><br><br>
+        
+          After verifying the waveform characteristics using the oscilloscope, the next step was to validate the complete
+          firmware-based RPM measurement algorithm.
+          <br><br>
+        
+          For bench testing and firmware development, an <b>Arduino Zero</b> was used as the microcontroller platform.
+          The firmware measured RPM by capturing the time period between pulses and converting it into frequency and RPM.
+          <br><br>
+        
+          The Arduino-calculated RPM values were then compared against the lathe machine speed readings and tachometer
+          reference measurements. The corresponding measurement images captured during these validation tests are shown below:
+        
+          <div class="figure">
+            <img src="../assets/Sensing 56 RPM.png" alt="Sensing at 56 RPM">
+            <div class="caption">Figure 14: Sensing at 56 RPM</div>
+          </div>
+        
+          <div class="figure">
+            <img src="../assets/Sensing 87 RPM.png" alt="Sensing at 87 RPM">
+            <div class="caption">Figure 15: Sensing at 87 RPM</div>
+          </div>
+        
+          <div class="figure">
+            <img src="../assets/Sensing 134 RPM.png" alt="Sensing at 134 RPM">
+            <div class="caption">Figure 16: Sensing at 134 RPM</div>
+          </div>
+        
+          <div class="figure">
+            <img src="../assets/Sensing 210 RPM.png" alt="Sensing at 210 RPM">
+            <div class="caption">Figure 17: Sensing at 210 RPM</div>
+          </div>
+        
+          <div class="figure">
+            <img src="../assets/Sensing 311 RPM.png" alt="Sensing at 311 RPM">
+            <div class="caption">Figure 18: Sensing at 311 RPM</div>
+          </div>
+          
+          <div class="figure">
+            <img src="../assets/Sensing 739 RPM.png" alt="Sensing at 739 RPM">
+            <div class="caption">Figure 19: Sensing at 739 RPM</div>
+          </div>
+        
+          <div class="figure">
+            <img src="../assets/Sensing 1142 RPM.png" alt="Sensing at 1142 RPM">
+            <div class="caption">Figure 20: Sensing at 1142 RPM</div>
+          </div>    
+        
+          The Arduino-based firmware was then used to compute real-time RPM and rotation direction directly from the Hall sensor pulse output.
+          The calculated RPM values were compared against the lathe machine set-speed readings and independent tachometer reference measurements
+          to verify speed accuracy.
+          <br><br>
+        
+          In parallel, the firmware also classified Forward/Reverse direction by evaluating the measured pulse duty-cycle signature,
+          confirming consistent direction detection across multiple rotational speeds. The corresponding oscilloscope waveforms captured during
+          these validation tests are shown below:
+          <br><br>
+        
+          <div class="figure">
+            <img src="../assets/Forward Sensing 311 RPM.png" alt="Forward direction sensing at 311 RPM">
+            <div class="caption">Figure 21: Forward direction sensing at 311 RPM</div>
+          </div>
+        
+          <div class="figure">
+            <img src="../assets/Reverse Sensing 311 RPM.png" alt="Reverse direction sensing at 311 RPM">
+            <div class="caption">Figure 22: Reverse direction sensing at 311 RPM</div>
+          </div>
+        </li>
+        
+        
       </ul>
     </div>
 
