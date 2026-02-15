@@ -509,8 +509,7 @@
         <li>
           <b>Firmware challenges and solutions</b><br>
         
-        <ul class="subheading-list">
-        
+          <ul class="subheading-list">
             <li>
               <i><b>Challenge:</b></i> RPM must be accurate across a wide speed range (very slow to very fast).<br>
               At low RPM, pulses are widely spaced, which reduces update rate and makes the speed estimate appear sluggish.
@@ -546,7 +545,7 @@
               <i><b>Solution:</b></i> Implemented a configurable timeout window tied to the minimum expected rotational speed, along with
               debounced zero detection to prevent oscillation between low-RPM readings and zero near the threshold.
             </li>
-        </ul>
+          </ul>
       </ul>
     </div>
 
@@ -559,7 +558,7 @@
         This approach enabled non-contact displacement sensing, making it suitable for harsh drill rig environments where
         Mechanical encoders or contact-based sensors are prone to wear and contamination.
       </p>
-      <ul class="subheading-list"
+      <ul class="subheading-list">
         <li>
           <b>Stroke position measurement</b><br><br>
           The ToF was mounted to continuously measure the distance between the sensor and a fixed reference surface on the moving
@@ -597,39 +596,41 @@
         <li>
           <b>Firmware Challenges and Solutions</b><br><br>
     
-          <div style="margin-left: 6px;">
-            <i><b>Challenge:</b></i> Noisy distance readings in reflective and dusty field conditions<br>
-            Drill rig environments introduce dust, vibration, surface reflectivity variation, and intermittent obstructions, resulting in jitter and occasional
-            outlier readings from the ToF sensor.<br>
-            <i><b>Solution:</b></i> Implemented outlier rejection using range validity flags and threshold-based clamping of unrealistic step changes.
-            Additional digital filtering (moving average) was applied to stabilise the displacement signal while maintaining true motion response.
-            <br><br>
-    
-            <i><b>Challenge:</b></i> Converting raw distance measurements into meaningful stroke/feed events<br>
-            The ToF sensor provides absolute distance readings, but the system required extraction of higher-level drilling metrics such as stroke length,
-            stroke count, and net travel for rod counting and depth estimation.<br>
-            <i><b>Solution:</b></i> Implemented a state-machine-based motion tracking algorithm that classified chuck movement as advancing or retracting,
-            detected stroke endpoints using thresholds with hysteresis, and accumulated displacement increments to compute per-stroke travel and total feed distance.
-            <br><br>
-    
-            <i><b>Challenge:</b></i> Preventing false stroke detection due to vibration and micro-movements<br>
-            Mechanical vibration and small oscillations can appear as motion if the signal is differentiated directly, leading to false stroke transitions and accumulated depth error.<br>
-            <i><b>Solution:</b></i> Introduced a configurable deadband (minimum movement threshold) and applied persistence logic, requiring motion to exceed
-            the threshold for a defined number of samples before a stroke transition was registered.
-            <br><br>
-    
-            <i><b>Challenge:</b></i> Synchronizing linear movement tracking with chuck rotation activity<br>
-            Stroke movement data must represent real drilling activity rather than idle fluctuations, particularly when the chuck is stationary or disengaged.<br>
-            <i><b>Solution:</b></i> Used the chuck RPM and direction state as a gating condition, enabling stroke accumulation only when the system confirmed
-            active drilling or rod make/break operations. This improved reliability and reduced false depth accumulation during idle periods.
-            <br><br>
-    
-            <i><b>Challenge:</b></i> Fault detection and sensor health monitoring<br>
-            ToF sensors may return invalid readings when blocked, out of range, or affected by a poor target return signal. Without fault handling, the system could silently
-            accumulate incorrect depth or rod count.<br>
-            <i><b>Solution:</b></i> Implemented sensor health monitoring checks, including consecutive invalid sample counters and range-status verification.
-            Fault states were designed to be exposed over the RS485 telemetry interface, allowing the controller/operator to distinguish valid measurements from sensor error conditions.
-          </div>
+         <ul class="subheading-list">
+           <li>
+              <i><b>Challenge:</b></i> Noisy distance readings in reflective and dusty field conditions<br>
+              Drill rig environments introduce dust, vibration, surface reflectivity variation, and intermittent obstructions, resulting in jitter and occasional
+              outlier readings from the ToF sensor.<br>
+              <i><b>Solution:</b></i> Implemented outlier rejection using range validity flags and threshold-based clamping of unrealistic step changes.
+              Additional digital filtering (moving average) was applied to stabilise the displacement signal while maintaining true motion response.
+            </li>
+            <li>
+              <i><b>Challenge:</b></i> Converting raw distance measurements into meaningful stroke/feed events<br>
+              The ToF sensor provides absolute distance readings, but the system required extraction of higher-level drilling metrics such as stroke length,
+              stroke count, and net travel for rod counting and depth estimation.<br>
+              <i><b>Solution:</b></i> Implemented a state-machine-based motion tracking algorithm that classified chuck movement as advancing or retracting,
+              detected stroke endpoints using thresholds with hysteresis, and accumulated displacement increments to compute per-stroke travel and total feed distance.                                                
+            </li>
+            <li>
+              <i><b>Challenge:</b></i> Preventing false stroke detection due to vibration and micro-movements<br>
+              Mechanical vibration and small oscillations can appear as motion if the signal is differentiated directly, leading to false stroke transitions and accumulated depth error.<br>
+              <i><b>Solution:</b></i> Introduced a configurable deadband (minimum movement threshold) and applied persistence logic, requiring motion to exceed
+              the threshold for a defined number of samples before a stroke transition was registered.
+             </li>
+             <li>
+              <i><b>Challenge:</b></i> Synchronizing linear movement tracking with chuck rotation activity<br>
+              Stroke movement data must represent real drilling activity rather than idle fluctuations, particularly when the chuck is stationary or disengaged.<br>
+              <i><b>Solution:</b></i> Used the chuck RPM and direction state as a gating condition, enabling stroke accumulation only when the system confirmed
+              active drilling or rod make/break operations. This improved reliability and reduced false depth accumulation during idle periods.
+             </li>
+             <li>
+              <i><b>Challenge:</b></i> Fault detection and sensor health monitoring<br>
+              ToF sensors may return invalid readings when blocked, out of range, or affected by a poor target return signal. Without fault handling, the system could silently
+              accumulate incorrect depth or rod count.<br>
+              <i><b>Solution:</b></i> Implemented sensor health monitoring checks, including consecutive invalid sample counters and range-status verification.
+              Fault states were designed to be exposed over the RS485 telemetry interface, allowing the controller/operator to distinguish valid measurements from sensor error conditions.
+             </li>
+         </ul>
         </li>
       </ul>
     </div>
