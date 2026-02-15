@@ -806,6 +806,147 @@
       </ul>
     </div>
 
+    <div class="qbox">
+      <div class="q-title">How was the linear stroke of the chuck validated experimentally?</div>
+      <div class="q-sep"></div>
+    
+      <ul class="subheading-list">
+    
+        <li>
+          <b>Test Setup</b><br><br>
+    
+          To experimentally validate the feasibility of measuring chuck feed/stroke travel, a Time-of-Flight (ToF)
+          LiDAR sensor was tested in a controlled bench environment.
+          <br><br>
+    
+          A 2 m drill rod was mounted on stands, and a flat reflector plate was fixed to the rod to provide a stable
+          reflective surface for ranging measurements. The ToF sensor was positioned at a fixed reference point
+          and aligned toward the reflector to measure the distance variation as the rod was moved linearly
+          (simulating drill rig chuck feed motion).
+          <br><br>
+    
+          The experimental setup is shown below:
+    
+          <div class="figure">
+            <img src="../assets/lidar_test.png" alt="Bench test setup showing ToF sensor placement, reflector, and drill rod alignment">
+            <div class="caption">Figure 23: Bench test setup showing ToF sensor placement, reflector, and drill rod alignment.</div>
+          </div>
+        </li>
+    
+        <li>
+          <b>Environmental Protection (Epoxy Coating)</b><br><br>
+    
+          Since the drill rig environment contains dust, mud, moisture, and rock debris, the ToF sensor must remain
+          functional under harsh field conditions. To improve field survivability, the LiDAR module was coated with
+          a clear epoxy layer to provide:
+          <br><br>
+    
+          <ul>
+            <li>Splash resistance</li>
+            <li>Dust protection</li>
+            <li>Mechanical protection against impact/vibration</li>
+          </ul>
+    
+          <br>
+          The epoxy coating was applied carefully to avoid blocking the sensor optical window while still sealing
+          the PCB and components.
+        </li>
+    
+        <li>
+          <b>Experimental Procedure</b><br><br>
+    
+          The ToF sensor was tested by placing the reflector at known distances from the sensor. The actual distance
+          was measured manually, and the corresponding LiDAR distance readings were recorded.
+          <br><br>
+    
+          Two sets of measurements were performed:
+          <br><br>
+    
+          <ul>
+            <li>Without epoxy coating</li>
+            <li>With epoxy coating applied</li>
+          </ul>
+    
+          <br>
+          The goal was to confirm whether epoxy protection significantly impacts ranging accuracy.
+        </li>
+    
+        <li>
+          <b>Firmware Implementation and Data Logging</b><br><br>
+    
+          Firmware for real-time ranging acquisition was developed and tested on an Arduino Zero platform. The Arduino
+          Zero interfaced with the ToF sensor over I²C, continuously captured distance measurements, and streamed the
+          data over serial for logging and analysis.
+        </li>
+    
+        <li>
+          <b>Results and Accuracy Comparison</b><br><br>
+    
+          The LiDAR sensor showed a strong linear response across the tested range. The LiDAR distance results shown in
+          Figure 24 reported in this section are directly obtained from the Arduino Zero firmware output and validated
+          against the physical reference measurements.
+    
+          <div class="figure">
+            <img src="../assets/LIDAR_Actual_vs_Results_8K.png" alt="LiDAR distance results comparison with and without epoxy coating">
+            <div class="caption">Figure 24: LiDAR distance results comparison (without epoxy vs epoxy-coated).</div>
+          </div>
+    
+          From the dataset:
+          <br><br>
+    
+          <ul>
+            <li>The sensor maintained consistent distance tracking across the full range.</li>
+            <li>The epoxy-coated sensor demonstrated better stability and reduced error spread compared to the uncoated sensor.</li>
+          </ul>
+    
+          <br>
+          <b>Key statistical outcomes:</b>
+          <br><br>
+    
+          <b>Without epoxy coating</b>
+          <ul>
+            <li>Mean Squared Error (MSE): 326.18</li>
+            <li>Average Standard Deviation: 12.29 mm</li>
+          </ul>
+    
+          <br>
+          <b>With epoxy coating</b>
+          <ul>
+            <li>Mean Squared Error (MSE): 102.5</li>
+            <li>Average Standard Deviation: 6.63 mm</li>
+          </ul>
+    
+          <br>
+          This indicates that the epoxy-coated configuration achieved improved repeatability and lower deviation, making
+          it more suitable for real drill rig conditions.
+        </li>
+    
+        <li>
+          <b>Conclusion</b><br><br>
+    
+          The experimental validation confirmed that the ToF sensor is suitable for measuring linear feed/stroke movement
+          of a drill rig chuck.
+          <br><br>
+    
+          Additionally, coating the module with clear epoxy improved durability and did not degrade performance. In fact,
+          results showed reduced standard deviation, suggesting improved robustness and repeatability under practical
+          conditions.
+          <br><br>
+    
+          This validation proved that ToF sensing can reliably be used to extract:
+          <br><br>
+    
+          <ul>
+            <li>Stroke length (linear travel)</li>
+            <li>Stroke count</li>
+            <li>Total feed accumulation (drilling depth estimation)</li>
+          </ul>
+        </li>
+    
+      </ul>
+    </div>
+
+    
   </div>
 
 </body>
