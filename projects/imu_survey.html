@@ -495,7 +495,7 @@
         This is the engineering problem the system addresses: delivering azimuth, inclination, and toolface measurements accurate enough that trajectory errors remain small even at depth, in a package that can survive the mechanical shock, vibration, and temperature extremes of a working drill site, and transmit data reliably to the surface over long cable runs.
       </p>
 
-      <figure class="figure">
+      <figure class="figure" style="margin:0">
         <img src="../assets/borehole_path.png" alt="Borehole trajectory deviation due to survey error accumulation">
         <figcaption>Fig. 1 — Borehole trajectory deviation caused by survey measurement error accumulating with depth. Even a small angular offset at the measurement point produces increasing positional drift as depth grows.</figcaption>
       </figure>
@@ -791,7 +791,7 @@
         Soft-iron distortion is caused by magnetically permeable materials near the sensor — materials that don't have permanent magnetism but distort the Earth's field as it passes through them. This produces an elliptical scaling and rotation of the measurement sphere: instead of a perfect sphere centred at the origin, the data forms a tilted ellipsoid. Soft-iron correction applies a transformation matrix that maps the ellipsoid back to a sphere, restoring consistent field magnitude and direction across all orientations.
       </p>
 
-      <figure class="figure">
+      <figure class="figure" style="margin:0">
         <img src="../assets/calibrated X-Y-Z points(afte removing soft-iron offsets).png" alt="Magnetometer after soft-iron correction">
         <figcaption>Fig. 5 — After soft-iron correction: the ellipsoid is normalised into a sphere, restoring uniform magnetic field magnitude across all measurement orientations.</figcaption>
       </figure>
