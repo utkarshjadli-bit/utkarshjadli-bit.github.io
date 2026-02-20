@@ -875,8 +875,8 @@
         </div>
         <div class="component-card">
           <p class="cc-tag">Excitation</p>
-          <h4>3 V LDO Regulator</h4>
-          <p>A stable, low-noise excitation supply was critical because any variation in bridge excitation directly corrupts the output. The LDO provides clean, regulated 3 V regardless of battery voltage variation, reducing supply ripple and measurement inconsistency.</p>
+          <h4>LDO Regulator</h4>
+          <p>A stable, low-noise excitation supply was critical because any variation in bridge excitation directly corrupts the output. The LDO provides clean, regulated voltage regardless of battery voltage variation, reducing supply ripple and measurement inconsistency.</p>
         </div>
       </div>
     </div>
@@ -1109,10 +1109,10 @@
       <p class="section-label">09 — Accuracy Validation</p>
       <h2>Beam Bending Test Against Euler–Bernoulli Theory</h2>
       <p>
-        System accuracy was validated through a beam bending calibration, applying controlled end displacement from <strong>1 mm to 13 mm</strong> in discrete steps while recording strain from the full acquisition chain. An analytical strain prediction was generated using standard small-deflection Euler–Bernoulli beam theory, converting applied displacement to surface strain at the gauge location for the test specimen geometry (length ≈ 340 mm, width ≈ 32 mm, thickness ≈ 3 mm, gauge position ≈ 310 mm from support).
+        System accuracy was validated through a beam bending calibration, applying controlled end displacement from <strong>1 mm to 13 mm</strong> in discrete steps while recording strain from the full acquisition chain. An analytical strain prediction was generated using standard small-deflection Euler–Bernoulli beam theory, converting applied displacement to surface strain at the gauge location for the test specimen geometry.
       </p>
       <p>
-        The experimental strain — derived from ADC output codes via the bridge equations at 3 V excitation — closely tracked the analytical prediction across the full displacement range, with near-identical linear behaviour. The error metrics confirmed strong agreement:
+        The experimental strain — derived from ADC output codes via the bridge equations — closely tracked the analytical prediction across the full displacement range, with near-identical linear behaviour. The error metrics confirmed strong agreement:
       </p>
 
       <div class="result-grid">
@@ -1162,9 +1162,8 @@
 
       <h3>Test Conditions</h3>
       <p>
-        The test captured <strong>two full thermal cycles</strong>, with temperature peaking at <strong>45–47°C</strong> and returning to a baseline of <strong>9–12°C</strong> — a total differential range of <strong>39.6°C</strong>. The sharp thermal spikes visible in the temperature log correspond to a deliberate heat source introduced at approximately 20 and 44 hours, followed by natural cool-down. This produced a far more demanding characterisation window than a simple overnight test.
+        The test captured <strong>two full thermal cycles</strong>, with temperature peaking at <strong>45–47°C</strong> and returning to a baseline of <strong>9–12°C</strong> — a total differential range of <strong>39.6°C</strong>. The sharp thermal spikes visible in the temperature log — peaking at 45–47°C in a matter of minutes — were not artificially induced. For most of the test, the setup was kept in shade, maintaining a stable baseline of 9–12°C. At approximately 20 and 44 hours, the setup came into direct sunlight, causing rapid solar heating before returning to shade and cooling naturally. This is a realistic and repeatable thermal event for a field-deployed instrument, making it a far more meaningful characterisation window than a controlled lab ramp — it captures exactly the kind of sudden, uncontrolled temperature excursion the system will encounter in the field.
       </p>
-
       <figure class="figure">
         <img src="../assets/Time_vs_Temperature.png" alt="Temperature vs time over 67-hour drift test">
         <figcaption>Fig. 2 — Temperature vs time over the 67-hour drift test. Two thermal cycles peak at 45–47°C with baseline at 9–12°C, giving a 39.6°C differential range.</figcaption>
