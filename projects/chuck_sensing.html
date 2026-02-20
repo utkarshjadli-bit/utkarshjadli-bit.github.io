@@ -3,1042 +3,976 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Drill Rig Chuck Direction, Rotation, and Movement Sensing | Dr. Utkarsh Jadli</title>
-
+  <title>Drill Rig Chuck Sensing System — Dr. Utkarsh Jadli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    body{
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      max-width: 980px;
-      margin: 40px auto;
-      padding: 0 18px;
-      line-height: 1.65;
-      color:#111;
-      background:#fff;
+    :root {
+      --bg: #0e0f11;
+      --bg2: #13151a;
+      --bg3: #1a1d24;
+      --border: #2a2d35;
+      --accent: #e8a040;
+      --accent2: #c47820;
+      --text: #d4d6db;
+      --text-dim: #7a7e8a;
+      --text-bright: #f0f1f3;
+      --green: #4ec98a;
+      --blue: #6ab0e0;
+      --mono: 'IBM Plex Mono', monospace;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Inter', sans-serif;
     }
-    h1{
-      font-size: 40px;
-      margin: 0 0 6px;
-      font-weight: 800;
-    }
-    .subtitle{
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
       font-size: 16px;
-      color:#444;
-      margin:0 0 18px;
-      font-weight: 500;
-    }
-    .topnav{
-      margin: 10px 0 24px;
-      font-size: 16px;
-    }
-    .topnav a{
-      color:#0b66c3;
-      text-decoration:none;
-      font-weight:600;
-    }
-    .topnav a:hover{ text-decoration: underline; }
-
-    h2{
-      margin-top: 34px;
-      border-bottom:2px solid #eee;
-      padding-bottom:10px;
-      font-size: 28px;
-      font-weight: 800;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .project{
-      padding: 16px 18px;
-      border: 1px solid #eee;
-      border-radius: 12px;
-      background: #fafafa;
-      margin-bottom: 18px;
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
     }
 
-    /* Project title: bigger, red, bold */
-    .project-title{
-      font-size: 34px;
-      font-weight: 800;
-      color: #c00000;
-      margin: 12px 0 12px;
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      background: rgba(19, 21, 26, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .back-link {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .back-link::before { content: '←'; font-size: 1rem; }
+    .header-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid var(--accent2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
     }
 
-    /* Question blocks */
-    .q-title{
-      font-size: 18px;
-      font-weight: 800;
-      color: #0b66c3;
+    /* HERO */
+    .hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 7rem 2rem 3rem;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.05s forwards;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      color: var(--text-bright);
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+    }
+    .hero-role {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-role span {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--green);
+      background: rgba(78,201,138,0.08);
+      border: 1px solid rgba(78,201,138,0.2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      letter-spacing: 0.03em;
+    }
+    .hero-intro {
+      font-size: 1.05rem;
+      color: var(--text);
+      max-width: 680px;
+      line-height: 1.8;
+    }
+
+    /* SPECS BAR */
+    .specs-bar {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.25s forwards;
+    }
+    .specs-bar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+    .spec-item {
+      padding: 1.4rem 1rem;
+      border-right: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+    }
+    .spec-item:last-child { border-right: none; }
+    .spec-item:nth-child(1) { animation-delay: 0.1s; }
+    .spec-item:nth-child(2) { animation-delay: 0.15s; }
+    .spec-item:nth-child(3) { animation-delay: 0.2s; }
+    .spec-item:nth-child(4) { animation-delay: 0.25s; }
+    .spec-item:nth-child(5) { animation-delay: 0.3s; }
+    .spec-item:nth-child(6) { animation-delay: 0.35s; }
+    .spec-value {
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .spec-label {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* CONTENT */
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+    .section {
+      padding: 3.5rem 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .section:last-of-type { border-bottom: none; }
+    .section:nth-of-type(1)  { animation-delay: 0.2s; }
+    .section:nth-of-type(2)  { animation-delay: 0.25s; }
+    .section:nth-of-type(3)  { animation-delay: 0.3s; }
+    .section:nth-of-type(4)  { animation-delay: 0.35s; }
+    .section:nth-of-type(5)  { animation-delay: 0.4s; }
+    .section:nth-of-type(6)  { animation-delay: 0.45s; }
+    .section:nth-of-type(7)  { animation-delay: 0.5s; }
+    .section:nth-of-type(8)  { animation-delay: 0.55s; }
+    .section:nth-of-type(9)  { animation-delay: 0.6s; }
+    .section:nth-of-type(10) { animation-delay: 0.65s; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 60px;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--text-bright);
+      margin-bottom: 1.4rem;
+      line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--text-bright);
+      margin: 2rem 0 0.8rem;
+    }
+    p {
+      color: var(--text);
+      margin-bottom: 1rem;
+      max-width: 720px;
+    }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--text-bright); font-weight: 500; }
+    code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      color: var(--accent);
+      background: rgba(232,160,64,0.08);
+      padding: 0.1em 0.4em;
+      border-radius: 2px;
+    }
+
+    /* FIGURES */
+    .figure { margin: 2rem 0; }
+    .figure img {
+      width: 100%;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .figure figcaption {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      color: var(--text);
+      margin-top: 0.75rem;
+      line-height: 1.6;
+      padding: 0.6rem 0.8rem;
+      background: var(--bg3);
+      border-left: 2px solid var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* FIGURE GRID — for oscilloscope waveform pairs */
+    .fig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .fig-grid .figure { margin: 0; }
+    .fig-grid-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 0.4rem;
+    }
+
+    /* RESULT GRID */
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .result-item { background: var(--bg2); padding: 1.2rem 1.4rem; }
+    .result-item .rv {
+      font-family: var(--mono);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .result-item .rl {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* CALLOUT — for the key insight */
+    .callout {
+      background: linear-gradient(135deg, rgba(232,160,64,0.07), rgba(232,160,64,0.02));
+      border: 1px solid rgba(232,160,64,0.3);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 4px 4px 0;
+      padding: 1.4rem 1.6rem;
+      margin: 1.8rem 0;
+    }
+    .callout-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .callout p {
       margin: 0;
-    }
-    .qbox{
-      background:#fff;
-      border:1px solid #e8e8e8;
-      border-radius:12px;
-      padding:14px 16px;
-      margin:14px 0;
-    }
-    .q-sep{
-      height:1px;
-      background:#eeeeee;
-      margin:10px 0 12px;
+      color: var(--text-bright);
+      font-size: 0.97rem;
+      max-width: none;
     }
 
-    .kpi{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:10px;
+    /* CHALLENGE GRID */
+    .challenge-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 1.5rem;
     }
-    .kpi span{
-      display:inline-block;
-      border:1px solid #e6e6e6;
-      background:#fff;
-      border-radius:999px;
-      padding:6px 10px;
-      font-size:13px;
+    .challenge-item {
+      background: var(--bg2);
+      padding: 1.3rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      transition: background 0.2s;
     }
-
-    .figure{
-      margin:12px 0 0;
-      padding:10px;
-      background:#fff;
-      border:1px solid #eee;
-      border-radius:12px;
+    .challenge-item:hover { background: var(--bg3); }
+    .ch-problem { }
+    .ch-solution { }
+    .ch-tag {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
     }
-    
-    .figure img{
-        width:100%;
-        height:auto;
-        border-radius:10px;
-        display:block;
-      }
-      
-      .img-small{
-        max-width: 400px;
-        margin: 0 auto;
-      }
-      
-      .img-medium{
-        max-width: 600px;
-        margin: 0 auto;
-      }
-      
-      .img-large{
-        max-width: 850px;
-        margin: 0 auto;
-      }
-    
-    .caption{
-      font-size:13px;
-      color:#555;
-      margin-top:8px;
+    .ch-tag.problem { color: #e07070; }
+    .ch-tag.solution { color: var(--green); }
+    .ch-text {
+      font-size: 0.87rem;
+      color: var(--text);
+      line-height: 1.6;
     }
 
-    .muted{ color:#555; }
+    /* TABLE */
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.8rem; }
+    thead tr { background: var(--bg3); border-bottom: 2px solid var(--accent2); }
+    th { padding: 0.7rem 1rem; text-align: left; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 400; }
+    td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--text); }
+    tr.cw td { background: rgba(232,160,64,0.04); }
+    tr.ccw td { background: rgba(106,176,224,0.04); }
+    .dir-cw { color: var(--accent); font-weight: 600; }
+    .dir-ccw { color: var(--blue); font-weight: 600; }
 
-    /* Lists inside qboxes */
-    .qbox ul{ margin: 8px 0 0 20px; }
-    .qbox li{ margin: 8px 0; }
-
-    .subheading-list{
-      margin: 12px 0 8px 22px;
-      padding: 0;
+    /* OUTCOME BOX */
+    .outcome-box {
+      background: linear-gradient(135deg, rgba(232,160,64,0.08), rgba(232,160,64,0.03));
+      border: 1px solid rgba(232,160,64,0.25);
+      border-radius: 4px;
+      padding: 2rem;
+      margin-top: 1.5rem;
     }
-    .subheading-list li{
-      font-weight: 400;
-      color: #222;
-      margin: 10px 0 10px;
+    .outcome-box p { font-size: 1rem; color: var(--text); margin: 0; max-width: none; }
+
+    /* EQUATION */
+    .equation-box {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 3px;
+      padding: 1.2rem 1.6rem;
+      margin: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
     }
-    .subheading-list li i,
-    .subheading-list li b{
-      font-weight: 700;
-      font-style: normal;
+    .eq-main { font-family: var(--mono); font-size: 1.05rem; color: var(--accent); }
+    .eq-terms { display: flex; flex-wrap: wrap; gap: 0.4rem 2rem; }
+    .eq-terms span { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
+
+    /* PARAM CARDS */
+    .param-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+    .param-card { background: var(--bg2); padding: 1.5rem; transition: background 0.2s; }
+    .param-card:hover { background: var(--bg3); }
+    .param-card .pc-tag {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .param-card h4 { font-size: 0.95rem; font-weight: 500; color: var(--text-bright); margin-bottom: 0.5rem; }
+    .param-card p { font-size: 0.85rem; color: var(--text-dim); margin: 0; max-width: none; }
+
+    @media (max-width: 640px) {
+      .fig-grid { grid-template-columns: 1fr; }
+      .challenge-item { grid-template-columns: 1fr; }
+      .specs-bar-inner { grid-template-columns: repeat(2, 1fr); }
     }
 
-    .hr{ height:1px; background:#eee; margin:18px 0; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
-    code{ background:#f3f3f3; padding:2px 6px; border-radius:6px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
   </style>
 </head>
-
 <body>
 
-  <div class="topnav">
-    ← <a href="../index.html">Back to Home</a>
+  <header>
+    <div class="header-inner">
+      <a href="../index.html" class="back-link">Back to Portfolio</a>
+      <span class="header-tag">Industrial Sensing</span>
+    </div>
+  </header>
+
+  <div class="hero">
+    <p class="hero-eyebrow">Project 03 — Industrial Sensing</p>
+    <h1>Drill Rig Chuck Sensing System</h1>
+    <div class="hero-role">
+      <span>PCB Design</span>
+      <span>Sensor Integration</span>
+      <span>Embedded Firmware</span>
+      <span>Validation Testing</span>
+      <span>Intrinsic Safety</span>
+    </div>
+    <p class="hero-intro">
+      An intrinsically safe sensing module for drill rig chuck monitoring — measuring rotation speed, rotation direction, and linear feed/stroke travel in real time. The system uses a dual Hall-effect latch sensor for RPM and CW/CCW direction detection, and a Time-of-Flight LiDAR sensor for stroke measurement, with RS485 Modbus-ready communication for industrial deployment. A key engineering contribution was developing a novel magnet geometry that enables reliable direction detection from just 4 discrete magnets — eliminating the need for a full 50-magnet alternating-pole ring.
+    </p>
   </div>
 
-  <div class="project">
-    <div class="project-title">Drill Rig Chuck Direction, Rotation, and Movement Sensing</div>
-    <p><b>Role:</b> Electronics Design + Firmware + Validation Testing</p>
-
-    <!-- ===================== -->
-    <!-- Why / Goal / Constraints -->
-    <!-- ===================== -->
-    <div class="qbox">
-      <div class="q-title">Why does this project matter?</div>
-      <div class="q-sep"></div>
-
-    <p>
-        Drill rigs rely on correct chuck rotation and controlled feed to avoid equipment damage and protect the
-        operator—especially during rod make-up and break-out. If the chuck rotates in the wrong direction, it can jam,
-        cross-thread, or snap the drill rod, potentially damaging the rig and creating a safety hazard for the crew.
-    </p>
-    
-    <p>
-      At the same time, operators often track drilling progress using a manual logsheet (rod count and depth). This is
-      time-consuming and error-prone. By sensing chuck rotation speed (RPM), rotation direction (CW/CCW), and linear
-      feed/stroke, the system enables:
-    </p>
-  
-    <ul>
-      <li>safer verification of correct make/break rotation behaviour,</li>
-      <li>improved operational control (RPM selection for changing rock structures and directional drilling),</li>
-      <li>automated estimation of rod count and drilling depth from measured stroke.</li>
-    </ul>
-    
-      <p>
-        This makes the sensing module valuable for both safety-critical operation and productivity/automation on the rig.
-      </p>
+  <div class="specs-bar">
+    <div class="specs-bar-inner">
+      <div class="spec-item">
+        <span class="spec-value">10–700</span>
+        <span class="spec-label">RPM Range</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">~10%</span>
+        <span class="spec-label">Fwd Duty Cycle</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">~94%</span>
+        <span class="spec-label">Rev Duty Cycle</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">4</span>
+        <span class="spec-label">Magnets Required</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">50 Hz</span>
+        <span class="spec-label">Stroke Sample Rate</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">RS485</span>
+        <span class="spec-label">Comms (Modbus RTU)</span>
+      </div>
     </div>
+  </div>
 
-    <div class="qbox">
-      <div class="q-title">What was the goal?</div>
-      <div class="q-sep"></div>
-    
-      <p>
-        The goal was to develop an intrinsically safe, field-deployable sensing system capable of reliably measuring
-        drill rig chuck rotation direction, rotation speed (RPM), and linear feed/stroke movement in real time.
-      </p>
-    
-      <p>
-        The system was intended to improve drilling safety during rod make/break operations and enable automated estimation
-        of rod count and drilling depth, with sensor data designed for transmission over an RS485 industrial communication interface.
-      </p>
-    </div>
+  <div class="content">
 
-    <div class="qbox">
-      <div class="q-title">What constraints mattered most?</div>
-      <div class="q-sep"></div>
-    
-      <ul>
-        <li>
-          <b>Harsh drill rig conditions:</b> the system needed to remain reliable under vibration, dust, mechanical shock,
-          and industrial contamination.
-        </li>
-    
-        <li>
-          <b>Wide operating speed range:</b> chuck rotation had to be detected accurately across typical drilling speeds of
-          10–700 RPM, including start/stop and reversal events.
-        </li>
-    
-        <li>
-          <b>Reliable direction detection:</b> incorrect direction reporting during rod make/break could lead to rod damage
-          and safety risks.
-        </li>
-    
-        <li>
-          <b>High-resolution linear feed sensing:</b> stroke measurement needed sufficient sampling rate and stability to
-          enable rod counting and depth estimation.
-        </li>
-    
-        <li>
-          <b>Intrinsic Safety compliance (IS):</b> the sensing electronics had to operate under strict energy-limiting
-          constraints suitable for hazardous environments.
-        </li>
-    
-        <li>
-          <b>Robust industrial communication:</b> telemetry had to be suitable for long cable runs and noisy environments,
-          leading to an RS485-based architecture (Modbus-ready).
-        </li>
-      </ul>
-    </div>
-
-    <div class="qbox">
-      <div class="q-title">What did I design?</div>
-      <div class="q-sep"></div>
-    
+    <!-- 01 APPLICATION -->
+    <div class="section">
+      <p class="section-label">01 — Application</p>
+      <h2>Why Chuck Sensing Matters on a Drill Rig</h2>
       <p>
-        An end-to-end drill rig chuck sensing module capable of measuring <b>rotation speed (RPM)</b>, 
-        <b>rotation direction (CW/CCW)</b>, and <b>linear feed/stroke travel</b>. The system combined a Hall-effect 
-        dual-latch rotation sensor with a ToF-based stroke sensor, integrated into an intrinsically safe 
-        STM32-based electronics platform with RS485 (Modbus-ready) communication for industrial deployment.
+        The chuck is the rotating mechanism at the heart of a drill rig — it grips and drives the drill string into the ground. During normal drilling, the chuck rotates in one direction at a controlled speed. But during rod make-up and break-out operations — adding or removing drill rods as the hole deepens — the rotation direction must reverse. Getting this wrong has real consequences: a chuck rotating in the wrong direction during rod make-up can jam, cross-thread, or snap the drill rod, potentially damaging the rig and creating a safety hazard for the crew nearby.
       </p>
-    
-      <div class="kpi">
-        <span><b>Rotation sensing:</b> Hall-effect dual latch</span>
-        <span><b>Direction:</b> CW / CCW detection</span>
-        <span><b>Speed range:</b> 10–700 RPM</span>
-        <span><b>Stroke sensing:</b> LIDAR module</span>
-        <span><b>Stroke sampling:</b> 50 samples/sec</span>
-        <span><b>MCU:</b> STM32 </span>
-        <span><b>Comms:</b> RS485 (Modbus RTU ready)</span>
-        <span><b>Design:</b> Intrinsically Safe architecture</span>
+      <p>
+        Beyond safety, drill depth and rod count are typically tracked manually by operators on a paper logsheet — recording each rod insertion and estimated depth by hand. This is slow, error-prone, and adds cognitive load to an already demanding job. A sensing system that measures chuck RPM, direction, and linear feed stroke in real time enables two things simultaneously: <strong>safety verification</strong> of correct make/break rotation behaviour, and <strong>automated depth tracking</strong> that replaces the manual logsheet.
+      </p>
+
+      <div class="param-grid">
+        <div class="param-card">
+          <p class="pc-tag">Safety</p>
+          <h4>Direction Verification</h4>
+          <p>Real-time CW/CCW detection confirms correct rotation during rod make/break, preventing cross-threading and rod damage.</p>
+        </div>
+        <div class="param-card">
+          <p class="pc-tag">Operations</p>
+          <h4>RPM Monitoring</h4>
+          <p>Live rotation speed enables better operational control — selecting appropriate RPM for different rock structures and directional drilling conditions.</p>
+        </div>
+        <div class="param-card">
+          <p class="pc-tag">Automation</p>
+          <h4>Depth Estimation</h4>
+          <p>Stroke sensing accumulates linear feed travel, enabling automated rod count and drilling depth estimation — replacing manual logsheets.</p>
+        </div>
       </div>
     </div>
 
-    <div class="qbox">
-      <div class="q-title">How did the chuck rotation speed and direction sensing work?</div>
-      <div class="q-sep"></div>
-    
-      <ul class="subheading-list">
-    
-        <li>
-          <b>Preliminary Thinking</b><br>
-          Initially, the design approach considered using two Hall-effect switches to detect chuck rotation. 
-          If two sensors proved insufficient for reliable direction sensing, the fallback plan was to implement 
-          a four-sensor quadrature-style arrangement for robust CW/CCW detection.
-          <br><br>
-          For rapid prototyping, a commercial Hall-effect sensor module (XC-4434) was purchased and interfaced 
-          with an Arduino MKR Zero. Early testing confirmed that rotation speed measurement was straightforward: 
-          using a single magnet mounted on the rotating target, RPM could be computed accurately by measuring the 
-          pulse period. The setup was later validated on a lathe machine, successfully detecting chuck speeds across 
-          a wide range of approximately <b>35 RPM to 2000 RPM</b>. 
-          However, determining rotation direction proved more challenging. A configuration using two sensor modules 
-          and one magnet was tested, but it did not produce a consistent or repeatable phase relationship. As a result, 
-          there was no reliable signature to detect reversal, making direction classification unstable.
-          <br><br>
-          To address this, a dedicated low-voltage dual Hall-effect latch sensor was selected, capable of supporting 
-          both speed and direction detection. The device integrates an internal voltage regulator, two Hall sensing 
-          elements with offset cancellation, and dual open-drain output drivers in a single package—providing a compact 
-          and robust solution suitable for industrial field deployment.
-        </li>
-    
-
-        <li>
-          <b>Challenges in direction detection using a Hall-effect dual latch sensor</b><br>
-        
-          Rotation speed measurement using the dual Hall-effect dual latch sensor was relatively straightforward and similar to
-          the earlier XC-4434 module. RPM could be calculated reliably by measuring the pulse period generated on the open-drain
-          <b>SP (speed)</b> output.<br><br>
-        
-          However, rotation direction detection was significantly more complex, as outlined in the sensor datasheet. The device
-          determines direction based on a specific magnetic field sequence generated by a magnetic encoder disk with alternating
-          <b>North–South poles</b>. This alternating pole arrangement produces a defined switching pattern that allows the sensor to
-          drive the open-drain <b>DIR</b> output high or low depending on rotation direction.<br><br>
-        
-          In the drill rig application, the chuck rotation assembly used a large-diameter disk (Figure 1) designed to house
-          discrete magnets. Replicating the datasheet-recommended alternating N–S magnetic ring on this disk would require
-          approximately <b>50 magnets</b> to form a full alternating pole pattern (Figure 2).<br><br>
-        
-          <div class="figure img-small">
-            <img src="../assets/Magnet_Housing_Disk.png" alt=" Chuck magnet housing disk (large diameter)">
-            <div class="caption">Figure 1: Chuck rotation magnet housing disk used for experiments.</div>
-          </div>
-        
-          <div class="figure img-small">
-            <img src="../assets/Altenating_N_S_pole.png" alt=" Alternating N-S pole arrangement required for direction detection">
-            <div class="caption">Figure 2: Datasheet-style alternating N–S pole arrangement required for DIR output sequencing.</div>
-          </div>
-        
-          This approach was not considered viable due to:
-          <ul>
-            <li>high component count and assembly complexity,</li>
-            <li>increased mechanical integration effort,</li>
-            <li>poor cost-effectiveness for field deployment.</li>
-          </ul>
-        
-          Additionally, experimental testing on the lathe revealed that the DIR output behaviour was highly sensitive to
-          sensor-to-magnet spacing and alignment, making it difficult to obtain a stable and repeatable direction signal using a
-          conventional arrangement.<br><br>
-        
-          As a result, an alternative solution was required. The key insight was that if the magnet offset and air-gap distance
-          could be optimized, the sensor could be driven into producing a consistent switching sequence—allowing reliable
-          direction detection without requiring a full alternating-pole magnetic ring.
-        </li>
-        
-        <li>
-          <b>Alternate solution for direction detection</b><br>
-        
-          To overcome the limitations of requiring a full alternating N–S magnetic ring, an alternative magnet arrangement
-          was developed on the chuck magnet housing disk, as shown in Figure 3. The goal was to generate a repeatable
-          switching sequence that changes predictably when the chuck rotation reverses direction.<br><br>
-        
-          Through multiple trial-and-error experiments on the lathe machine, a critical sensor placement window was
-          identified. A sensor-to-magnet offset of approximately <b>22–24 mm (Y)</b> and <b>1–3 mm (X)</b> (Figure 4)
-          consistently produced the required switching behaviour on the DIR output.
-        
-          <div class="figure img-small">
-            <img src="../assets/Block_diagram.png" alt=" Proposed alternate magnet arrangement on chuck disk">
-            <div class="caption">Figure 3: Proposed alternate magnet arrangement on the chuck magnet housing disk.</div>
-          </div>
-        
-          <div class="figure img-medium">
-            <img src="../assets/x_y_pos.png" alt=" Sensor offset distance X and Y used for direction detection">
-            <div class="caption">Figure 4: Sensor placement window (X and Y offset) identified through lathe testing.</div>
-          </div>
-          <br><br>
-
-          Using this optimized geometry, distinct pulse patterns were observed for clockwise and anticlockwise rotation.
-          The measured sequences are summarized in <b>Table 1</b> and illustrated in <b>Figure 5</b>.
-          
-          <div class="figure">
-            <div class="caption"><b>Table 1:</b> Specific sequence for direction detection</div>
-          
-            <table style="width:100%; border-collapse:collapse; margin-top:10px; font-size:15px;">
-              <thead>
-                <tr style="border-top:2px solid #111; border-bottom:2px solid #111;">
-                  <th style="text-align:left; padding:8px;">Direction</th>
-                  <th style="text-align:center; padding:8px;">Step</th>
-                  <th style="text-align:center; padding:8px;">H1</th>
-                  <th style="text-align:center; padding:8px;">Output State</th>
-                  <th style="text-align:center; padding:8px;">H2</th>
-                  <th style="text-align:center; padding:8px;">Output State</th>
-                </tr>
-              </thead>
-          
-              <tbody>
-                <!-- Anticlockwise -->
-                <tr>
-                  <td rowspan="6" style="text-align:left; padding:8px; font-weight:600;">Anticlockwise</td>
-                  <td style="text-align:center; padding:8px;"><i>St(t)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                </tr>
-          
-                <tr>
-                  <td style="text-align:center; padding:8px;"><i>St(t+1)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
-                  <td style="text-align:center; padding:8px;">0</td>
-                </tr>
-          
-                <tr>
-                  <td style="text-align:center; padding:8px;"><i>St(t+2)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
-                  <td style="text-align:center; padding:8px;">0</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
-                  <td style="text-align:center; padding:8px;">0</td>
-                </tr>
-          
-                <tr>
-                  <td style="text-align:center; padding:8px;"><i>St(t+3)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                </tr>
-          
-                <tr>
-                  <td style="text-align:center; padding:8px;"><i>St(t+4)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
-                  <td style="text-align:center; padding:8px;">0</td>
-                </tr>
-          
-                <tr style="border-bottom:2px solid #111;">
-                  <td style="text-align:center; padding:8px;"><i>St(t+5)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
-                  <td style="text-align:center; padding:8px;">0</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
-                  <td style="text-align:center; padding:8px;">0</td>
-                </tr>
-          
-                <!-- Clockwise -->
-                <tr>
-                  <td rowspan="6" style="text-align:left; padding:8px; font-weight:600;">Clockwise</td>
-                  <td style="text-align:center; padding:8px;"><i>St(t)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
-                  <td style="text-align:center; padding:8px;">0</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
-                  <td style="text-align:center; padding:8px;">0</td>
-                </tr>
-          
-                <tr>
-                  <td style="text-align:center; padding:8px;"><i>St(t+1)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                </tr>
-          
-                <tr>
-                  <td style="text-align:center; padding:8px;"><i>St(t+2)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                </tr>
-          
-                <tr>
-                  <td style="text-align:center; padding:8px;"><i>St(t+3)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
-                  <td style="text-align:center; padding:8px;">0</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">S</td>
-                  <td style="text-align:center; padding:8px;">0</td>
-                </tr>
-          
-                <tr>
-                  <td style="text-align:center; padding:8px;"><i>St(t+4)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                </tr>
-          
-                <tr style="border-bottom:2px solid #111;">
-                  <td style="text-align:center; padding:8px;"><i>St(t+5)</i></td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                  <td style="text-align:center; padding:8px; color:#c00000; font-weight:700;">N</td>
-                  <td style="text-align:center; padding:8px;">1</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          
-          <div class="figure img-medium">
-            <img src="../assets/Direction_working_principle.png" alt=" Pulse sequence and duty cycle difference for CW vs CCW rotation">
-            <div class="caption">Figure 5: DIR pulse sequence showing duty-cycle difference for clockwise vs anticlockwise rotation.</div>
-          </div>
-          
-          A key outcome of this approach was that the pulse duty cycle became direction-dependent. Specifically, the pulse duty
-          cycle during <b>anticlockwise</b> rotation was significantly smaller than during <b>clockwise</b> rotation, creating a clear and
-          repeatable signature for direction classification. This duty-cycle difference provided a robust method to determine:
-          <ul>
-            <li><b>Direction (CW vs CCW)</b> from duty-cycle thresholding</li>
-            <li><b>Speed (RPM)</b> from pulse period measurement</li>
-          </ul>
-          
-          An additional advantage of this configuration was that both speed and direction information could be extracted using only
-          the open-drain <b>DIR</b> output, eliminating the need to use a second output pin. This reduced wiring complexity and enabled
-          a simpler interface to the microcontroller—requiring only a single digital input line to determine both RPM and direction state.
-        </li>
-
-        <li>
-          <b>Firmware challenges and solutions</b><br>
-        
-          <ul class="subheading-list">
-            <li>
-              <i><b>Challenge:</b></i> RPM must be accurate across a wide speed range (very slow to very fast).<br>
-              At low RPM, pulses are widely spaced, which reduces update rate and makes the speed estimate appear sluggish.
-              At high RPM, pulse periods become very short, increasing susceptibility to timing jitter and interrupt overhead.<br>
-              <i><b>Solution:</b></i> Implemented an interrupt-driven pulse period measurement approach using edge-to-edge timing.
-              To improve stability, an adaptive averaging strategy was applied, where multiple pulse periods are averaged at higher
-              speeds (for noise reduction), while fewer pulses are averaged at lower speeds (for responsiveness). A zero-speed timeout
-              mechanism was also implemented to ensure the RPM output reliably drops to zero during stall or disengagement events.
-            </li>
-        
-            <li>
-              <i><b>Challenge:</b></i> Noise / false edges in a harsh industrial environment.<br>
-              Electrical noise, long cable runs, mechanical vibration, and EMI from drill rig equipment can introduce false transitions,
-              leading to incorrect RPM or unstable direction state detection.<br>
-              <i><b>Solution:</b></i> Added edge qualification logic to reject unrealistically short pulse periods, combined with temporal
-              filtering (moving average). Direction classification was implemented as a state-based decision process, requiring a consistent
-              direction signature over multiple cycles before switching state, preventing flickering due to noise.
-            </li>
-        
-            <li>
-              <i><b>Challenge:</b></i> Direction detection must be reliable during start/stop and reversals.<br>
-              During reversals and transient operation, pulse timing characteristics can become irregular, making direction classification
-              unreliable if based on a single pulse or edge.<br>
-              <i><b>Solution:</b></i> Direction was determined using a robust duty-cycle signature derived from multiple pulse cycles rather
-              than instantaneous edge timing. Hysteresis and debouncing were applied by enforcing duty-cycle threshold margins and confirming
-              direction changes over several consecutive cycles before updating the reported direction state.
-            </li>
-        
-            <li>
-              <i><b>Challenge:</b></i> “No pulse” and stall detection must not lag too much.<br>
-              If the stall detection threshold is too long, the system continues reporting the last valid RPM after rotation stops.
-              If it is too short, very low RPM operation may be incorrectly classified as zero.<br>
-              <i><b>Solution:</b></i> Implemented a configurable timeout window tied to the minimum expected rotational speed, along with
-              debounced zero detection to prevent oscillation between low-RPM readings and zero near the threshold.
-            </li>
-          </ul>
-      </ul>
-    </div>
-
-    <div class="qbox">
-      <div class="q-title">How did the linear stroke measurement work?</div>
-      <div class="q-sep"></div>
+    <!-- 02 ROTATION SENSING -->
+    <div class="section">
+      <p class="section-label">02 — Rotation Sensing</p>
+      <h2>From Two Hall Switches to a Dual-Latch Sensor</h2>
       <p>
-        Linear feed/stroke measurement was implemented using a Time-of-Flight (ToF) ranging sensor, which provides absolute
-        distance measurement by emitting an infrared laser pulse and measuring the return time from the target surface.
-        This approach enabled non-contact displacement sensing, making it suitable for harsh drill rig environments where
-        Mechanical encoders or contact-based sensors are prone to wear and contamination.
+        The initial approach to rotation sensing used a commercial Hall-effect switch module (XC-4434) with a single magnet mounted on the rotating target. Early testing on an Arduino MKR Zero confirmed that RPM measurement was straightforward — pulse period from a single magnet gives a clean speed signal, validated on a lathe across a range of approximately <strong>35 to 2000 RPM</strong>. Direction sensing, however, proved harder.
       </p>
-      <ul class="subheading-list">
-        <li>
-          <b>Stroke position measurement</b><br><br>
-          The ToF was mounted to continuously measure the distance between the sensor and a fixed reference surface on the moving
-          chuck assembly. As the chuck advanced or retracted, the measured distance changed proportionally, providing a direct
-          measurement of stroke position in millimetres.
-        </li>
-    
-        <li>
-          <b>Stroke delta and motion tracking</b><br><br>
-          To track movement, firmware computed the stroke delta, defined as the change in measured position between consecutive samples:
-          <br><br>
-    
-          <div style="text-align:center; font-weight:700; font-size:18px;">
-            Δx = x(n) − x(n−1)
-          </div>
-    
-          <br>
-          This enabled detection of both the direction of travel (forward vs backward stroke) and the magnitude of movement over time.
-          By accumulating stroke delta over multiple samples, the firmware derived total feed displacement and estimated the net travel
-          distance during drilling.
-        </li>
-    
-        <li>
-          <b>Rod counting and depth estimation</b><br><br>
-          By continuously monitoring stroke displacement, the system could detect full feed cycles and estimate the total drilling progress.
-          This enabled automated calculation of:
-          <ul>
-            <li><b>Rod count</b> (based on accumulated feed distance per rod insertion)</li>
-            <li><b>Drilling depth</b> (based on total measured feed travel)</li>
-          </ul>
-          This stroke sensing method provided a robust and scalable foundation for automated drill depth tracking and operator logsheet
-          replacement, without requiring direct mechanical coupling to the chuck mechanism.
-        </li>
-    
-        <li>
-          <b>Firmware Challenges and Solutions</b><br><br>
-    
-         <ul class="subheading-list">
-           <li>
-              <i><b>Challenge:</b></i> Noisy distance readings in reflective and dusty field conditions<br>
-              Drill rig environments introduce dust, vibration, surface reflectivity variation, and intermittent obstructions, resulting in jitter and occasional
-              outlier readings from the ToF sensor.<br>
-              <i><b>Solution:</b></i> Implemented outlier rejection using range validity flags and threshold-based clamping of unrealistic step changes.
-              Additional digital filtering (moving average) was applied to stabilise the displacement signal while maintaining true motion response.
-            </li>
-            <li>
-              <i><b>Challenge:</b></i> Converting raw distance measurements into meaningful stroke/feed events<br>
-              The ToF sensor provides absolute distance readings, but the system required extraction of higher-level drilling metrics such as stroke length,
-              stroke count, and net travel for rod counting and depth estimation.<br>
-              <i><b>Solution:</b></i> Implemented a state-machine-based motion tracking algorithm that classified chuck movement as advancing or retracting,
-              detected stroke endpoints using thresholds with hysteresis, and accumulated displacement increments to compute per-stroke travel and total feed distance.                                                
-            </li>
-            <li>
-              <i><b>Challenge:</b></i> Preventing false stroke detection due to vibration and micro-movements<br>
-              Mechanical vibration and small oscillations can appear as motion if the signal is differentiated directly, leading to false stroke transitions and accumulated depth error.<br>
-              <i><b>Solution:</b></i> Introduced a configurable deadband (minimum movement threshold) and applied persistence logic, requiring motion to exceed
-              the threshold for a defined number of samples before a stroke transition was registered.
-             </li>
-             <li>
-              <i><b>Challenge:</b></i> Synchronizing linear movement tracking with chuck rotation activity<br>
-              Stroke movement data must represent real drilling activity rather than idle fluctuations, particularly when the chuck is stationary or disengaged.<br>
-              <i><b>Solution:</b></i> Used the chuck RPM and direction state as a gating condition, enabling stroke accumulation only when the system confirmed
-              active drilling or rod make/break operations. This improved reliability and reduced false depth accumulation during idle periods.
-             </li>
-             <li>
-              <i><b>Challenge:</b></i> Fault detection and sensor health monitoring<br>
-              ToF sensors may return invalid readings when blocked, out of range, or affected by a poor target return signal. Without fault handling, the system could silently
-              accumulate incorrect depth or rod count.<br>
-              <i><b>Solution:</b></i> Implemented sensor health monitoring checks, including consecutive invalid sample counters and range-status verification.
-              Fault states were designed to be exposed over the RS485 telemetry interface, allowing the controller/operator to distinguish valid measurements from sensor error conditions.
-             </li>
-         </ul>
-        </li>
-      </ul>
+      <p>
+        A two-sensor, one-magnet configuration was tested to extract directional information from phase offset between the two outputs. It did not produce a consistent or repeatable phase relationship — there was no reliable signature to detect reversal, making direction classification unstable. A four-sensor quadrature arrangement was considered as a fallback, but it increased hardware complexity without solving the fundamental problem.
+      </p>
+      <p>
+        The solution was a dedicated <strong>dual Hall-effect latch sensor</strong> — a single package integrating two Hall sensing elements with offset cancellation, an internal voltage regulator, and dual open-drain outputs: <code>SP</code> for speed and <code>DIR</code> for direction. The device is designed to determine direction from a specific magnetic field sequence generated by an alternating North–South pole encoder ring. This is where the real engineering challenge began.
+      </p>
     </div>
-    
-    <div class="qbox">
-      <div class="q-title">How was chuck rotation speed and direction sensing validated experimentally?</div>
-      <div class="q-sep"></div>
-    
-      <ul>
-        <li>
-          <b>Verification of Clockwise and Anticlockwise Pattern (Direction Signature)</b><br><br>
-    
-          After implementing the alternate magnet arrangement and identifying the optimal sensor placement distance
-          (Y = 22–24 mm and X = 1–3 mm), the first experimental step was to verify whether the Hall-effect dual latch
-          sensor produces a repeatable and unique sequence for both clockwise and anticlockwise rotation.
-          <br><br>
-    
-          The measured output sequences obtained from oscilloscope testing are shown below.
-          <br><br>
-    
-          <div class="figure img-medium">
-            <img src="../assets/56 RPM Duty 10 percent.png" alt="Forward steering at 56 RPM waveform">
-            <div class="caption">Figure 6: Forward steering at 56 RPM</div>
-          </div>
-    
-          <div class="figure img-medium">
-            <img src="../assets/56 RPM Duty 94 percent.png" alt="Reverse steering at 56 RPM waveform">
-            <div class="caption">Figure 7: Reverse steering at 56 RPM</div>
-          </div>
-    
-          <div class="figure img-medium">
-            <img src="../assets/136.2 RPM Duty 10 percent.png" alt="Forward steering at 136.2 RPM waveform">
-            <div class="caption">Figure 8: Forward steering at 136.2 RPM</div>
-          </div>
-    
-          <div class="figure img-medium">
-            <img src="../assets/136.2 RPM Duty 94 percent.png" alt="Reverse steering at 136.2 RPM waveform">
-            <div class="caption">Figure 9: Reverse steering at 136.2 RPM</div>
-          </div>
-    
-          <div class="figure img-medium">
-            <img src="../assets/208 RPM Duty 10 percent.png" alt="Forward steering at 208 RPM waveform">
-            <div class="caption">Figure 10: Forward steering at 208 RPM</div>
-          </div>
-    
-          <div class="figure img-medium">
-            <img src="../assets/208 RPM Duty 94 percent.png" alt="Reverse steering at 208 RPM waveform">
-            <div class="caption">Figure 11: Reverse steering at 208 RPM</div>
-          </div>
-    
-          <div class="figure img-medium">
-            <img src="../assets/480 RPM Duty 10 percent.png" alt="Forward steering at 480 RPM waveform">
-            <div class="caption">Figure 12: Forward steering at 480 RPM</div>
-          </div>
-    
-          <div class="figure img-medium">
-            <img src="../assets/480 RPM Duty 94 percent.png" alt="Reverse steering at 480 RPM waveform">
-            <div class="caption">Figure 13: Reverse steering at 480 RPM</div>
-          </div>
-    
-          From observed waveform behaviour, it was confirmed that the sensor produces a distinct pattern during reversal.
-          Most importantly, the waveform duty cycle differed significantly between the two directions, enabling direction
-          detection using only the DIR output.
-          <br><br>
-    
-          As noted in the experiments, the anticlockwise duty cycle is much smaller than the clockwise duty cycle,
-          meaning direction can be extracted using a simple duty-cycle threshold logic.
-          <br><br>
-    
-          The output waveforms captured at various speeds on the oscilloscope showed:
-          <ul>
-            <li><b>Forward steering duty cycle ≈ 10%</b></li>
-            <li><b>Reverse steering duty cycle ≈ 94%</b></li>
-          </ul>
-          <br>
-        </li>
 
-        <li>
-          <b>Firmware Validation using Arduino Zero (Bench + Lathe Comparison)</b><br><br>
-        
-          After verifying the waveform characteristics using the oscilloscope, the next step was to validate the complete
-          firmware-based RPM measurement algorithm.
-          <br><br>
-        
-          For bench testing and firmware development, an <b>Arduino Zero</b> was used as the microcontroller platform.
-          The firmware measured RPM by capturing the time period between pulses and converting it into frequency and RPM.
-          <br><br>
-        
-          The Arduino-calculated RPM values were then compared against the lathe machine speed readings and tachometer
-          reference measurements. The corresponding measurement images captured during these validation tests are shown below:
-        
-          <div class="figure img-small">
+    <!-- 03 DIRECTION DETECTION INNOVATION -->
+    <div class="section">
+      <p class="section-label">03 — Direction Detection</p>
+      <h2>A 4-Magnet Solution to a 50-Magnet Problem</h2>
+      <p>
+        The dual latch sensor determines rotation direction from a defined alternating N–S pole sequence. For the chuck application, replicating this on the large-diameter magnet housing disk would require approximately <strong>50 magnets</strong> arranged in a full alternating-pole ring — an approach that was impractical due to high component count, assembly complexity, and cost.
+      </p>
+
+      <div class="fig-grid">
+        <div>
+          <p class="fig-grid-label">Magnet Housing Disk</p>
+          <figure class="figure" style="margin:0">
+            <img src="../assets/Magnet_Housing_Disk.png" alt="Chuck rotation magnet housing disk">
+            <figcaption>Fig. 1 — The large-diameter chuck magnet housing disk. A full alternating N–S pole ring on this disk would require approximately 50 magnets.</figcaption>
+          </figure>
+        </div>
+        <div>
+          <p class="fig-grid-label">Datasheet Requirement</p>
+          <figure class="figure" style="margin:0">
+            <img src="../assets/Altenating_N_S_pole.png" alt="Alternating N-S pole arrangement">
+            <figcaption>Fig. 2 — The datasheet-recommended alternating N–S pole ring. Replicating this on the chuck disk was not considered viable for field deployment.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <p>
+        Additionally, experimental testing on the lathe showed that the DIR output behaviour was highly sensitive to sensor-to-magnet spacing and alignment, making it difficult to obtain a stable direction signal using a conventional arrangement. An alternative approach was needed.
+      </p>
+
+      <h3>The Alternative Magnet Arrangement</h3>
+      <p>
+        Through systematic trial-and-error experiments on the lathe, an alternative magnet geometry was developed that generates a repeatable switching sequence without requiring a full alternating-pole ring. A critical sensor placement window was identified: a sensor-to-magnet offset of approximately <strong>22–24 mm (Y-axis)</strong> and <strong>1–3 mm (X-axis)</strong> consistently produced the required switching behaviour on the DIR output.
+      </p>
+
+      <div class="fig-grid">
+        <div>
+          <p class="fig-grid-label">Alternate Magnet Arrangement</p>
+          <figure class="figure" style="margin:0">
+            <img src="../assets/Block_diagram.png" alt="Alternate magnet arrangement on chuck disk">
+            <figcaption>Fig. 3 — The alternate magnet arrangement developed for the chuck disk. Only 4 discrete magnets are required rather than a full 50-magnet alternating ring.</figcaption>
+          </figure>
+        </div>
+        <div>
+          <p class="fig-grid-label">Sensor Placement Window</p>
+          <figure class="figure" style="margin:0">
+            <img src="../assets/x_y_pos.png" alt="Sensor offset X and Y positions">
+            <figcaption>Fig. 4 — The critical sensor placement window (X = 1–3 mm, Y = 22–24 mm) identified through lathe testing. Placement outside this window produces unreliable direction output.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <h3>Duty-Cycle as a Direction Signature</h3>
+      <p>
+        With the optimised magnet geometry and sensor placement, distinct pulse patterns emerge for clockwise and anticlockwise rotation. The key insight is that the DIR output duty cycle becomes direction-dependent — and the difference is large enough to be classified robustly.
+      </p>
+
+      <div class="callout">
+        <p class="callout-label">Key Result</p>
+        <p>Forward rotation produces a DIR duty cycle of approximately <strong>10%</strong>. Reverse rotation produces approximately <strong>94%</strong>. This 84-percentage-point separation is stable across the full tested RPM range and provides a robust classification threshold that is unambiguous even in noisy industrial conditions.</p>
+      </div>
+
+      <p>
+        An important consequence of this approach is that both speed and direction information can be extracted from the <strong>single DIR output pin</strong> — RPM from the pulse period, direction from the duty cycle. The SP output pin becomes redundant for this application, reducing wiring complexity and simplifying the MCU interface to a single digital input line.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/Direction_working_principle.png" alt="DIR pulse sequence showing duty-cycle difference for CW vs CCW">
+        <figcaption>Fig. 5 — DIR output pulse sequence for clockwise vs anticlockwise rotation. The duty cycle difference between the two directions is the basis for all direction classification in firmware.</figcaption>
+      </figure>
+
+      <h3>Switching Sequence Table</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Direction</th>
+              <th>Step</th>
+              <th>H1 Field</th>
+              <th>H1 Output</th>
+              <th>H2 Field</th>
+              <th>H2 Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="ccw"><td rowspan="6" class="dir-ccw">Anticlockwise</td><td>St(t)</td><td>N</td><td>1</td><td>N</td><td>1</td></tr>
+            <tr class="ccw"><td>St(t+1)</td><td>N</td><td>1</td><td>S</td><td>0</td></tr>
+            <tr class="ccw"><td>St(t+2)</td><td>S</td><td>0</td><td>S</td><td>0</td></tr>
+            <tr class="ccw"><td>St(t+3)</td><td>N</td><td>1</td><td>N</td><td>1</td></tr>
+            <tr class="ccw"><td>St(t+4)</td><td>N</td><td>1</td><td>S</td><td>0</td></tr>
+            <tr class="ccw"><td>St(t+5)</td><td>S</td><td>0</td><td>S</td><td>0</td></tr>
+            <tr class="cw"><td rowspan="6" class="dir-cw">Clockwise</td><td>St(t)</td><td>S</td><td>0</td><td>S</td><td>0</td></tr>
+            <tr class="cw"><td>St(t+1)</td><td>N</td><td>1</td><td>N</td><td>1</td></tr>
+            <tr class="cw"><td>St(t+2)</td><td>N</td><td>1</td><td>N</td><td>1</td></tr>
+            <tr class="cw"><td>St(t+3)</td><td>S</td><td>0</td><td>S</td><td>0</td></tr>
+            <tr class="cw"><td>St(t+4)</td><td>N</td><td>1</td><td>N</td><td>1</td></tr>
+            <tr class="cw"><td>St(t+5)</td><td>N</td><td>1</td><td>N</td><td>1</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 04 ROTATION VALIDATION -->
+    <div class="section">
+      <p class="section-label">04 — Rotation Validation</p>
+      <h2>Waveform and RPM Verification on the Lathe</h2>
+      <p>
+        Validation was performed in two stages. First, oscilloscope captures confirmed the direction-dependent duty-cycle signature across a range of rotation speeds. Second, firmware-calculated RPM was compared against lathe set-speed readings and independent tachometer reference measurements to verify speed accuracy.
+      </p>
+
+      <h3>Direction Waveforms — CW vs CCW at Multiple Speeds</h3>
+      <p>
+        The following waveform pairs show the DIR output at four representative speeds. In each pair, the left capture is forward rotation (low duty cycle ≈ 10%) and the right is reverse rotation (high duty cycle ≈ 94%). The pattern is consistent across all tested speeds.
+      </p>
+
+      <div class="fig-grid">
+        <div>
+          <p class="fig-grid-label">Forward — 56 RPM (~10% duty)</p>
+          <figure class="figure" style="margin:0">
+            <img src="../assets/56 RPM Duty 10 percent.png" alt="Forward 56 RPM">
+            <figcaption>Fig. 6 — Forward (CW) at 56 RPM. DIR duty cycle ≈ 10%.</figcaption>
+          </figure>
+        </div>
+        <div>
+          <p class="fig-grid-label">Reverse — 56 RPM (~94% duty)</p>
+          <figure class="figure" style="margin:0">
+            <img src="../assets/56 RPM Duty 94 percent.png" alt="Reverse 56 RPM">
+            <figcaption>Fig. 7 — Reverse (CCW) at 56 RPM. DIR duty cycle ≈ 94%.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="fig-grid">
+        <div>
+          <p class="fig-grid-label">Forward — 208 RPM (~10% duty)</p>
+          <figure class="figure" style="margin:0">
+            <img src="../assets/208 RPM Duty 10 percent.png" alt="Forward 208 RPM">
+            <figcaption>Fig. 8 — Forward (CW) at 208 RPM. DIR duty cycle ≈ 10%.</figcaption>
+          </figure>
+        </div>
+        <div>
+          <p class="fig-grid-label">Reverse — 208 RPM (~94% duty)</p>
+          <figure class="figure" style="margin:0">
+            <img src="../assets/208 RPM Duty 94 percent.png" alt="Reverse 208 RPM">
+            <figcaption>Fig. 9 — Reverse (CCW) at 208 RPM. DIR duty cycle ≈ 94%.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="fig-grid">
+        <div>
+          <p class="fig-grid-label">Forward — 480 RPM (~10% duty)</p>
+          <figure class="figure" style="margin:0">
+            <img src="../assets/480 RPM Duty 10 percent.png" alt="Forward 480 RPM">
+            <figcaption>Fig. 10 — Forward (CW) at 480 RPM. DIR duty cycle ≈ 10%.</figcaption>
+          </figure>
+        </div>
+        <div>
+          <p class="fig-grid-label">Reverse — 480 RPM (~94% duty)</p>
+          <figure class="figure" style="margin:0">
+            <img src="../assets/480 RPM Duty 94 percent.png" alt="Reverse 480 RPM">
+            <figcaption>Fig. 11 — Reverse (CCW) at 480 RPM. DIR duty cycle ≈ 94%.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <h3>Firmware RPM Measurement</h3>
+      <p>
+        Arduino Zero firmware measured RPM by capturing the time period between pulses and converting to frequency and RPM. Calculated values were compared against the lathe set-speed and independent tachometer readings across the full operating range.
+      </p>
+
+      <div class="fig-grid">
+        <div>
+          <figure class="figure" style="margin:0">
             <img src="../assets/Sensing 56 RPM.png" alt="Sensing at 56 RPM">
-            <div class="caption">Figure 14: Sensing at 56 RPM</div>
-          </div>
-        
-          <div class="figure img-small">
-            <img src="../assets/Sensing 87 RPM.png" alt="Sensing at 87 RPM">
-            <div class="caption">Figure 15: Sensing at 87 RPM</div>
-          </div>
-        
-          <div class="figure img-small">
-            <img src="../assets/Sensing 134 RPM.png" alt="Sensing at 134 RPM">
-            <div class="caption">Figure 16: Sensing at 134 RPM</div>
-          </div>
-        
-          <div class="figure img-small">
-            <img src="../assets/Sensing 210 RPM.png" alt="Sensing at 210 RPM">
-            <div class="caption">Figure 17: Sensing at 210 RPM</div>
-          </div>
-        
-          <div class="figure img-small">
+            <figcaption>Fig. 12 — Firmware RPM readout at 56 RPM.</figcaption>
+          </figure>
+        </div>
+        <div>
+          <figure class="figure" style="margin:0">
             <img src="../assets/Sensing 311 RPM.png" alt="Sensing at 311 RPM">
-            <div class="caption">Figure 18: Sensing at 311 RPM</div>
-          </div>
-          
-          <div class="figure img-small">
+            <figcaption>Fig. 13 — Firmware RPM readout at 311 RPM.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="fig-grid">
+        <div>
+          <figure class="figure" style="margin:0">
             <img src="../assets/Sensing 739 RPM.png" alt="Sensing at 739 RPM">
-            <div class="caption">Figure 19: Sensing at 739 RPM</div>
-          </div>
-        
-          <div class="figure img-small">
+            <figcaption>Fig. 14 — Firmware RPM readout at 739 RPM.</figcaption>
+          </figure>
+        </div>
+        <div>
+          <figure class="figure" style="margin:0">
             <img src="../assets/Sensing 1142 RPM.png" alt="Sensing at 1142 RPM">
-            <div class="caption">Figure 20: Sensing at 1142 RPM</div>
-          </div>    
-        
-          The Arduino-based firmware was then used to compute real-time RPM and rotation direction directly from the Hall sensor pulse output.
-          The calculated RPM values were compared against the lathe machine set-speed readings and independent tachometer reference measurements
-          to verify speed accuracy.
-          <br><br>
-        
-          In parallel, the firmware also classified Forward/Reverse direction by evaluating the measured pulse duty-cycle signature,
-          confirming consistent direction detection across multiple rotational speeds. The corresponding oscilloscope waveforms captured during
-          these validation tests are shown below:
-          <br><br>
-        
-          <div class="figure img-small">
+            <figcaption>Fig. 15 — Firmware RPM readout at 1142 RPM, confirming accuracy well above the target 700 RPM operating range.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="fig-grid">
+        <div>
+          <figure class="figure" style="margin:0">
             <img src="../assets/Forward Sensing 311 RPM.png" alt="Forward direction sensing at 311 RPM">
-            <div class="caption">Figure 21: Forward direction sensing at 311 RPM</div>
-          </div>
-        
-          <div class="figure img-small">
+            <figcaption>Fig. 16 — Forward direction correctly classified at 311 RPM from duty-cycle threshold logic.</figcaption>
+          </figure>
+        </div>
+        <div>
+          <figure class="figure" style="margin:0">
             <img src="../assets/Reverse Sensing 311 RPM.png" alt="Reverse direction sensing at 311 RPM">
-            <div class="caption">Figure 22: Reverse direction sensing at 311 RPM</div>
-          </div>
-        </li>
-        <li>
-          <b>Conclusion (Speed + Direction Validation Outcome)</b><br><br>
-        
-          The experimental validation confirmed that the dual Hall latch sensor can reliably detect both:
-          <ul>
-            <li><b>Chuck rotation speed</b> (via pulse period measurement)</li>
-            <li><b>Direction of rotation</b> (via duty cycle signature)</li>
-          </ul>
-        
-          The duty cycle difference between forward and reverse direction remained stable across tested RPM values:
-          <ul>
-            <li><b>Forward ≈ 10%</b></li>
-            <li><b>Reverse ≈ 94%</b></li>
-          </ul>
-        
-          Additionally, the dual Hall latch sensor operates at <b>3.0 V</b> and consumes approximately <b>3 mA</b>,
-          making it suitable for intrinsically safe (IS) applications.
-          <br>
-        
-          Finally, it was confirmed that mechanical placement and sensor-to-magnet spacing is critical for reliable direction detection.
-          A key outcome of this validation was that both speed and direction sensing could be achieved using only
-          <b>4 discrete magnets</b> mounted on the chuck disk, rather than requiring a full alternating N–S magnetic ring.
-          This significantly reduced component count and assembly complexity, making the solution highly
-          <b>cost-effective</b> and practical for real-world field deployment.
-          <br><br>
-        </li>    
-      </ul>
+            <figcaption>Fig. 17 — Reverse direction correctly classified at 311 RPM from duty-cycle threshold logic.</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-item"><span class="rv">~10%</span><span class="rl">Forward Duty Cycle</span></div>
+        <div class="result-item"><span class="rv">~94%</span><span class="rl">Reverse Duty Cycle</span></div>
+        <div class="result-item"><span class="rv">4</span><span class="rl">Magnets on Disk</span></div>
+        <div class="result-item"><span class="rv">3.0 V / 3 mA</span><span class="rl">Sensor Operating Point</span></div>
+      </div>
     </div>
 
-    <div class="qbox">
-      <div class="q-title">How was the linear stroke of the chuck validated experimentally?</div>
-      <div class="q-sep"></div>
-    
-      <ul class="subheading-list">
-    
-        <li>
-          <b>Test Setup</b><br><br>
-    
-          To experimentally validate the feasibility of measuring chuck feed/stroke travel, a Time-of-Flight (ToF)
-          LiDAR sensor was tested in a controlled bench environment.
-          <br>
-    
-          A 2 m drill rod was mounted on stands, and a flat reflector plate was fixed to the rod to provide a stable
-          reflective surface for ranging measurements. The ToF sensor was positioned at a fixed reference point
-          and aligned toward the reflector to measure the distance variation as the rod was moved linearly
-          (simulating drill rig chuck feed motion).
-          <br>
-    
-          The experimental setup is shown below:
-    
-          <div class="figure img-small">
-            <img src="../assets/lidar_test.png" alt="Bench test setup showing ToF sensor placement, reflector, and drill rod alignment">
-            <div class="caption">Figure 23: Bench test setup showing ToF sensor placement, reflector, and drill rod alignment.</div>
-          </div>
-        </li>
-    
-        <li>
-          <b>Environmental Protection (Epoxy Coating)</b><br><br>
-    
-          Since the drill rig environment contains dust, mud, moisture, and rock debris, the ToF sensor must remain
-          functional under harsh field conditions. To improve field survivability, the LiDAR module was coated with
-          a clear epoxy layer to provide:
-          <br>
-          <ul>
-            <li>Splash resistance</li>
-            <li>Dust protection</li>
-            <li>Mechanical protection against impact/vibration</li>
-          </ul>
-    
-          The epoxy coating was applied carefully to avoid blocking the sensor optical window while still sealing
-          the PCB and components.
-        </li>
-    
-        <li>
-          <b>Experimental Procedure</b><br><br>
-    
-          The ToF sensor was tested by placing the reflector at known distances from the sensor. The actual distance
-          was measured manually, and the corresponding LiDAR distance readings were recorded.
-    
-          Two sets of measurements were performed:
-          <ul>
-            <li>Without epoxy coating</li>
-            <li>With epoxy coating applied</li>
-          </ul>
-          The goal was to confirm whether epoxy protection significantly impacts ranging accuracy.
-        </li>
-    
-        <li>
-          <b>Firmware Implementation and Data Logging</b><br><br>
-    
-          Firmware for real-time ranging acquisition was developed and tested on an Arduino Zero platform. The Arduino
-          Zero interfaced with the ToF sensor over I²C, continuously captured distance measurements, and streamed the
-          data over serial for logging and analysis.
-        </li>
-    
-        <li>
-          <b>Results and Accuracy Comparison</b><br><br>
-    
-          The LiDAR sensor showed a strong linear response across the tested range. The LiDAR distance results shown in
-          Figure 24 reported in this section are directly obtained from the Arduino Zero firmware output and validated
-          against the physical reference measurements.
-    
-          <div class="figure">
-            <img src="../assets/LIDAR_Actual_vs_Results_8K.png" alt="LiDAR distance results comparison with and without epoxy coating">
-            <div class="caption">Figure 24: LiDAR distance results comparison (without epoxy vs epoxy-coated).</div>
-          </div>
-          <br>
-          From the dataset:
-          <ul>
-            <li>The sensor maintained consistent distance tracking across the full range.</li>
-            <li>The epoxy-coated sensor demonstrated better stability and reduced error spread compared to the uncoated sensor.</li>
-          </ul>
-    
-          <b>Without epoxy coating</b>
-          <ul>
-            <li>Mean Squared Error (MSE): 326.18</li>
-            <li>Average Standard Deviation: 12.29 mm</li>
-          </ul>
+    <!-- 05 ROTATION FIRMWARE -->
+    <div class="section">
+      <p class="section-label">05 — Rotation Firmware</p>
+      <h2>Making RPM and Direction Reliable in a Harsh Environment</h2>
 
-          <b>With epoxy coating</b>
-          <ul>
-            <li>Mean Squared Error (MSE): 102.5</li>
-            <li>Average Standard Deviation: 6.63 mm</li>
-          </ul>
-          This indicates that the epoxy-coated configuration achieved improved repeatability and lower deviation, making
-          it more suitable for real drill rig conditions.
-        </li>
-    
-        <li>
-          <b>Conclusion</b><br><br>
-    
-          The experimental validation confirmed that the ToF sensor is suitable for measuring linear feed/stroke movement
-          of a drill rig chuck.
-          <br>
-    
-          Additionally, coating the module with clear epoxy improved durability and did not degrade performance. In fact,
-          results showed reduced standard deviation, suggesting improved robustness and repeatability under practical
-          conditions.
-          <br>
-    
-          This validation proved that ToF sensing can reliably be used to extract:
-          <br>
-    
-          <ul>
-            <li>Stroke length (linear travel)</li>
-            <li>Stroke count</li>
-            <li>Total feed accumulation (drilling depth estimation)</li>
-          </ul>
-        </li>
-    
-      </ul>
+      <div class="challenge-grid">
+        <div class="challenge-item">
+          <div class="ch-problem">
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">RPM accuracy across a wide speed range — slow speeds produce sluggish updates; high speeds produce timing jitter and interrupt overhead.</p>
+          </div>
+          <div class="ch-solution">
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">Interrupt-driven edge-to-edge timing with adaptive averaging: more pulses averaged at high speeds for noise reduction, fewer at low speeds for responsiveness. Zero-speed timeout ensures RPM drops reliably to zero at stall.</p>
+          </div>
+        </div>
+        <div class="challenge-item">
+          <div class="ch-problem">
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">Electrical noise, long cable runs, and EMI from drill rig machinery introduce false pulse edges, leading to incorrect RPM and unstable direction state.</p>
+          </div>
+          <div class="ch-solution">
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">Edge qualification logic rejects unrealistically short pulse periods. Direction classification uses a state-based decision requiring a consistent duty-cycle signature over multiple cycles before switching state, preventing noise-induced flickering.</p>
+          </div>
+        </div>
+        <div class="challenge-item">
+          <div class="ch-problem">
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">During direction reversals and start/stop transients, pulse timing becomes irregular, making single-pulse classification unreliable.</p>
+          </div>
+          <div class="ch-solution">
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">Direction derived from duty-cycle averaged across multiple pulse cycles rather than instantaneous edge timing. Hysteresis and debouncing enforce threshold margins and require direction changes to persist over several consecutive cycles before being reported.</p>
+          </div>
+        </div>
+        <div class="challenge-item">
+          <div class="ch-problem">
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">Stall detection must not lag too much — but too short a timeout falsely reports zero at very low RPM.</p>
+          </div>
+          <div class="ch-solution">
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">Configurable timeout window tied to minimum expected rotational speed, with debounced zero detection to prevent oscillation between low-RPM readings and zero near the stall threshold.</p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="qbox">
-      <div class="q-title">What did the final embedded hardware implementation look like?</div>
-      <div class="q-sep"></div>
-    
+    <!-- 06 STROKE SENSING -->
+    <div class="section">
+      <p class="section-label">06 — Stroke Sensing</p>
+      <h2>Linear Feed Measurement with Time-of-Flight LiDAR</h2>
       <p>
-        After validating the chuck rotation sensing and linear stroke measurement concepts through bench testing using an Arduino Zero,
-        the project was progressed into a final embedded hardware revision designed for industrial drill-rig integration.
+        Linear feed and stroke travel was measured using a Time-of-Flight ranging sensor — a non-contact approach that measures the return time of an infrared laser pulse to determine distance. This avoids the mechanical wear, contamination susceptibility, and alignment demands of contact-based encoders, making it better suited to the drill rig environment.
       </p>
-    
       <p>
-        A dedicated custom PCB was developed to integrate the complete sensing and communication stack into a compact embedded module.
-        The final board combined:
+        The sensor was mounted to continuously measure the distance between itself and a fixed reflector plate on the moving chuck assembly. As the chuck advanced or retracted during drilling, the measured distance changed proportionally, giving a direct readout of stroke position in millimetres.
       </p>
-    
-      <ul>
-        <li>STM32 microcontroller (same MCU family as the strain gauge instrumentation platform)</li>
-        <li>Dual Hall-effect latch sensors for chuck rotation speed + direction sensing</li>
-        <li>ToF LiDAR sensor for feed/stroke measurement</li>
-        <li>RS485 communication interface for robust industrial networking</li>
-        <li>Power conditioning, filtering, and protection circuitry for harsh environments</li>
-      </ul>
-    
+
+      <h3>Stroke Tracking and Depth Estimation</h3>
       <p>
-        This PCB was brought up and tested for basic functional validation (sensor reading, timing capture, and communication interface),
-        establishing a working hardware platform. Although it was not deployed into a production drill rig, it demonstrated successful
-        integration readiness.
+        Firmware computed stroke delta between consecutive samples, accumulating displacement over time to derive total feed travel. A state machine classified chuck movement as advancing or retracting, detected stroke endpoints using thresholded hysteresis, and accumulated displacement increments to compute per-stroke travel and total depth:
       </p>
-    
-      <ul class="subheading-list">
-    
-        <li>
-          <b>Intrinsic Safety Design Considerations</b><br><br>
-    
-          Since the system was intended for use in a potentially explosive mining environment, the hardware design was developed under
-          intrinsic safety principles, where the key requirement is ensuring the circuit cannot store or deliver enough electrical energy
-          to ignite a hazardous atmosphere.
-    
-          To support intrinsically safe system integration, the PCB design incorporated:
-    
-          <ul>
-            <li>Low-power embedded architecture using STM32 + low-voltage sensors</li>
-            <li>Input protection and current limiting elements to reduce fault energy risk</li>
-            <li>Transient suppression (TVS protection) to manage surge conditions</li>
-            <li>Controlled supply conditioning (IS barrier) to limit available energy under fault scenarios</li>
-            <li>Careful routing with proper clearance and creepage was implemented to support safe operation and reduce risk of insulation failure under harsh industrial conditions</li>
-          </ul>
-    
-          These design practices helped ensure that the sensing module could be integrated into an intrinsically safe-certified system by
-          controlling energy storage (capacitance/inductance) and limiting fault-current pathways.
-        </li>
-    
-        <li>
-          <b>RS485 + Modbus RTU Communication Implementation</b><br><br>
-    
-          To enable reliable communication between the sensing module and the drill rig controller, RS485 was selected as the primary interface.
-          A Modbus RTU protocol layer was planned/implemented on top of RS485, allowing the sensor board to behave as a structured industrial node.
-          In this approach:
-    
-          <ul>
-            <li>The STM32 acts as a Modbus slave device</li>
-            <li>The drill rig controller acts as the Modbus master</li>
-            <li>
-              Sensor values (RPM, direction state, stroke distance, rod count estimate, sensor status flags) are mapped into Modbus
-              holding/input registers
-            </li>
-            <li>
-              The master polls the sensor board at a fixed interval, ensuring deterministic updates and simple system integration
-            </li>
-          </ul>
-    
-          This architecture makes the system scalable and deployment-friendly, since additional sensors can be added later without redesigning
-          the communication layer.
-        </li>
-    
-        <li>
-          <b>Final PCB Prototype</b><br><br>
-    
-          <div class="figure">
-            <img src="../assets/lidar_pcb.png" alt="Final custom PCB integrating chuck sensing, ToF stroke measurement, and RS485 communication">
-            <div class="caption">Figure 25: Final custom PCB implementation integrating chuck sensing, ToF stroke measurement, and RS485 communication.</div>
-          </div>
-        </li>
-    
-      </ul>
+
+      <div class="equation-box">
+        <span class="eq-main">Δx = x(n) − x(n−1)</span>
+        <div class="eq-terms">
+          <span>x(n) = current ToF distance reading</span>
+          <span>x(n−1) = previous sample</span>
+          <span>Accumulated Δx → rod count + drilling depth</span>
+        </div>
+      </div>
+
+      <p>
+        Chuck RPM and direction state were used as a gating condition — stroke accumulation was only active when the system confirmed active drilling or rod make/break operation. This prevented false depth accumulation during idle, vibration-only periods.
+      </p>
+
+      <h3>Environmental Protection — Epoxy Coating</h3>
+      <p>
+        The drill rig environment exposes sensors to dust, mud, moisture, and rock debris. To improve field survivability, the LiDAR module was coated with a clear epoxy layer — carefully applied to seal the PCB and components without blocking the optical window. The impact of this coating on ranging accuracy was experimentally measured.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/lidar_test.png" alt="Bench test setup for ToF stroke sensing">
+        <figcaption>Fig. 18 — Bench test setup: 2 m drill rod on stands with a fixed reflector plate. The ToF sensor measures distance variation as the rod is moved linearly, simulating chuck feed motion.</figcaption>
+      </figure>
+
+      <figure class="figure">
+        <img src="../assets/LIDAR_Actual_vs_Results_8K.png" alt="LiDAR distance comparison with and without epoxy">
+        <figcaption>Fig. 19 — LiDAR distance comparison: without epoxy vs with epoxy coating. The coated sensor shows reduced error spread and improved repeatability across the full tested range.</figcaption>
+      </figure>
+
+      <div class="result-grid">
+        <div class="result-item"><span class="rv">326.18</span><span class="rl">MSE — No Epoxy</span></div>
+        <div class="result-item"><span class="rv">12.29 mm</span><span class="rl">Avg Std Dev — No Epoxy</span></div>
+        <div class="result-item"><span class="rv">102.5</span><span class="rl">MSE — With Epoxy</span></div>
+        <div class="result-item"><span class="rv">6.63 mm</span><span class="rl">Avg Std Dev — With Epoxy</span></div>
+      </div>
+
+      <p style="margin-top:1.2rem">
+        The epoxy-coated configuration achieved a <strong>69% reduction in MSE</strong> and a <strong>46% reduction in standard deviation</strong> compared to the uncoated sensor. The coating not only protected the module from environmental damage but measurably improved ranging consistency — a result that supports its use as a standard part of the field preparation process.
+      </p>
     </div>
 
-    <div class="qbox">
-      <div class="q-title">What was the final engineering outcome?</div>
-      <div class="q-sep"></div>
-    
-      <p>
-        This project delivered a complete sensing solution for drill rig chuck monitoring, enabling measurement of
-        rotation speed, rotation direction, and linear stroke/feed travel to support safer drilling, automated rod counting,
-        and drilling depth estimation.
-      </p>
-    
-      <p>
-        Chuck RPM and direction sensing were experimentally validated on a lathe by confirming repeatable clockwise/anticlockwise
-        pulse patterns and comparing firmware-calculated RPM against reference speed readings. Linear stroke sensing was validated
-        using a ToF LiDAR test setup, with the module coated in clear epoxy for dust/splash protection and improved ruggedness.
-      </p>
-    
-      <p>
-        The validated design was then implemented on a final embedded PCB using an STM32 MCU with RS485 Modbus-ready communication,
-        incorporating intrinsic safety design practices including current limiting, transient protection, and PCB routing with
-        proper clearance and creepage.
-      </p>
+    <!-- 07 STROKE FIRMWARE -->
+    <div class="section">
+      <p class="section-label">07 — Stroke Firmware</p>
+      <h2>Reliable Motion Tracking Under Rig Conditions</h2>
+
+      <div class="challenge-grid">
+        <div class="challenge-item">
+          <div class="ch-problem">
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">Dust, vibration, surface reflectivity variation, and intermittent obstructions cause jitter and occasional outlier readings from the ToF sensor.</p>
+          </div>
+          <div class="ch-solution">
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">Outlier rejection using range validity flags and threshold-based clamping of unrealistic step changes. Digital moving-average filter stabilises the displacement signal while preserving true motion response.</p>
+          </div>
+        </div>
+        <div class="challenge-item">
+          <div class="ch-problem">
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">Converting raw distance readings into higher-level drilling metrics — stroke length, stroke count, and net travel for rod counting and depth estimation.</p>
+          </div>
+          <div class="ch-solution">
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">State-machine motion tracking classifies chuck movement as advancing or retracting, detects stroke endpoints with hysteresis, and accumulates displacement increments to compute per-stroke travel and total feed distance.</p>
+          </div>
+        </div>
+        <div class="challenge-item">
+          <div class="ch-problem">
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">Mechanical vibration and small oscillations appear as motion if the signal is differentiated directly, causing false stroke transitions and accumulated depth error.</p>
+          </div>
+          <div class="ch-solution">
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">Configurable deadband (minimum movement threshold) with persistence logic — motion must exceed the threshold for a defined number of samples before a stroke transition is registered.</p>
+          </div>
+        </div>
+        <div class="challenge-item">
+          <div class="ch-problem">
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">ToF sensors may return invalid readings when blocked, out of range, or with poor target return. Without fault handling, the system could silently accumulate incorrect depth.</p>
+          </div>
+          <div class="ch-solution">
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">Sensor health monitoring via consecutive invalid sample counters and range-status verification. Fault states are exposed over RS485, allowing the controller to distinguish valid measurements from sensor error conditions.</p>
+          </div>
+        </div>
+      </div>
     </div>
-    
+
+    <!-- 08 HARDWARE -->
+    <div class="section">
+      <p class="section-label">08 — Hardware</p>
+      <h2>Final PCB Implementation</h2>
+      <p>
+        Following successful bench validation of both sensing approaches, the design was implemented on a custom PCB combining the complete sensing and communication stack into a compact embedded module. The board integrates an STM32 MCU, dual Hall-effect latch sensors, a ToF LiDAR sensor, and an RS485 communication interface — all with power conditioning, filtering, and protection circuitry suited to harsh industrial environments.
+      </p>
+
+      <h3>Intrinsic Safety Design</h3>
+      <p>
+        The system was designed for operation in potentially explosive mining environments, where the fundamental requirement is that the circuit cannot store or deliver sufficient energy to ignite a hazardous atmosphere. Design measures included a low-power STM32 + low-voltage sensor architecture, input protection and current limiting to reduce fault energy, transient suppression (TVS protection), controlled supply conditioning via IS barrier, and PCB routing with appropriate clearance and creepage for hazardous-area compliance.
+      </p>
+
+      <h3>RS485 Modbus RTU Communication</h3>
+      <p>
+        RS485 was selected for its robustness over long industrial cable runs and immunity to common-mode noise from drill rig machinery. A Modbus RTU protocol layer maps sensor values — RPM, direction state, stroke distance, rod count estimate, and sensor status flags — into Modbus holding/input registers. The STM32 operates as a Modbus slave, polled at a fixed interval by the drill rig controller acting as master. This makes the architecture scalable: additional sensors can be added without redesigning the communication layer.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/lidar_pcb.png" alt="Final custom PCB integrating chuck sensing and RS485">
+        <figcaption>Fig. 20 — Final custom PCB integrating dual Hall-effect chuck rotation sensing, ToF stroke measurement, STM32 MCU, and RS485 Modbus-ready communication. Designed under intrinsic safety constraints for hazardous mining environments.</figcaption>
+      </figure>
+    </div>
+
+    <!-- 09 OUTCOME -->
+    <div class="section">
+      <p class="section-label">09 — Outcome</p>
+      <h2>Engineering Result</h2>
+      <div class="outcome-box">
+        <p>
+          A complete drill rig chuck sensing module delivering real-time rotation speed (10–700 RPM), rotation direction (CW/CCW), and linear feed/stroke measurement for safety-critical and automation applications. The key technical contribution was a novel magnet geometry requiring only 4 discrete magnets — replacing the 50-magnet alternating-pole ring specified in the sensor datasheet — and an optimised sensor placement window (Y = 22–24 mm, X = 1–3 mm) that produces a stable, direction-dependent duty-cycle signature (~10% forward, ~94% reverse) consistent across the full tested speed range. ToF stroke sensing was validated with and without epoxy environmental protection, confirming a 69% reduction in MSE and 46% reduction in standard deviation for the coated configuration. The validated design was implemented on a custom STM32 PCB with RS485 Modbus-ready communication, incorporating intrinsic safety design practices for hazardous mining deployment.
+        </p>
+      </div>
+    </div>
+
   </div>
 
 </body>
