@@ -3,129 +3,855 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dr. Utkarsh Jadli | Portfolio</title>
-
+  <title>Dr. Utkarsh Jadli — Electronics Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    body{
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      max-width: 980px;
-      margin: 40px auto;
-      padding: 0 18px;
+    :root {
+      --bg: #0e0f11;
+      --bg2: #13151a;
+      --bg3: #1a1d24;
+      --border: #2a2d35;
+      --accent: #e8a040;
+      --accent2: #c47820;
+      --text: #d4d6db;
+      --text-dim: #7a7e8a;
+      --text-bright: #f0f1f3;
+      --green: #4ec98a;
+      --blue: #6ab0e0;
+      --mono: 'IBM Plex Mono', monospace;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Inter', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      background: rgba(14, 15, 17, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 10rem 2rem 5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.1s forwards;
+    }
+    .hero-name {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      color: var(--text-bright);
+      line-height: 1.05;
+      margin-bottom: 0.4rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.2s forwards;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.3s forwards;
+    }
+    .hero-bio {
+      font-size: 1.05rem;
+      color: var(--text);
+      max-width: 620px;
+      line-height: 1.85;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.4s forwards;
+    }
+    .hero-bio strong { color: var(--text-bright); font-weight: 500; }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.5s forwards;
+    }
+    .btn-primary {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--bg);
+      background: var(--accent);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--accent2); }
+    .btn-secondary {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      border-radius: 2px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* STATS STRIP */
+    .stats-strip {
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.55s forwards;
+    }
+    .stats-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    .stat-item {
+      padding: 1.4rem 1rem;
+      border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-val {
+      font-family: var(--mono);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+    .stat-lbl {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* SECTIONS */
+    .section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .section:last-of-type { border-bottom: none; }
+    .section:nth-of-type(1) { animation-delay: 0.3s; }
+    .section:nth-of-type(2) { animation-delay: 0.4s; }
+    .section:nth-of-type(3) { animation-delay: 0.5s; }
+    .section:nth-of-type(4) { animation-delay: 0.6s; }
+    .section:nth-of-type(5) { animation-delay: 0.7s; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 60px;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.8rem;
+      color: var(--text-bright);
+      margin-bottom: 1.6rem;
+      line-height: 1.15;
+    }
+    p {
+      color: var(--text);
+      margin-bottom: 1rem;
+      max-width: 720px;
+    }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--text-bright); font-weight: 500; }
+
+    /* PROJECT CARDS */
+    .projects-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .project-card {
+      background: var(--bg2);
+      padding: 2rem 2rem 2rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1.5rem;
+      align-items: start;
+      text-decoration: none;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .project-card:hover { background: var(--bg3); }
+    .project-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--border);
+      transition: background 0.2s;
+    }
+    .project-card:hover::before { background: var(--accent); }
+    .pc-number {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+    .pc-title {
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 0.6rem;
+      line-height: 1.2;
+    }
+    .pc-desc {
+      font-size: 0.9rem;
+      color: var(--text-dim);
       line-height: 1.65;
-      color:#111;
-      background:#fff;
+      margin-bottom: 1rem;
+      max-width: 560px;
+    }
+    .pc-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+    .pc-tag {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+      letter-spacing: 0.03em;
+    }
+    .pc-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      min-width: 140px;
+      text-align: right;
+    }
+    .pc-stat-val {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+    }
+    .pc-stat-lbl {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .pc-arrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      margin-top: 1rem;
+      display: block;
+      text-align: right;
     }
 
-    h1{
-      font-size:50px;
-      margin:0 0 10px;
-      font-weight:800;
+    /* SKILLS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .skill-card {
+      background: var(--bg2);
+      padding: 1.5rem;
+      transition: background 0.2s;
+    }
+    .skill-card:hover { background: var(--bg3); }
+    .skill-card-label {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.9rem;
+    }
+    .skill-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .skill-item {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .skill-item::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
     }
 
-    .subtitle{
-      font-size:22px;
-      color:#333;
-      margin:0 0 20px;
-      font-weight:500;
+    /* EXPERIENCE */
+    .exp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .exp-item {
+      background: var(--bg2);
+      padding: 1.6rem 1.8rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      transition: background 0.2s;
+    }
+    .exp-item:hover { background: var(--bg3); }
+    .exp-role {
+      font-size: 0.97rem;
+      font-weight: 500;
+      color: var(--text-bright);
+      margin-bottom: 0.2rem;
+    }
+    .exp-org {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+    .exp-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.65;
+      max-width: 520px;
+    }
+    .exp-period {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+      padding-top: 0.2rem;
     }
 
-    .contact{
-      font-size:18px;
-      margin-top:10px;
-    }
-
-    .contact a{
-      color:#0b66c3;
+    /* PUBLICATIONS CALLOUT */
+    .pub-callout {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 4px 4px 0;
+      padding: 1.4rem 1.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
       text-decoration: none;
-      font-weight:500;
+      transition: background 0.2s;
+      margin-top: 1.5rem;
+    }
+    .pub-callout:hover { background: #1f2229; }
+    .pub-callout-text p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text);
+      max-width: 500px;
+    }
+    .pub-callout-text strong { color: var(--text-bright); }
+    .pub-callout-link {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+      white-space: nowrap;
     }
 
-    .contact a: hover{
-      text-decoration: underline;
+    /* CONTACT */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
     }
-
-    h2{
-      margin-top:46px;
-      border-bottom:2px solid #eee;
-      padding-bottom:10px;
-      font-size:38px;
-      font-weight:800;
-    }
-
-    h3{
-      margin:22px 0 6px;
-      font-size:32px;
-      font-weight:800;
-      color:#b30000;
-    }
-
-    .project-summary{
-      font-size:18px;
-      color:#222;
-      margin-top:6px;
-      margin-bottom:8px;
-    }
-
-    .readmore a{
-      font-size:18px;
-      font-weight:600;
-      color:#6a00b3;
+    .contact-item {
+      background: var(--bg2);
+      padding: 1.4rem 1.6rem;
       text-decoration: none;
+      transition: background 0.2s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .contact-item:hover { background: var(--bg3); }
+    .contact-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .contact-value {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--accent);
     }
 
-    .readmore a: hover{
-      text-decoration: underline;
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
     }
+    footer p {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      margin: 0;
+      max-width: none;
+    }
+
+    @media (max-width: 640px) {
+      .project-card { grid-template-columns: 1fr; }
+      .pc-stats { text-align: left; flex-direction: row; flex-wrap: wrap; }
+      .pc-arrow { text-align: left; }
+      .exp-item { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
   </style>
 </head>
-
 <body>
 
-  <h1>Dr. Utkarsh Jadli</h1>
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">UJ<span>.</span></a>
+      <ul class="nav-links">
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
 
-  <p class="subtitle">
-    Electronics Engineer | Ph.D. Power Semiconductor Devices | PCB Design | Instrumentation | Intrinsically Safe Systems
-  </p>
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-eyebrow">Electronics Engineer · Brisbane, Australia</p>
+    <h1 class="hero-name">Dr. Utkarsh Jadli</h1>
+    <p class="hero-title">PCB Design · Analog & Mixed-Signal · Intrinsically Safe Systems</p>
+    <p class="hero-bio">
+      I design electronics that work in the field — not just on the bench. With a <strong>Ph.D. in Power Semiconductor Devices</strong> from Griffith University and over five years of industry experience at Sigra, I build precision instrumentation, embedded sensing systems, and intrinsically safe electronics for mining and industrial applications. My work spans from sub-micron device physics to deployed field instruments, with a consistent focus on measurement accuracy, signal integrity, and engineering rigour.
+    </p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">View Projects</a>
+      <a href="mailto:utkarshjadli@gmail.com" class="btn-secondary">Get in Touch</a>
+      <a href="https://scholar.google.com.au/citations?user=kmwQvPQAAAAJ&hl=en&oi=ao" target="_blank" class="btn-secondary">Google Scholar →</a>
+    </div>
+  </div>
 
-  <p class="contact">
-    📍 Brisbane, Australia<br/>
-    📧 <a href="mailto:utkarshjadli@gmail.com">utkarshjadli@gmail.com</a><br/>
-    🔗 <a href="https://www.linkedin.com/in/utkarshjadli/" target="_blank" rel="noopener">LinkedIn</a><br/>
-    🔗 <a href="https://scholar.google.com.au/citations?user=kmwQvPQAAAAJ&hl=en&oi=ao" target="_blank" rel="noopener">Google Scholar</a><br/>
-  </p>
+  <!-- STATS STRIP -->
+  <div class="stats-strip">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <span class="stat-val">5+</span>
+        <span class="stat-lbl">Years Industry</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">$1M+</span>
+        <span class="stat-lbl">Projects Delivered</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">IEC 60079</span>
+        <span class="stat-lbl">IS Compliance</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">SiC · GaN</span>
+        <span class="stat-lbl">Device Expertise</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-val">Altium · KiCAD</span>
+        <span class="stat-lbl">PCB Toolchain</span>
+      </div>
+    </div>
+  </div>
 
-  <h2>Projects</h2>
+  <!-- PROJECTS -->
+  <div class="section" id="projects">
+    <p class="section-label">Projects</p>
+    <h2>Field Instrumentation Work</h2>
 
-  <h3>1) Accurate and Cost-Effective IMU-based Survey Tool for Drillhole Orientation Measurement</h3>
-  <p class="project-summary">
-    A cost-effective, field-deployable, intrinsically safe, precision IMU-based downhole survey system capable of measuring azimuth, inclination, and toolface in real time for drilling applications.
-  </p>
+    <div class="projects-grid">
 
-  <p class="readmore">
-    <a href="./projects/imu_survey.html">Read full technical deep-dive →</a>
+      <!-- Project 1: Strain Gauge -->
+      <a href="./projects/strain-gauge.html" class="project-card">
+        <div>
+          <p class="pc-number">01 — Strain Gauge Instrumentation</p>
+          <p class="pc-title">Multi-Channel Strain Gauge System</p>
+          <p class="pc-desc">8-channel quarter-bridge strain instrumentation system with 24-bit ADC, integrated PGA, thermal drift compensation via reference subtraction, and 67-hour field thermal characterisation. Validated on a UCS machine with a rectangular rosette gauge configuration.</p>
+          <div class="pc-tags">
+            <span class="pc-tag">PCB Design</span>
+            <span class="pc-tag">Analog Front-End</span>
+            <span class="pc-tag">STM32 Firmware</span>
+            <span class="pc-tag">Signal Processing</span>
+            <span class="pc-tag">HART · RS-232</span>
+          </div>
+          <span class="pc-arrow">Read full technical deep-dive →</span>
+        </div>
+        <div class="pc-stats">
+          <div>
+            <span class="pc-stat-val">1.83 µε</span>
+            <span class="pc-stat-lbl">Max RMS Noise</span>
+          </div>
+          <div>
+            <span class="pc-stat-val">22.50</span>
+            <span class="pc-stat-lbl">ppm/°C Drift</span>
+          </div>
+          <div>
+            <span class="pc-stat-val">67 hrs</span>
+            <span class="pc-stat-lbl">Thermal Test</span>
+          </div>
+        </div>
+      </a>
 
-  </p>
+      <!-- Project 2: IMU Survey -->
+      <a href="./projects/imu_survey.html" class="project-card">
+        <div>
+          <p class="pc-number">02 — Downhole Survey Instrument</p>
+          <p class="pc-title">IMU-Based Downhole Survey System</p>
+          <p class="pc-desc">Complete intrinsically safe borehole survey instrument measuring azimuth, inclination, and toolface. Redundant multi-sensor IMU architecture with hard-iron/soft-iron magnetometer calibration, gyroscope-based drill rotation detection, and HART telemetry validated over 1.4 km of armoured drilling cable. Cross-validated across three independent tool builds.</p>
+          <div class="pc-tags">
+            <span class="pc-tag">Sensor Fusion</span>
+            <span class="pc-tag">Calibration</span>
+            <span class="pc-tag">HART Telemetry</span>
+            <span class="pc-tag">Intrinsic Safety</span>
+            <span class="pc-tag">Python</span>
+          </div>
+          <span class="pc-arrow">Read full technical deep-dive →</span>
+        </div>
+        <div class="pc-stats">
+          <div>
+            <span class="pc-stat-val">±0.33°</span>
+            <span class="pc-stat-lbl">Azimuth Error</span>
+          </div>
+          <div>
+            <span class="pc-stat-val">±0.11°</span>
+            <span class="pc-stat-lbl">Inclination Error</span>
+          </div>
+          <div>
+            <span class="pc-stat-val">1.4 km</span>
+            <span class="pc-stat-lbl">HART Range</span>
+          </div>
+        </div>
+      </a>
 
-  <h3>2) Strain Gauge Instrumentation System</h3>
-  <p class="project-summary">
-    Multi-channel low-noise, low-power quarter-bridge strain system with calibration, validation, and thermal drift compensation.
-  </p>
+      <!-- Project 3: Chuck Sensing -->
+      <a href="./projects/chuck_sensing.html" class="project-card">
+        <div>
+          <p class="pc-number">03 — Industrial Sensing</p>
+          <p class="pc-title">Drill Rig Chuck Sensing System</p>
+          <p class="pc-desc">Intrinsically safe sensing module for drill rig chuck monitoring — RPM, CW/CCW direction, and linear feed stroke. A key contribution was a novel magnet geometry enabling reliable direction detection from just 4 discrete magnets, using duty-cycle signature (~10% forward, ~94% reverse), validated across 10–700 RPM on a lathe.</p>
+          <div class="pc-tags">
+            <span class="pc-tag">Hall-Effect Sensing</span>
+            <span class="pc-tag">ToF LiDAR</span>
+            <span class="pc-tag">RS485 Modbus</span>
+            <span class="pc-tag">Embedded Firmware</span>
+            <span class="pc-tag">IS Design</span>
+          </div>
+          <span class="pc-arrow">Read full technical deep-dive →</span>
+        </div>
+        <div class="pc-stats">
+          <div>
+            <span class="pc-stat-val">~10%</span>
+            <span class="pc-stat-lbl">Fwd Duty Cycle</span>
+          </div>
+          <div>
+            <span class="pc-stat-val">~94%</span>
+            <span class="pc-stat-lbl">Rev Duty Cycle</span>
+          </div>
+          <div>
+            <span class="pc-stat-val">4</span>
+            <span class="pc-stat-lbl">Magnets Required</span>
+          </div>
+        </div>
+      </a>
 
-  <p class="readmore">
-    <a href="./projects/strain-gauge.html">Read full technical deep-dive →</a>
+    </div>
+  </div>
 
-  </p>
+  <!-- SKILLS -->
+  <div class="section" id="skills">
+    <p class="section-label">Skills & Tools</p>
+    <h2>Technical Capabilities</h2>
 
-  <h3>3) Drill Rig Chuck Direction, Rotation, and Movement Sensing</h3>
-  <p class="project-summary">
-    Intrinsically safe, field-deployable sensing system capable of reliably measuring drill rig chuck rotation direction, rotation speed (RPM), and linear feed/stroke movement in real time.
-  </p>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <p class="skill-card-label">PCB & Circuit Design</p>
+        <div class="skill-list">
+          <span class="skill-item">Altium Designer</span>
+          <span class="skill-item">KiCAD</span>
+          <span class="skill-item">Analog & mixed-signal design</span>
+          <span class="skill-item">DFM / DFT principles</span>
+          <span class="skill-item">Intrinsically safe circuits</span>
+          <span class="skill-item">High-speed PCB layout</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <p class="skill-card-label">Firmware & Software</p>
+        <div class="skill-list">
+          <span class="skill-item">STM32 / Embedded C</span>
+          <span class="skill-item">Arduino (prototyping)</span>
+          <span class="skill-item">Python (data processing)</span>
+          <span class="skill-item">MATLAB / Simulink</span>
+          <span class="skill-item">Modbus RTU protocol</span>
+          <span class="skill-item">UART · SPI · I²C · RS485</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <p class="skill-card-label">Simulation & Analysis</p>
+        <div class="skill-list">
+          <span class="skill-item">LTSPICE / PSPICE / QSPICE</span>
+          <span class="skill-item">TINA-TI</span>
+          <span class="skill-item">SPICE semiconductor models</span>
+          <span class="skill-item">MATLAB modelling</span>
+          <span class="skill-item">DPT switching analysis</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <p class="skill-card-label">Compliance & Standards</p>
+        <div class="skill-list">
+          <span class="skill-item">IEC 60079 / IEC 80079</span>
+          <span class="skill-item">UL safety standards</span>
+          <span class="skill-item">IS system certification</span>
+          <span class="skill-item">Risk assessment & documentation</span>
+          <span class="skill-item">Energy-limiting design</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <p class="skill-card-label">Instrumentation</p>
+        <div class="skill-list">
+          <span class="skill-item">Strain gauge systems</span>
+          <span class="skill-item">IMU / magnetometer calibration</span>
+          <span class="skill-item">ToF / LiDAR sensing</span>
+          <span class="skill-item">Hall-effect sensing</span>
+          <span class="skill-item">HART · 4–20 mA telemetry</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <p class="skill-card-label">Semiconductor Devices</p>
+        <div class="skill-list">
+          <span class="skill-item">SiC MOSFET characterisation</span>
+          <span class="skill-item">GaN HEMT characterisation</span>
+          <span class="skill-item">Double Pulse Tester design</span>
+          <span class="skill-item">I-V, C-V, trap measurements</span>
+          <span class="skill-item">Agilent power analyser</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <p class="readmore">
-    <a href="./projects/chuck_sensing.html">Read full technical deep-dive →</a
+  <!-- EXPERIENCE -->
+  <div class="section" id="experience">
+    <p class="section-label">Experience & Education</p>
+    <h2>Background</h2>
 
-  </p>
+    <div class="exp-list">
+      <div class="exp-item">
+        <div>
+          <p class="exp-role">Electronic and Field Engineer</p>
+          <p class="exp-org">Sigra Pty Ltd — Brisbane, Australia</p>
+          <p class="exp-desc">Designed and optimised intrinsically safe electronics for downhole and industrial applications under IEC 60079, IEC 80079, and UL standards. Delivered a $1M+ ACARP drilling project and a $250k+ listening outburst project on time and within budget. Developed and validated prototypes through functional, environmental, and safety testing. Conducted on-site troubleshooting of electronic systems during field deployments across active mining sites.</p>
+        </div>
+        <span class="exp-period">Nov 2021 — Present</span>
+      </div>
+      <div class="exp-item">
+        <div>
+          <p class="exp-role">Research Assistant / Research Fellow</p>
+          <p class="exp-org">Queensland Micro- and Nanotechnology Centre, Griffith University</p>
+          <p class="exp-desc">Customised PCB designs for flexible sensor integration using Altium Designer. Conducted fault detection and repair of electronic components in the fabrication lab. Collaborated with interdisciplinary teams on sensor prototypes incorporating advanced materials and fabrication techniques.</p>
+        </div>
+        <span class="exp-period">Aug 2019 — Oct 2021</span>
+      </div>
+      <div class="exp-item">
+        <div>
+          <p class="exp-role">Ph.D. — Power Semiconductor Devices</p>
+          <p class="exp-org">Griffith University, Brisbane, Australia</p>
+          <p class="exp-desc">Thesis: <em>"Parasitic Capacitances of Power Transistors and their Effects in Power Electronics Systems."</em> Designed an in-house Double Pulse Tester for SiC MOSFET and GaN HEMT characterisation. Applied advanced PCB techniques to minimise parasitic inductance — optimised gate-loop layouts, Kelvin-source connections, ground-plane segmentation. Developed and validated SPICE semiconductor models against experimental DPT data.</p>
+        </div>
+        <span class="exp-period">2018 — 2021</span>
+      </div>
+      <div class="exp-item">
+        <div>
+          <p class="exp-role">M.Tech — Control Engineering</p>
+          <p class="exp-org">Graphic Era Deemed University, Dehradun, India</p>
+          <p class="exp-desc">Thesis: <em>"A New Parameter Estimation Method of Solar Photovoltaic."</em> Modelled MPPT algorithms and solar-tracking systems. Implemented PID control algorithms for DC and induction motors.</p>
+        </div>
+        <span class="exp-period">2015 — 2017</span>
+      </div>
+    </div>
+
+    <a href="https://scholar.google.com.au/citations?user=kmwQvPQAAAAJ&hl=en&oi=ao" target="_blank" class="pub-callout">
+      <div class="pub-callout-text">
+        <p><strong>Journal Publications</strong> — Top-tier publications on power semiconductor device modelling, SiC/GaN characterisation, solar PV modelling, and power converter loss analysis. IEEE Power Electronics Society and IEEE Electron Device Society member.</p>
+      </div>
+      <span class="pub-callout-link">View on Google Scholar →</span>
+    </a>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="section" id="contact">
+    <p class="section-label">Contact</p>
+    <h2>Get in Touch</h2>
+    <p>Open to electronics engineering roles in instrumentation, industrial sensing, embedded systems, and power electronics — particularly where field deployment and measurement accuracy matter.</p>
+
+    <div class="contact-grid" style="margin-top: 1.5rem;">
+      <a href="mailto:utkarshjadli@gmail.com" class="contact-item">
+        <span class="contact-label">Email</span>
+        <span class="contact-value">utkarshjadli@gmail.com</span>
+      </a>
+      <a href="https://www.linkedin.com/in/utkarshjadli/" target="_blank" class="contact-item">
+        <span class="contact-label">LinkedIn</span>
+        <span class="contact-value">linkedin.com/in/utkarshjadli</span>
+      </a>
+      <a href="https://scholar.google.com.au/citations?user=kmwQvPQAAAAJ&hl=en&oi=ao" target="_blank" class="contact-item">
+        <span class="contact-label">Google Scholar</span>
+        <span class="contact-value">Published Research</span>
+      </a>
+      <div class="contact-item">
+        <span class="contact-label">Location</span>
+        <span class="contact-value">Brisbane, QLD, Australia</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Dr. Utkarsh Jadli · Electronics Engineer · Brisbane, Australia</p>
+  </footer>
 
 </body>
 </html>
-
