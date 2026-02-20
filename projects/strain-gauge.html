@@ -567,149 +567,49 @@
       <h2>Signal Chain Overview</h2>
       <p>The complete acquisition chain runs from strain gauge excitation through to post-processed microstrain output in Python. Each stage introduces noise, offset, or drift that the system design must manage.</p>
 
-      <div class="block-diagram">
-        <!-- Row 1: Physical input -->
-        <div class="bd-row">
-          <div class="bd-box bd-sensor">
-            <span class="bd-icon">⊞</span>
-            <span class="bd-title">1000 Ω Quarter-Bridge<br>Strain Gauges</span>
-            <span class="bd-sub">×7 active channels</span>
-          </div>
-          <div class="bd-arrow">→</div>
-          <div class="bd-box bd-analog">
-            <span class="bd-icon">⚡</span>
-            <span class="bd-title">Wheatstone Bridge<br>+ 3V LDO Excitation</span>
-            <span class="bd-sub">Stable regulated supply</span>
-          </div>
-          <div class="bd-arrow">→</div>
-          <div class="bd-box bd-analog">
-            <span class="bd-icon">∿</span>
-            <span class="bd-title">PGA<br>(Integrated in ADC)</span>
-            <span class="bd-sub">Gain 16 or 32</span>
-          </div>
-          <div class="bd-arrow">→</div>
-          <div class="bd-box bd-digital">
-            <span class="bd-icon">⊞</span>
-            <span class="bd-title">24-bit ADC<br>(TI ADS131)</span>
-            <span class="bd-sub">OSR 256, SPI interface</span>
-          </div>
-        </div>
-
-        <!-- Aux sensor row -->
-        <div class="bd-aux-row">
-          <div class="bd-box bd-sensor bd-small">
-            <span class="bd-title">NTC Thermistor</span>
-            <span class="bd-sub">Ch8 — temp sensing</span>
-          </div>
-          <div class="bd-arrow-up">↑</div>
-          <div class="bd-box bd-sensor bd-small">
-            <span class="bd-title">Internal Reference</span>
-            <span class="bd-sub">Drift compensation baseline</span>
-          </div>
-          <div class="bd-arrow-up">↑</div>
-        </div>
-
-        <!-- Row 2: Digital processing -->
-        <div class="bd-row bd-row2">
-          <div class="bd-box bd-digital">
-            <span class="bd-icon">⊡</span>
-            <span class="bd-title">STM32 MCU</span>
-            <span class="bd-sub">Acquisition + CRC8 + UART</span>
-          </div>
-          <div class="bd-arrow">→</div>
-          <div class="bd-box bd-comms">
-            <span class="bd-icon">⇌</span>
-            <span class="bd-title">UART / RS-232<br>Comms Protocol</span>
-            <span class="bd-sub">Command / Response + CRC8</span>
-          </div>
-          <div class="bd-arrow">→</div>
-          <div class="bd-box bd-software">
-            <span class="bd-icon">🐍</span>
-            <span class="bd-title">Python<br>Post-Processing</span>
-            <span class="bd-sub">Ref. subtraction, µε, E calc</span>
-          </div>
-          <div class="bd-arrow">→</div>
-          <div class="bd-box bd-output">
-            <span class="bd-icon">📊</span>
-            <span class="bd-title">Microstrain Output<br>+ Young's Modulus</span>
-            <span class="bd-sub">Validated field data</span>
-          </div>
-        </div>
-      </div>
-
       <style>
-        .block-diagram {
+        .bd-wrap {
           margin: 2rem 0;
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
+          overflow-x: auto;
         }
-        .bd-row {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-          flex-wrap: wrap;
-        }
-        .bd-row2 { margin-top: 0.3rem; }
-        .bd-aux-row {
-          display: flex;
-          align-items: center;
-          gap: 0.4rem;
-          padding-left: 0;
-          margin: 0.2rem 0 0.2rem 0;
-        }
-        .bd-box {
-          background: var(--bg2);
-          border: 1px solid var(--border);
-          border-radius: 3px;
-          padding: 0.8rem 1rem;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          min-width: 130px;
-          flex: 1;
-          max-width: 170px;
-          gap: 0.2rem;
-          transition: border-color 0.2s, background 0.2s;
-        }
-        .bd-box:hover { background: var(--bg3); }
-        .bd-box.bd-small {
-          padding: 0.55rem 0.8rem;
-          min-width: 110px;
-          max-width: 140px;
-        }
-        .bd-sensor  { border-top: 2px solid #6ab0e0; }
-        .bd-analog  { border-top: 2px solid var(--accent); }
-        .bd-digital { border-top: 2px solid #a070d0; }
-        .bd-comms   { border-top: 2px solid #60b890; }
-        .bd-software{ border-top: 2px solid var(--green); }
-        .bd-output  { border-top: 2px solid var(--accent); }
-        .bd-icon { font-size: 1rem; }
-        .bd-title {
+        .bd-svg-box {
           font-family: var(--sans);
-          font-size: 0.78rem;
+        }
+        .bd-svg-box .box-bg {
+          fill: #13151a;
+          stroke: #2a2d35;
+          stroke-width: 1;
+          rx: 4;
+        }
+        .bd-svg-box text {
+          fill: #f0f1f3;
+          font-size: 11px;
           font-weight: 500;
-          color: var(--text-bright);
-          line-height: 1.3;
+          text-anchor: middle;
         }
-        .bd-sub {
-          font-family: var(--mono);
-          font-size: 0.62rem;
-          color: var(--text-dim);
-          letter-spacing: 0.03em;
+        .bd-svg-box .sub-text {
+          fill: #7a7e8a;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 9px;
+          font-weight: 400;
         }
-        .bd-arrow {
-          font-size: 1.2rem;
-          color: var(--border);
-          flex-shrink: 0;
+        .bd-svg-box line, .bd-svg-box path, .bd-svg-box polyline {
+          stroke: #6a7585;
+          stroke-width: 1.5;
+          fill: none;
         }
-        .bd-arrow-up {
-          font-size: 1rem;
-          color: var(--border);
-          flex-shrink: 0;
-          align-self: center;
+        .bd-svg-box .arrow-head {
+          fill: #6a7585;
+          stroke: none;
         }
+        /* border-top colour bars */
+        .c-analog  { fill: #e8a040; }
+        .c-sensor  { fill: #6ab0e0; }
+        .c-digital { fill: #a070d0; }
+        .c-comms   { fill: #60b890; }
+        .c-soft    { fill: #4ec98a; }
+        .c-output  { fill: #e8a040; }
+
         .bd-legend {
           display: flex;
           flex-wrap: wrap;
@@ -729,20 +629,173 @@
           height: 3px;
           border-radius: 1px;
         }
-        @media (max-width: 700px) {
-          .bd-row, .bd-aux-row { gap: 0.3rem; }
-          .bd-box { min-width: 90px; font-size: 0.7rem; }
-        }
       </style>
+
+      <div class="bd-wrap">
+      <svg class="bd-svg-box" viewBox="0 0 700 750" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arr" markerWidth="7" markerHeight="7" refX="3" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#6a7585"/>
+          </marker>
+        </defs>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- ROW 1: Wheatstone Bridge + LDO (center)       -->
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- box: x=250, y=10, w=200, h=62 -->
+        <rect x="250" y="10" width="200" height="62" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="250" y="10" width="200" height="3" rx="2" class="c-analog"/>
+        <text x="350" y="34" class="bd-svg-box" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">Wheatstone Bridge</text>
+        <text x="350" y="49" class="bd-svg-box" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">+LDO Excitation</text>
+        <text x="350" y="64" class="sub-text" style="text-anchor:middle">Stable regulated supply</text>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- CONNECTORS: LDO → 3 sensors                   -->
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- horizontal bar at y=100 spanning x=100 to x=600 -->
+        <line x1="100" y1="100" x2="600" y2="100" stroke="#6a7585" stroke-width="1.5"/>
+        <!-- vertical stem down from LDO center (x=350) to bar -->
+        <line x1="350" y1="72" x2="350" y2="100" stroke="#6a7585" stroke-width="1.5"/>
+        <!-- left stem: x=100 down to Strain Gauges box top (y=118) -->
+        <line x1="100" y1="100" x2="100" y2="118" stroke="#6a7585" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- center stem: x=350 down to Internal Reference box top -->
+        <line x1="350" y1="100" x2="350" y2="118" stroke="#6a7585" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- right stem: x=600 down to NTC box top -->
+        <line x1="600" y1="100" x2="600" y2="118" stroke="#6a7585" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- ROW 2: Three sensor boxes                      -->
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- Strain Gauges: x=15, y=118, w=170, h=68 -->
+        <rect x="15" y="118" width="170" height="68" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="15" y="118" width="170" height="3" rx="2" class="c-sensor"/>
+        <text x="100" y="142" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">1000 Ω Quarter-Bridge</text>
+        <text x="100" y="157" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">Strain Gauges</text>
+        <text x="100" y="176" class="sub-text" style="text-anchor:middle">×7 active channels</text>
+
+        <!-- Internal Reference: x=265, y=118, w=170, h=68 -->
+        <rect x="265" y="118" width="170" height="68" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="265" y="118" width="170" height="3" rx="2" class="c-sensor"/>
+        <text x="350" y="147" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">Internal Reference</text>
+        <text x="350" y="176" class="sub-text" style="text-anchor:middle">Drift compensation baseline</text>
+
+        <!-- NTC Thermistor: x=515, y=118, w=170, h=68 -->
+        <rect x="515" y="118" width="170" height="68" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="515" y="118" width="170" height="3" rx="2" class="c-sensor"/>
+        <text x="600" y="147" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">NTC Thermistor</text>
+        <text x="600" y="176" class="sub-text" style="text-anchor:middle">Ch8 — temperature sensing</text>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- CONNECTORS: sensors → two ADCs                 -->
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- Strain Gauges (bottom center x=100, y=186) → 24-bit ADC -->
+        <!-- Internal Ref (bottom center x=350, y=186) → 24-bit ADC  -->
+        <!-- NTC (bottom center x=600, y=186) → 16-bit ADC           -->
+
+        <!-- Strain → 24-bit: down to y=224, then right to x=210 -->
+        <line x1="100" y1="186" x2="100" y2="224" stroke="#6a7585" stroke-width="1.5"/>
+        <line x1="100" y1="224" x2="210" y2="224" stroke="#6a7585" stroke-width="1.5"/>
+        <line x1="210" y1="224" x2="210" y2="248" stroke="#6a7585" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Ref → 24-bit: down to y=224, then left to x=210 -->
+        <line x1="350" y1="186" x2="350" y2="224" stroke="#6a7585" stroke-width="1.5"/>
+        <!-- horizontal already covered by meeting at x=210; draw from 350 to 210 -->
+        <line x1="350" y1="224" x2="210" y2="224" stroke="#6a7585" stroke-width="1.5"/>
+        <!-- arrow already drawn above, just connect horizontally -->
+
+        <!-- NTC → 16-bit: straight down -->
+        <line x1="600" y1="186" x2="600" y2="248" stroke="#6a7585" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- ROW 3: Two ADCs                               -->
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- 24-bit ADC: x=80, y=248, w=260, h=72 -->
+        <rect x="80" y="248" width="260" height="72" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="80" y="248" width="260" height="3" rx="2" class="c-digital"/>
+        <text x="210" y="272" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">24-bit ADC</text>
+        <text x="210" y="289" class="sub-text" style="text-anchor:middle">Strain + Reference · PGA Gain 16/32</text>
+        <text x="210" y="308" class="sub-text" style="text-anchor:middle">Integrated PGA · SPI</text>
+
+        <!-- 16-bit ADC: x=470, y=248, w=210, h=72 -->
+        <rect x="470" y="248" width="210" height="72" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="470" y="248" width="210" height="3" rx="2" class="c-digital"/>
+        <text x="575" y="272" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">16-bit ADC</text>
+        <text x="575" y="292" class="sub-text" style="text-anchor:middle">Temperature channel · SPI</text>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- CONNECTORS: both ADCs → STM32                 -->
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- 24-bit (bottom x=210, y=320) → merge bar at y=368 -->
+        <line x1="210" y1="320" x2="210" y2="368" stroke="#6a7585" stroke-width="1.5"/>
+        <!-- 16-bit (bottom x=575, y=320) → merge bar at y=368 -->
+        <line x1="575" y1="320" x2="575" y2="368" stroke="#6a7585" stroke-width="1.5"/>
+        <!-- horizontal merge bar -->
+        <line x1="210" y1="368" x2="575" y2="368" stroke="#6a7585" stroke-width="1.5"/>
+        <!-- down to STM32 (center x=350, top y=388) -->
+        <line x1="350" y1="368" x2="350" y2="388" stroke="#6a7585" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- ROW 4: STM32 MCU                              -->
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- x=250, y=388, w=200, h=60 -->
+        <rect x="250" y="388" width="200" height="60" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="250" y="388" width="200" height="3" rx="2" class="c-digital"/>
+        <text x="350" y="413" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">STM32 MCU</text>
+        <text x="350" y="438" class="sub-text" style="text-anchor:middle">Acquisition + CRC8 + UART</text>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- CONNECTOR: MCU → UART                         -->
+        <!-- ══════════════════════════════════════════════ -->
+        <line x1="350" y1="448" x2="350" y2="472" stroke="#6a7585" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- ROW 5: UART                                   -->
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- x=250, y=472, w=200, h=60 -->
+        <rect x="250" y="472" width="200" height="60" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="250" y="472" width="200" height="3" rx="2" class="c-comms"/>
+        <text x="350" y="497" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">UART / RS-232</text>
+        <text x="350" y="513" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">Comms Protocol</text>
+        <text x="350" y="528" class="sub-text" style="text-anchor:middle">Command / Response + CRC8</text>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- CONNECTOR: UART → Python                      -->
+        <!-- ══════════════════════════════════════════════ -->
+        <line x1="350" y1="532" x2="350" y2="556" stroke="#6a7585" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- ROW 6: Python Post-Processing                 -->
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- x=250, y=556, w=200, h=60 -->
+        <rect x="250" y="556" width="200" height="60" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="250" y="556" width="200" height="3" rx="2" class="c-soft"/>
+        <text x="350" y="581" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">Python Post-Processing</text>
+        <text x="350" y="606" class="sub-text" style="text-anchor:middle">Ref. subtraction, µε, E calc</text>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- CONNECTOR: Python → Microstrain Output        -->
+        <!-- ══════════════════════════════════════════════ -->
+        <line x1="350" y1="616" x2="350" y2="640" stroke="#6a7585" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- ROW 7: Microstrain Output                     -->
+        <!-- ══════════════════════════════════════════════ -->
+        <!-- x=250, y=640, w=200, h=60 -->
+        <rect x="250" y="640" width="200" height="60" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="250" y="640" width="200" height="3" rx="2" class="c-output"/>
+        <text x="350" y="665" class="sub-text" style="fill:#f0f1f3;font-size:11px;font-weight:500;text-anchor:middle;font-family:inherit">Microstrain Output</text>
+        <text x="350" y="690" class="sub-text" style="text-anchor:middle">Validated field data</text>
+
+      </svg>
+      </div>
 
       <div class="bd-legend">
         <div class="bd-legend-item"><div class="bd-legend-dot" style="background:#6ab0e0"></div> Sensors</div>
-        <div class="bd-legend-item"><div class="bd-legend-dot" style="background:var(--accent)"></div> Analog</div>
-        <div class="bd-legend-item"><div class="bd-legend-dot" style="background:#a070d0"></div> Digital</div>
+        <div class="bd-legend-item"><div class="bd-legend-dot" style="background:var(--accent)"></div> Analog / Excitation</div>
+        <div class="bd-legend-item"><div class="bd-legend-dot" style="background:#a070d0"></div> Digital (ADCs + MCU)</div>
         <div class="bd-legend-item"><div class="bd-legend-dot" style="background:#60b890"></div> Comms</div>
         <div class="bd-legend-item"><div class="bd-legend-dot" style="background:var(--green)"></div> Software</div>
       </div>
-    </div>
 
     <!-- CHANNEL CONFIGURATION -->
     <div class="section">
