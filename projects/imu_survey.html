@@ -48,10 +48,16 @@
 
     /* HEADER */
     header {
-      position: relative;
+      position: fixed;             /* stays pinned to viewport */
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;                /* sits above all other content */
       border-bottom: 1px solid var(--border);
       padding: 0 2rem;
-      background: var(--bg2);
+      background: rgba(19, 21, 26, 0.85);   /* semi-transparent */
+      backdrop-filter: blur(12px);           /* frosted glass blur */
+      -webkit-backdrop-filter: blur(12px);   /* Safari support */
     }
     .header-inner {
       max-width: 900px;
@@ -89,7 +95,7 @@
     .hero {
       max-width: 900px;
       margin: 0 auto;
-      padding: 4rem 2rem 3rem;
+      padding: 7rem 2rem 3rem;
       border-bottom: 1px solid var(--border);
       opacity: 0;
       animation: fadeUp 0.7s ease 0.05s forwards;
