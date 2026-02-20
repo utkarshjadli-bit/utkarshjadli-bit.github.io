@@ -3,749 +3,841 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Accurate and Cost-Effective IMU-based Survey Tool for Drillhole Orientation Measurement | Dr. Utkarsh Jadli</title>
-
-  <!-- KaTeX CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
-  <!-- KaTeX JS -->
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
-  <!-- KaTeX auto-render -->
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      renderMathInElement(document.body, {
-        delimiters: [
-          {left: "$$", right: "$$", display: true},
-          {left: "$", right: "$", display: false}
-        ]
-      });
-    });
-  </script>
-
+  <title>IMU-Based Downhole Survey System — Dr. Utkarsh Jadli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    body{
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      max-width: 980px;
-      margin: 40px auto;
-      padding: 0 18px;
-      line-height: 1.65;
-      color:#111;
-      background:#fff;
+    :root {
+      --bg: #0e0f11;
+      --bg2: #13151a;
+      --bg3: #1a1d24;
+      --border: #2a2d35;
+      --accent: #e8a040;
+      --accent2: #c47820;
+      --text: #d4d6db;
+      --text-dim: #7a7e8a;
+      --text-bright: #f0f1f3;
+      --green: #4ec98a;
+      --blue: #6ab0e0;
+      --mono: 'IBM Plex Mono', monospace;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Inter', sans-serif;
     }
-    h1{
-      font-size: 40px;
-      margin: 0 0 6px;
-      font-weight: 800;
-      color: #b30000;
-    }
-    .subtitle{
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
       font-size: 16px;
-      color:#444;
-      margin:0 0 18px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* HEADER */
+    header {
+      position: relative;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      background: var(--bg2);
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .back-link {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .back-link::before { content: '←'; font-size: 1rem; }
+    .header-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid var(--accent2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    /* HERO */
+    .hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4rem 2rem 3rem;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.05s forwards;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      color: var(--text-bright);
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+    }
+    .hero-role {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-role span {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--green);
+      background: rgba(78,201,138,0.08);
+      border: 1px solid rgba(78,201,138,0.2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      letter-spacing: 0.03em;
+    }
+    .hero-intro {
+      font-size: 1.05rem;
+      color: var(--text);
+      max-width: 680px;
+      line-height: 1.8;
+    }
+
+    /* SPECS BAR */
+    .specs-bar {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.25s forwards;
+    }
+    .specs-bar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    }
+    .spec-item {
+      padding: 1.4rem 1rem;
+      border-right: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+    }
+    .spec-item:last-child { border-right: none; }
+    .spec-item:nth-child(1) { animation-delay: 0.1s; }
+    .spec-item:nth-child(2) { animation-delay: 0.15s; }
+    .spec-item:nth-child(3) { animation-delay: 0.2s; }
+    .spec-item:nth-child(4) { animation-delay: 0.25s; }
+    .spec-item:nth-child(5) { animation-delay: 0.3s; }
+    .spec-item:nth-child(6) { animation-delay: 0.35s; }
+    .spec-value {
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .spec-label {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* CONTENT */
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+    .section {
+      padding: 3.5rem 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 60px;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--text-bright);
+      margin-bottom: 1.4rem;
+      line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--text-bright);
+      margin: 2rem 0 0.8rem;
+    }
+    h3:first-of-type { margin-top: 0; }
+    p {
+      color: var(--text);
+      margin-bottom: 1rem;
+      max-width: 720px;
+    }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--text-bright); font-weight: 500; }
+    em { font-style: italic; }
+
+    /* FIGURES */
+    .figure { margin: 2rem 0; }
+    .figure img {
+      width: 100%;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .figure figcaption {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      color: var(--text);
+      margin-top: 0.75rem;
+      line-height: 1.6;
+      padding: 0.6rem 0.8rem;
+      background: var(--bg3);
+      border-left: 2px solid var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+
+    /* RESULT GRID */
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .result-item { background: var(--bg2); padding: 1.2rem 1.4rem; }
+    .result-item .rv {
+      font-family: var(--mono);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .result-item .rl {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* PARAMETER CARDS */
+    .param-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+    .param-card {
+      background: var(--bg2);
+      padding: 1.5rem;
+      transition: background 0.2s;
+    }
+    .param-card:hover { background: var(--bg3); }
+    .param-card .pc-tag {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .param-card h4 {
+      font-size: 0.95rem;
       font-weight: 500;
+      color: var(--text-bright);
+      margin-bottom: 0.6rem;
     }
-    .topnav{
-      margin: 10px 0 24px;
-      font-size: 16px;
-    }
-    .topnav a{
-      color:#0b66c3;
-      text-decoration:none;
-      font-weight:600;
-    }
-    .topnav a:hover{ text-decoration: underline; }
-
-    h2{
-      margin-top: 34px;
-      border-bottom:2px solid #eee;
-      padding-bottom:10px;
-      font-size: 28px;
-      font-weight: 800;
-    }
-
-    .project{
-      padding: 16px 18px;
-      border: 1px solid #eee;
-      border-radius: 12px;
-      background: #fafafa;
-      margin-bottom: 18px;
-    }
-
-    /* Project title: bigger, black, bold */
-    .project-title{
-      font-size: 34px;
-      font-weight: 800;
-      color: #000;
-      margin: 12px 0 12px;
-    }
-
-    /* Question blocks */
-    .q-title{
-      font-size: 18px;
-      font-weight: 800;
-      color: #0b66c3;
+    .param-card p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
       margin: 0;
-    }
-    .qbox{
-      background:#fff;
-      border:1px solid #e8e8e8;
-      border-radius:12px;
-      padding:14px 16px;
-      margin:14px 0;
-    }
-    .q-sep{
-      height:1px;
-      background:#eeeeee;
-      margin:10px 0 12px;
+      max-width: none;
     }
 
-    .kpi{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:10px;
-    }
-    .kpi span{
-      display:inline-block;
-      border:1px solid #e6e6e6;
-      background:#fff;
-      border-radius:999px;
-      padding:6px 10px;
-      font-size:13px;
+    /* TABLE */
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.8rem; }
+    thead tr { background: var(--bg3); border-bottom: 2px solid var(--accent2); }
+    th { padding: 0.7rem 1rem; text-align: left; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 400; }
+    td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); color: var(--text); }
+    tr.highlight { background: rgba(232,160,64,0.05); }
+    tr.highlight td { color: var(--text-bright); }
+
+    /* TAG */
+    .tag-good {
+      display: inline-block;
+      font-size: 0.65rem;
+      background: rgba(78,201,138,0.1);
+      color: var(--green);
+      border: 1px solid rgba(78,201,138,0.25);
+      padding: 0.1rem 0.45rem;
+      border-radius: 2px;
+      letter-spacing: 0.05em;
     }
 
-    .figure{
-      margin:12px 0 0;
-      padding:10px;
-      background:#fff;
-      border:1px solid #eee;
-      border-radius:12px;
+    /* OUTCOME BOX */
+    .outcome-box {
+      background: linear-gradient(135deg, rgba(232,160,64,0.08), rgba(232,160,64,0.03));
+      border: 1px solid rgba(232,160,64,0.25);
+      border-radius: 4px;
+      padding: 2rem;
+      margin-top: 1.5rem;
     }
-    
-    .figure img{
-        width:100%;
-        height:auto;
-        border-radius:10px;
-        display:block;
-      }
-      
-      .img-small{
-        max-width: 400px;
-        margin: 0 auto;
-      }
-      
-      .img-tiny{
-        max-width: 280px;
-        margin: 0 auto;
-      }
-      
-      .img-medium{
-        max-width: 600px;
-        margin: 0 auto;
-      }
-      
-      .img-large{
-        max-width: 850px;
-        margin: 0 auto;
-      }
-    
-    .caption{
-      font-size:13px;
-      color:#555;
-      margin-top:8px;
-      margin-bottom:20px;
-      font-weight:700;
-      text-align:center;
+    .outcome-box p { font-size: 1rem; color: var(--text); margin: 0; max-width: none; }
+
+    /* EQUATION BOX */
+    .equation-box {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 3px;
+      padding: 1.2rem 1.6rem;
+      margin: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .eq-main {
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+    .eq-terms { display: flex; flex-wrap: wrap; gap: 0.5rem 2rem; }
+    .eq-terms span { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
+
+    /* CODE */
+    code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      color: var(--accent);
+      background: rgba(232,160,64,0.08);
+      padding: 0.1em 0.4em;
+      border-radius: 2px;
     }
 
-    .muted{ color:#555; }
-
-    /* Lists inside qboxes */
-    .qbox ul{ margin: 8px 0 0 20px; }
-    .qbox li{ margin: 8px 0; }
-
-    .subheading-list{
-      margin: 12px 0 8px 22px;
-      padding: 0;
+    /* INLINE FIGURE PAIR */
+    .fig-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2rem 0;
     }
-    .subheading-list li{
-      font-weight: 400;
-      color: #222;
-      margin: 10px 0 10px;
-    }
-    .subheading-list li b{
-      font-weight: 700;
-      color: #000;
-    }
-    .subheading-list li i{
-      font-style: italic;
-      color: #000;
+    @media (max-width: 640px) {
+      .fig-pair { grid-template-columns: 1fr; }
+      .specs-bar-inner { grid-template-columns: repeat(2, 1fr); }
     }
 
-    .subhead{
-      font-size:15px;
-      font-weight:800;
-      margin:12px 0 6px;
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
+    .section:nth-of-type(1)  { animation-delay: 0.2s; }
+    .section:nth-of-type(2)  { animation-delay: 0.25s; }
+    .section:nth-of-type(3)  { animation-delay: 0.3s; }
+    .section:nth-of-type(4)  { animation-delay: 0.35s; }
+    .section:nth-of-type(5)  { animation-delay: 0.4s; }
+    .section:nth-of-type(6)  { animation-delay: 0.45s; }
+    .section:nth-of-type(7)  { animation-delay: 0.5s; }
+    .section:nth-of-type(8)  { animation-delay: 0.55s; }
+    .section:nth-of-type(9)  { animation-delay: 0.6s; }
+    .section:nth-of-type(10) { animation-delay: 0.65s; }
+    .section:nth-of-type(11) { animation-delay: 0.7s; }
 
-    .hr{height:1px;background:#eee;margin:18px 0}
-
-    code{background:#f3f3f3;padding:2px 6px;border-radius:6px}
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
   </style>
 </head>
-
 <body>
 
-  <h1>Accurate and Cost-Effective IMU-based Survey Tool for Drillhole Orientation Measurement</h1>
-
-  <p class="topnav">
-    ← <a href="../index.html">Back to portfolio</a>
-  </p>
-
-  <p style="margin: 24px 0;"><b>Role:</b> Embedded Systems Engineer (Electronics Design + Firmware + Calibration + Validation) </p>
-
-  <div class="qbox">
-    <p class="q-title">Why does this project matter?</p>
-    <div class="q-sep"></div>
-    <p>
-      The success of any drilling operation—whether mineral exploration, geotechnical investigation, or directional oil & gas drilling—depends heavily on one critical factor: accurate borehole orientation measurement. Even small errors in survey data can accumulate rapidly with depth and cause major positional drift, leading to missed targets, re-drilling costs, and safety risks.
-    </p>
-    <p>
-      Survey parameters such as azimuth, inclination, and toolface define the exact underground direction of the drill string. These values are used to track the borehole trajectory and confirm that drilling is progressing toward the planned geological target. If the survey tool reports incorrect orientation, the drilling path may deviate without the operator realising it until significant depth has already been drilled. Even small angular errors can accumulate rapidly with depth. For example, a <b>1° azimuth error over a 100 m borehole can result in ~1.7 m lateral drift</b>, and over longer multi-kilometre holes, this deviation can grow to <b>several metres or tens of metres</b>, potentially missing the target zone entirely.
-    </p>
-    <p>
-      This is not just a theoretical problem — in real drilling operations, survey error directly translates into <b>trajectory mismatch between planned and actual borehole paths</b>, leading to costly correction drilling, reduced targeting accuracy, and increased operational risk.
-    </p>
-    <div class="figure img-medium">
-      <img src="../assets/borehole_path.png" alt="Borehole trajectory deviation due to survey error">
+  <header>
+    <div class="header-inner">
+      <a href="../index.html" class="back-link">Back to Portfolio</a>
+      <span class="header-tag">Downhole Instrumentation</span>
     </div>
-    <div class="caption">Figure 1: Illustration of borehole trajectory deviation caused by survey measurement error accumulation with depth.</div>
-    <p>
-      That is why high-precision downhole survey systems are essential. Reliable orientation measurement ensures drilling remains aligned with design objectives, improves decision-making during drilling, and ultimately reduces cost, risk, and uncertainty in the field.
+  </header>
+
+  <div class="hero">
+    <p class="hero-eyebrow">Project 01 — Field Instrumentation</p>
+    <h1>IMU-Based Downhole Survey System</h1>
+    <div class="hero-role">
+      <span>PCB Design</span>
+      <span>Embedded Firmware</span>
+      <span>Sensor Fusion</span>
+      <span>Calibration</span>
+      <span>HART Telemetry</span>
+      <span>Validation Testing</span>
+    </div>
+    <p class="hero-intro">
+      A complete, intrinsically safe downhole survey instrument for real-time borehole orientation measurement in drilling operations. The system measures azimuth, inclination, and toolface using a redundant multi-sensor IMU architecture, with calibrated magnetometer and accelerometer outputs, gyroscope-based drill rotation detection, and long-distance HART telemetry validated over 1.4 km of armoured cable. Validated across three independent tool builds.
     </p>
   </div>
 
-  <div class="qbox">
-    <p class="q-title">What was the goal?</p>
-    <div class="q-sep"></div>
-    <p>
-      The goal of this project was to develop a cost-effective, field-deployable, intrinsically safe, precision IMU-based downhole survey system capable of measuring azimuth, inclination, and toolface in real time for drilling applications. The system was designed to provide reliable borehole orientation data to verify the drilling trajectory and reduce positional drift at long depths.
-    </p>
+  <div class="specs-bar">
+    <div class="specs-bar-inner">
+      <div class="spec-item">
+        <span class="spec-value">±0.33°</span>
+        <span class="spec-label">Azimuth Error</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">±0.11°</span>
+        <span class="spec-label">Inclination Error</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">±0.25°</span>
+        <span class="spec-label">Toolface Error</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">0.564 RPM</span>
+        <span class="spec-label">Rotation RMS Error</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">1.4 km</span>
+        <span class="spec-label">HART Range</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">3 Tools</span>
+        <span class="spec-label">Cross-Validated</span>
+      </div>
+    </div>
   </div>
 
-  <div class="qbox">
-    <p class="q-title">What constraints mattered most?</p>
-    <div class="q-sep"></div>
-    <p>
-      This project had several critical constraints that strongly influenced the hardware design, sensor selection, and firmware architecture:
-    </p>
-    <ul>
-      <li>
-        <b>High orientation accuracy requirement</b><br>
-        The system needed to measure borehole orientation with very small allowable error, since even minor azimuth or inclination offsets accumulate into large positional drift over long drilling depths.
-      </li>
-      <li>
-        <b>Harsh downhole operating environment</b><br>
-        The survey tool had to remain reliable under extreme vibration, mechanical shock, temperature variation, and continuous drilling disturbance, where IMU sensors are highly susceptible to noise and drift.
-      </li>
-      <li>
-        <b>Magnetometer-based azimuth limitations</b><br>
-        Since azimuth was derived using magnetic field sensing, the design had to handle real-world challenges such as magnetic disturbances, sensor bias, and alignment errors that can degrade heading accuracy.
-      </li>
-      <li>
-        <b>Intrinsic Safety (IS) compliance</b><br>
-        The electronics were designed under intrinsic safety principles, requiring strict energy-limiting constraints to ensure safe operation in hazardous mining environments.
-      </li>
-      <li>
-        <b>Low-power embedded operation</b><br>
-        The system needed to run efficiently for long-duration field deployment, requiring a low-power microcontroller architecture and careful sensor duty-cycle management.
-      </li>
-      <li>
-        <b>Reliable communication for downhole telemetry</b><br>
-        While UART was sufficient for calibration and bench testing, the system required a robust field communication method suitable for drilling deployment, leading to a HART-based telemetry interface.
-      </li>
-      <li>
-        <b>Sensor redundancy and data stability</b><br>
-        To improve reliability, multiple inertial and magnetic sensors were used, requiring consistent alignment, synchronized sampling, and robust averaging/fusion logic to ensure stable outputs.
-      </li>
-    </ul>
-    <p>
-      These constraints made the project more than just an IMU integration task—it required careful engineering across sensor fusion strategy, rugged embedded design, intrinsic safety practices, and real-world calibration validation.
-    </p>
-  </div>
+  <div class="content">
 
-  <div class="qbox">
-    <p class="q-title">What did I design?</p>
-    <div class="q-sep"></div>
-    <p>
-      I designed a complete IMU-based downhole survey measurement system capable of estimating azimuth, inclination, and toolface with high precision for drilling applications. The system was developed as an intrinsically safe electronics platform, intended for real-world borehole survey operations where accuracy, stability, and reliability are critical.
-    </p>
-    <p>
-      The design combined redundant inertial sensing, embedded processing, and calibration workflows to deliver stable orientation outputs even under challenging downhole conditions. The final system architecture included sensor fusion-ready hardware, onboard data handling, and both bench-test and drilling communication interfaces.
-    </p>
-    <p>
-      Key outcomes targeted were high-accuracy borehole orientation measurement and robustness for field deployment.
-    </p>
-  </div>
+    <!-- 01 APPLICATION -->
+    <div class="section">
+      <p class="section-label">01 — Application</p>
+      <h2>Why Borehole Orientation Accuracy Matters</h2>
+      <p>
+        In mineral exploration, geotechnical investigation, and directional drilling, the survey tool is the instrument that tells the operator where the drill bit actually is underground. A borehole cannot be directly observed — its trajectory is reconstructed entirely from downhole survey measurements taken at regular depth intervals. Three parameters define that trajectory at any given point: <strong>azimuth</strong> (the compass bearing of the borehole), <strong>inclination</strong> (its angle from vertical), and <strong>toolface</strong> (the rotational orientation of the drill string around the borehole axis).
+      </p>
+      <p>
+        The critical challenge is error accumulation. A survey measurement error does not stay at the point where it was made — it propagates forward and compounds with every subsequent measurement. A <strong>1° azimuth error over a 100 m borehole translates into approximately 1.7 m of lateral drift</strong>. Over a multi-kilometre hole, the same systematic error can grow to tens of metres, potentially missing the target zone entirely. In directional drilling applications, where the drill string must be steered toward a specific geological target, this is not a recoverable situation without expensive correction drilling.
+      </p>
+      <p>
+        This is the engineering problem the system addresses: delivering azimuth, inclination, and toolface measurements accurate enough that trajectory errors remain small even at depth, in a package that can survive the mechanical shock, vibration, and temperature extremes of a working drill site, and transmit data reliably to the surface over long cable runs.
+      </p>
 
-  <div class="qbox">
-    <p class="q-title">How was the system implemented (Sensors + Architecture)?</p>
-    <div class="q-sep"></div>
-    <p>
-      The survey system was implemented using a redundant multi-sensor architecture, where multiple inertial sensors were combined to improve measurement confidence and reduce drift sensitivity.
-    </p>
+      <figure class="figure">
+        <img src="../assets/borehole_path.png" alt="Borehole trajectory deviation due to survey error accumulation">
+        <figcaption>Fig. 1 — Borehole trajectory deviation caused by survey measurement error accumulating with depth. Even a small angular offset at the measurement point produces increasing positional drift as depth grows.</figcaption>
+      </figure>
+    </div>
 
-    <ul class="subheading-list">
-      <li>
-        <b>Sensor Strategy</b>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>
-            <b>Accelerometer-based inclination</b> was used to determine the gravity vector and calculate inclination reliably.
-          </li>
-          <li>
-            <b>Magnetometer-based azimuth</b> was used to estimate heading relative to Earth's magnetic field.
-          </li>
-          <li>
-            <b>Toolface estimation</b> was computed using the combined gravity vector (accelerometer) and magnetic field vector (magnetometer), allowing the system to determine the tool's rotational orientation around the borehole axis (critical for directional drilling and steering verification).
-          </li>
-          <li>
-            <b>Gyroscope-based rotation sensing</b> was used to detect drill string rotation. Since survey measurements must be taken when the drill string is stationary (to avoid dynamic errors and magnetic disturbances), gyro data was used as a rotation detection / survey-validity check, ensuring azimuth/toolface outputs are only trusted when rotation is below a defined threshold.
-          </li>
-          <li>
-            <b>Multiple sensors </b> were used to introduce redundancy and averaging, improving reliability and noise performance. Rather than relying on a single sensor, the design intentionally used multiple IMUs and magnetometers so that inconsistent readings could be identified and reduced through averaging and validation logic.
-          </li>
-        </ul>
-      </li>
+    <!-- 02 SYSTEM ARCHITECTURE -->
+    <div class="section">
+      <p class="section-label">02 — System Architecture</p>
+      <h2>What Was Built</h2>
+      <p>
+        The system was developed as two tightly coupled hardware modules: a <strong>Survey PCB</strong> that handles all sensing, data acquisition, and embedded control; and an <strong>IS Comms PCB</strong> that provides long-distance surface telemetry via a 24V 4–20 mA HART interface. Together they form a complete, intrinsically safe downhole instrument — the Survey PCB responsible for measurement and data formatting, the Comms PCB responsible for getting that data to the surface over drilling cable lengths.
+      </p>
+      <p>
+        The embedded firmware was deliberately designed as a lightweight acquisition and telemetry engine rather than an onboard computation platform. The STM32 MCU continuously acquires raw accelerometer, gyroscope, and magnetometer readings from all sensors, packetises them with CRC8 validation, and transmits the raw dataset to the surface. All orientation processing — azimuth, inclination, toolface calculation, calibration correction, and accuracy evaluation — is performed offline in Python. This keeps the firmware deterministic and simple, allows calibration algorithms to be updated without reflashing embedded code, and makes the full raw dataset available for audit and reprocessing.
+      </p>
 
-      <li>
-        <b>Embedded Processing Architecture</b>
-        <p style="margin: 8px 0;">
-          The embedded firmware was intentionally designed as a lightweight acquisition and telemetry engine, rather than performing heavy computation internally.
-        </p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>The MCU (STM32) continuously acquired raw accelerometer, gyroscope, and magnetometer readings from all sensors.</li>
-          <li>The raw data was then formatted, packetized, and transmitted to the host system.</li>
-          <li>All orientation processing (azimuth, inclination, toolface calculation, calibration correction, and accuracy evaluation) was performed externally using Python scripts.</li>
-        </ul>
-        <p style="margin: 8px 0;">This approach provided several key advantages:</p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>Avoided firmware-side calibration mistakes, since calibration constants and compensation methods could be validated and updated offline without reflashing embedded code.</li>
-          <li>Reduced microcontroller computational load, improving reliability and lowering risk of timing jitter during high-rate sampling.</li>
-          <li>Enabled rapid iteration and debugging, since orientation algorithms could be improved in Python without touching embedded firmware.</li>
-          <li>Improved traceability, as the full raw dataset was logged and could be reprocessed later for verification or audit.</li>
-        </ul>
-        <p style="margin: 8px 0;">
-          At this stage, the fusion approach was primarily based on redundancy + averaging, but the architecture was designed such that Kalman filtering could later be added as a firmware upgrade for improved dynamic performance and drift handling.
-        </p>
-      </li>
-
-      <li>
-        <b>Communication Interface</b>
-        <p style="margin: 8px 0;">Two communication modes were implemented:</p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li><b>UART communication</b> was used for calibration and bench testing to allow easy debugging and high-speed data logging.</li>
-          <li><b>HART protocol communication</b> was intended for real drilling use, enabling reliable long-distance surface telemetry in an industrial drilling environment.</li>
-        </ul>
-        <p style="margin: 8px 0;">
-          This separation allowed fast development and validation in the lab while still aligning with field deployment requirements.
-        </p>
-      </li>
-
-      <li>
-        <b>Intrinsic Safety Implementation</b>
-        <p style="margin: 8px 0;">
-          The system was designed under intrinsic safety constraints, meaning the electronics had to operate under strict energy limitations suitable for hazardous mining environments. This influenced component selection, supply architecture, and system power strategy, ensuring the final design could be integrated into an IS-certified drilling tool environment.
-        </p>
-      </li>
-    </ul>
-  </div>
-
-  <div class="qbox">
-    <p class="q-title">How did the survey tool measure azimuth, inclination, and toolface?</p>
-    <div class="q-sep"></div>
-    <p>
-      The survey tool estimated borehole orientation by combining accelerometer, gyroscope, and magnetometer measurements to compute three key drilling parameters: azimuth, inclination, and toolface. These parameters define the direction of the borehole and the rotational orientation of the tool inside the hole.
-    </p>
-
-    <ul class="subheading-list">
-      <li>
-        <b>Inclination (Tilt Angle)</b>
-        <p style="margin: 8px 0;">
-          Inclination represents the angle of the borehole relative to vertical. It was calculated primarily using the accelerometer, which measures the gravity vector. By resolving the gravity components along the tool axes, the system determines the tool's tilt angle with high stability. This method is highly reliable because gravity provides a strong, constant reference vector.
-        </p>
-      </li>
-
-      <li>
-        <b>Azimuth (Heading / Compass Direction)</b>
-        <p style="margin: 8px 0;">
-          Azimuth represents the heading of the borehole relative to magnetic north. It was calculated using the magnetometer, which measures the Earth's magnetic field vector. However, magnetometer-based heading is only meaningful when the sensor is properly compensated and aligned relative to gravity. Therefore, the accelerometer-based gravity vector was used to apply tilt compensation, ensuring the azimuth estimate remains correct even when the tool is inclined.
-        </p>
-      </li>
-
-      <li>
-        <b>Toolface (Rotation Around Borehole Axis)</b>
-        <p style="margin: 8px 0;">
-          Toolface represents the rotational orientation of the survey tool around the borehole axis, which is critical in directional drilling applications. Toolface was computed by combining:
-        </p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>the gravity vector (accelerometer reference)</li>
-          <li>the magnetic field vector (magnetometer reference)</li>
-        </ul>
-        <p style="margin: 8px 0;">
-          The system effectively determines the tool's roll angle relative to a stable downhole reference plane, allowing the toolface to be calculated consistently across different orientations.
-        </p>
-      </li>
-
-      <li>
-        <b>Rotation Detection (Survey Validity Check)</b>
-        <p style="margin: 8px 0;">
-          Survey measurements are typically taken when the drill string is not rotating, because rotation introduces dynamic errors and magnetic disturbances. To ensure readings were valid, the gyroscope was used to detect drill rotation speed. Firmware applied a rotation threshold so that azimuth and toolface measurements could be gated or flagged as invalid if the drill string was rotating.
-        </p>
-      </li>
-
-      <li>
-        <b>Redundant Multi-Sensor Measurement Strategy</b>
-        <p style="margin: 8px 0;">
-          To improve measurement reliability, multiple inertial sensors were used in parallel. The system applied redundancy + averaging to reduce noise, reject inconsistent readings, and improve stability under real field conditions.
-        </p>
-        <p style="margin: 8px 0;">
-          This architecture was designed to support future upgrades to more advanced sensor fusion approaches (e.g., Kalman filtering), while already delivering stable performance using redundancy-based processing.
-        </p>
-      </li>
-    </ul>
-  </div>
-
-  <div class="qbox">
-    <p class="q-title">How was the survey tool calibrated & validated?</p>
-    <div class="q-sep"></div>
-    <p>
-      Accurate borehole orientation measurement is not possible using raw IMU and magnetometer readings alone. Accelerometers and magnetometers suffer from scale errors, axis misalignment, sensor bias offsets, and magnetic distortions caused by both the PCB assembly and surrounding environment. Without calibration, these errors directly translate into incorrect azimuth, inclination, and toolface outputs.
-    </p>
-    <p>
-      To address this, the survey tool was calibrated using a dedicated mechanical calibration rig capable of holding the PCB at known reference orientations. The calibration process was designed to correct both inertial sensor offsets and magnetic distortions so that the measured vectors match the true gravity and Earth magnetic field directions.
-    </p>
-
-    <ul class="subheading-list">
-      <li>
-        <b>Calibration test setup (Reference orientation rig)</b>
-        <p style="margin: 8px 0;">
-          The survey PCB was mounted onto a calibration rig installed at a remote location. The rig allowed the tool to be oriented at controlled reference angles for:
-        </p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>Azimuth</li>
-          <li>Inclination</li>
-          <li>Toolface</li>
-        </ul>
-        <p style="margin: 8px 0;">
-          For each test index, the board was physically rotated to a known azimuth/inclination/toolface configuration, and the corresponding raw sensor data was recorded. This produced a reference dataset covering a wide range of orientations, simulating realistic downhole conditions.
-        </p>
-      </li>
-
-      <li>
-        <b>Accelerometer calibration (Inclination accuracy)</b>
-        <p style="margin: 8px 0;">
-          Inclination measurement depends on accurate estimation of the gravity vector. However, raw accelerometer outputs typically contain:
-        </p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>DC bias offset</li>
-          <li>scale factor error</li>
-          <li>axis cross-coupling / misalignment</li>
-        </ul>
-        <p style="margin: 8px 0;">
-          To correct this, raw accelerometer samples were collected across multiple known tilt orientations, and a calibration matrix was generated. This matrix maps the measured accelerometer vector into a corrected coordinate system, ensuring the gravity vector magnitude and direction are physically consistent.
-        </p>
-        <p style="margin: 8px 0;">
-          Once calibrated, the accelerometer output formed a stable and normalized gravity reference, enabling reliable inclination calculation.
-        </p>
-        <div class="figure">
-          <img src="../assets/calibrated vs uncalibrated accel data.png" alt="Original vs calibrated accelerometer output">
+      <div class="param-grid">
+        <div class="param-card">
+          <p class="pc-tag">Survey PCB</p>
+          <h4>Measurement &amp; Control</h4>
+          <p>Redundant IMU + magnetometer sensors, STM32 MCU, synchronised multi-sensor acquisition, CRC8-validated data packetisation, SPI control of HART modem.</p>
         </div>
-        <div class="caption">Figure 2: Original vs calibrated accelerometer output (X-Y-Z).</div>
-      </li>
+        <div class="param-card">
+          <p class="pc-tag">IS Comms PCB</p>
+          <h4>Long-Distance Telemetry</h4>
+          <p>24V 4–20 mA current-loop architecture with HART modulation. Designed under intrinsic safety constraints for hazardous mining environments. Validated over 1.4 km armoured cable.</p>
+        </div>
+        <div class="param-card">
+          <p class="pc-tag">Host Software</p>
+          <h4>Python Post-Processing</h4>
+          <p>Calibration matrix application, azimuth / inclination / toolface computation, gyro RPM derivation, accuracy evaluation, and validation plotting.</p>
+        </div>
+      </div>
+    </div>
 
-      <li>
-        <b>Magnetometer calibration (Azimuth + toolface accuracy)</b>
-        <p style="margin: 8px 0;">
-          Magnetometer readings are strongly affected by magnetic distortions caused by the surrounding mechanical and electrical environment. These distortions typically appear as:
-        </p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>Hard-iron offsets (constant bias shifting the magnetic sphere)</li>
-          <li>Soft-iron distortion (elliptical scaling and axis deformation)</li>
-        </ul>
-        <p style="margin: 8px 0;">
-          To correct this, magnetometer data were collected while rotating the tool through multiple orientations on the rig. The raw magnetic points formed a distorted ellipsoid instead of a centered sphere.
-        </p>
-        <div class="figure img-small">
-          <img src="../assets/original X-Y-Z points.png" alt="Raw magnetometer distribution">
+    <!-- 03 MEASUREMENT PRINCIPLES -->
+    <div class="section">
+      <p class="section-label">03 — Measurement Principles</p>
+      <h2>How the System Measures Azimuth, Inclination, and Toolface</h2>
+      <p>
+        The three survey parameters are each derived from a different combination of the inertial and magnetic sensor outputs, using the physical relationships between the sensor axes, the gravity vector, and Earth's magnetic field vector.
+      </p>
+
+      <div class="param-grid">
+        <div class="param-card">
+          <p class="pc-tag">Inclination</p>
+          <h4>Gravity Vector from Accelerometer</h4>
+          <p>Inclination — the borehole's angle from vertical — is calculated by resolving gravity components along the tool axes. Because gravity is a constant, strong, and stable reference vector, inclination is the most reliably measured of the three parameters and achieves the tightest accuracy.</p>
         </div>
-        <div class="caption">Figure 3: Raw magnetometer distribution showing distorted X-Y-Z magnetic field points before calibration.</div>
-        <p style="margin: 8px 0;">The calibration procedure corrected:</p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>hard-iron offsets by re-centering the dataset</li>
-          <li>soft-iron scaling by transforming the ellipsoid into a sphere</li>
-        </ul>
-        <p style="margin: 8px 0;">
-          After correction, the magnetometer data formed a symmetric distribution, enabling accurate heading estimation.
-        </p>
-        <div class="figure img-small">
-          <img src="../assets/calibrated X-Y-Z points(afte removing hard-iron offsets).png" alt="Magnetometer after hard-iron correction">
+        <div class="param-card">
+          <p class="pc-tag">Azimuth</p>
+          <h4>Magnetic Heading with Tilt Compensation</h4>
+          <p>Azimuth is derived from the magnetometer's measurement of Earth's magnetic field vector. Magnetometer heading is only meaningful when compensated for the tool's tilt — so the accelerometer-based gravity vector is used to tilt-correct the magnetic measurement before azimuth is computed.</p>
         </div>
-        <div class="caption">Figure 4: Magnetometer calibration after hard-iron correction (offset removal).</div>
-        <div class="figure img-small">
+        <div class="param-card">
+          <p class="pc-tag">Toolface</p>
+          <h4>Combined Gravity + Magnetic Reference</h4>
+          <p>Toolface — the tool's rotational orientation around the borehole axis — is computed by combining both the gravity vector (accelerometer) and the magnetic field vector (magnetometer). This gives the roll angle relative to a stable downhole reference plane, which is critical in directional drilling for steering verification.</p>
+        </div>
+        <div class="param-card">
+          <p class="pc-tag">Rotation Detection</p>
+          <h4>Gyroscope Survey Gate</h4>
+          <p>Survey measurements are only valid when the drill string is stationary. The gyroscope continuously measures angular velocity, and the firmware applies a rotation threshold: if the gyro rate exceeds the threshold, survey outputs are flagged as invalid. This prevents dynamic motion and magnetic disturbance from corrupting azimuth and toolface readings.</p>
+        </div>
+      </div>
+
+      <h3>Redundant Sensor Strategy</h3>
+      <p>
+        Rather than relying on a single IMU, the system intentionally uses multiple inertial and magnetic sensors in parallel. Readings from each sensor are compared, inconsistent values are identified, and the consistent subset is averaged to produce the final output. This redundancy approach improves noise performance, increases resilience to individual sensor faults, and provides a foundation for upgrading to Kalman filter-based fusion in a future firmware revision.
+      </p>
+    </div>
+
+    <!-- 04 ACCELEROMETER CALIBRATION -->
+    <div class="section">
+      <p class="section-label">04 — Accelerometer Calibration</p>
+      <h2>Correcting Inertial Sensor Errors for Reliable Inclination</h2>
+      <p>
+        Raw accelerometer outputs cannot be used directly for inclination measurement. Every MEMS accelerometer comes off a production line with three sources of error baked in: a <strong>DC bias offset</strong> that shifts the zero-g reading away from zero, a <strong>scale factor error</strong> that causes the sensitivity to deviate slightly from its nominal value, and <strong>axis misalignment</strong> where the sensor's physical measurement axes are not perfectly orthogonal to each other. Left uncorrected, these errors directly produce incorrect gravity vector estimates and therefore incorrect inclination values.
+      </p>
+      <p>
+        Calibration was performed using a dedicated mechanical rig that holds the PCB at known reference orientations across a range of azimuth, inclination, and toolface angles. Raw accelerometer samples were collected across multiple known tilt positions, and a calibration matrix was generated that maps the raw measurement vector to a corrected, physically consistent coordinate system. After applying the matrix, the accelerometer output forms a stable, normalised gravity reference suitable for reliable inclination computation.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/calibrated vs uncalibrated accel data.png" alt="Original vs calibrated accelerometer output">
+        <figcaption>Fig. 2 — Raw vs calibrated accelerometer output across X, Y, Z axes. The calibration matrix removes bias, scale error, and axis misalignment, producing consistent gravity vector magnitude across all orientations.</figcaption>
+      </figure>
+    </div>
+
+    <!-- 05 MAGNETOMETER CALIBRATION -->
+    <div class="section">
+      <p class="section-label">05 — Magnetometer Calibration</p>
+      <h2>Hard-Iron and Soft-Iron Correction for Accurate Heading</h2>
+      <p>
+        Magnetometer calibration is considerably more involved than accelerometer calibration, because magnetic sensors are affected by the tool's own electromagnetic environment — not just by manufacturing imperfections. Two distinct distortion mechanisms must be corrected.
+      </p>
+
+      <h3>Hard-Iron Distortion</h3>
+      <p>
+        Hard-iron distortion is caused by permanent magnetic fields in the tool's surroundings — ferromagnetic PCB components, connectors, or nearby steel hardware. These produce a constant offset that shifts the magnetometer's output away from the origin. When the raw magnetic readings from a full rotation are plotted in 3D, they form a sphere that is not centred at zero — it is offset in the direction of the local permanent field. Hard-iron correction recentres the sphere by subtracting the offset vector.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/original X-Y-Z points.png" alt="Raw magnetometer distribution before calibration">
+        <figcaption>Fig. 3 — Raw magnetometer data collected across multiple orientations. The 3D distribution forms a distorted, off-centre ellipsoid rather than a centred sphere, revealing both hard-iron offset and soft-iron scaling.</figcaption>
+      </figure>
+
+      <figure class="figure">
+        <img src="../assets/calibrated X-Y-Z points(afte removing hard-iron offsets).png" alt="Magnetometer after hard-iron correction">
+        <figcaption>Fig. 4 — After hard-iron correction: the distribution is recentred at the origin, removing the constant offset caused by permanent magnetic sources in the tool environment.</figcaption>
+      </figure>
+
+      <h3>Soft-Iron Distortion</h3>
+      <p>
+        Soft-iron distortion is caused by magnetically permeable materials near the sensor — materials that don't have permanent magnetism but distort the Earth's field as it passes through them. This produces an elliptical scaling and rotation of the measurement sphere: instead of a perfect sphere centred at the origin, the data forms a tilted ellipsoid. Soft-iron correction applies a transformation matrix that maps the ellipsoid back to a sphere, restoring consistent field magnitude and direction across all orientations.
+      </p>
+
+      <div class="fig-pair">
+        <figure class="figure" style="margin:0">
           <img src="../assets/calibrated X-Y-Z points(afte removing soft-iron offsets).png" alt="Magnetometer after soft-iron correction">
+          <figcaption>Fig. 5 — After soft-iron correction: the ellipsoid is normalised into a sphere, restoring uniform magnetic field magnitude across all measurement orientations.</figcaption>
+        </figure>
+        <figure class="figure" style="margin:0">
+          <img src="../assets/calibrated vs uncalibrated mag data.png" alt="Calibrated vs uncalibrated magnetometer">
+          <figcaption>Fig. 6 — Calibrated vs uncalibrated magnetometer data showing the improvement in vector consistency after applying both hard-iron and soft-iron correction.</figcaption>
+        </figure>
+      </div>
+
+      <p>
+        Once both corrections are applied, the magnetometer data forms a centred, symmetric sphere — meaning the sensor reports consistent Earth field magnitude and direction regardless of tool orientation. This is the prerequisite for reliable azimuth and toolface computation.
+      </p>
+    </div>
+
+    <!-- 06 VALIDATION -->
+    <div class="section">
+      <p class="section-label">06 — Calibration Validation</p>
+      <h2>Three-Tool Repeatability Study</h2>
+      <p>
+        Calibrating a single tool proves the method works for that unit. Validating across multiple independently built tools proves the calibration routine is robust enough for manufacturing — that consistent accuracy is achievable without hand-tuning each unit individually.
+      </p>
+      <p>
+        Three survey tools were built, calibrated using identical procedures on the same reference rig, and validated against the same set of known orientation angles. Each tool was rotated through known azimuth, inclination, and toolface positions, and the computed outputs were compared against the reference. The results confirmed strong repeatability across all three tools.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/SURVEY_Tool_1_2_3_combined_8K.png" alt="Survey Tool 1 vs Tool 2 vs Tool 3 combined plot">
+        <figcaption>Fig. 7 — Measured vs reference orientation across all three survey tools. The close agreement between all three tool curves confirms that the calibration routine produces consistent performance across independent hardware builds.</figcaption>
+      </figure>
+
+      <div class="fig-pair">
+        <figure class="figure" style="margin:0">
+          <img src="../assets/RMS_StdDev_MaxAbs_Combined.png" alt="RMS error, std dev, and max absolute error comparison">
+          <figcaption>Fig. 8 — RMS error, standard deviation, and maximum absolute error for all three tools across azimuth, inclination, and toolface.</figcaption>
+        </figure>
+        <figure class="figure" style="margin:0">
+          <img src="../assets/Error_Distribution_Histogram_Comparison_Tool123.png" alt="Error distribution histogram">
+          <figcaption>Fig. 9 — Error distribution across all three tools. The narrow, zero-centred histograms confirm low systematic bias and consistent noise performance.</figcaption>
+        </figure>
+      </div>
+
+      <figure class="figure">
+        <img src="../assets/Candlestick_Error_Comparison_RedBlue.png" alt="Candlestick error comparison">
+        <figcaption>Fig. 10 — Error spread across azimuth, inclination, and toolface for all three tools. The candlestick plot shows the distribution of signed errors, confirming that errors are symmetrically distributed around zero with no significant systematic drift.</figcaption>
+      </figure>
+
+      <h3>Key Results</h3>
+
+      <div class="result-grid">
+        <div class="result-item"><span class="rv">±0.33°</span><span class="rl">Max Azimuth Error</span></div>
+        <div class="result-item"><span class="rv">±0.11°</span><span class="rl">Max Inclination Error</span></div>
+        <div class="result-item"><span class="rv">±0.25°</span><span class="rl">Max Toolface Error</span></div>
+        <div class="result-item"><span class="rv">0.047°–0.048°</span><span class="rl">Inclination RMS</span></div>
+        <div class="result-item"><span class="rv">0.13°–0.16°</span><span class="rl">Azimuth RMS</span></div>
+        <div class="result-item"><span class="rv">&lt;0.10°</span><span class="rl">Toolface RMS</span></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>RMS Error</th>
+              <th>Max Absolute Error</th>
+              <th>Mean Error</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Inclination</td>
+              <td>0.047°–0.048°</td>
+              <td>±0.11°</td>
+              <td>≈ 0° <span class="tag-good">Low bias</span></td>
+            </tr>
+            <tr>
+              <td>Toolface</td>
+              <td>&lt; 0.10°</td>
+              <td>±0.25°</td>
+              <td>≈ 0° <span class="tag-good">Low bias</span></td>
+            </tr>
+            <tr class="highlight">
+              <td>Azimuth</td>
+              <td>0.13°–0.16°</td>
+              <td>±0.33°</td>
+              <td>≈ 0° <span class="tag-good">Low bias</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Near-zero mean error across all three tools confirms that the calibration procedure removes systematic bias effectively. The tightest performance is on inclination — expected, because gravity is a strong and stable reference. Azimuth shows slightly higher RMS error, consistent with the inherently more complex nature of magnetic heading estimation, but remains well within the accuracy envelope needed for reliable borehole trajectory tracking.
+      </p>
+    </div>
+
+    <!-- 07 ROTATION DETECTION -->
+    <div class="section">
+      <p class="section-label">07 — Drill Rotation Detection</p>
+      <h2>Gyroscope-Based Survey Gate</h2>
+      <p>
+        Survey measurements — azimuth, inclination, and toolface — are only valid when the drill string is not rotating. Rotation introduces dynamic acceleration and magnetic disturbance that corrupt both the magnetometer and accelerometer readings. In a working drilling environment, the drill string is regularly started, stopped, and adjusted, so the system needs to know in real time whether the string is stationary before committing a survey reading to the dataset.
+      </p>
+      <p>
+        The gyroscope measures angular velocity in degrees per second. When the drill string rotates, the gyro Z-axis (aligned with the tool axis) produces a proportional output. Rotational speed in RPM is derived directly from this measurement:
+      </p>
+
+      <div class="equation-box">
+        <span class="eq-main">RPM = (ω [°/s] ÷ 360) × 60</span>
+        <div class="eq-terms">
+          <span>ω = angular velocity from gyro Z-axis</span>
+          <span>Result: direct RPM estimate from inertial data alone</span>
         </div>
-        <div class="caption">Figure 5: Magnetometer calibration after soft-iron correction (ellipsoid normalization).</div>
-        <div class="figure img-large">
-          <img src="../assets/calibrated vs uncalibrated mag data.png" alt="Calibrated 3D sensor distribution">
-        </div>
-        <div class="caption">Figure 6: Calibrated 3D sensor distribution showing corrected vector consistency after applying calibration.</div>
-      </li>
+      </div>
 
-      <li>
-        <b>Generating the calibration matrix</b>
-        <p style="margin: 8px 0;">
-          Once enough samples were collected across multiple orientations, a calibration routine was applied to generate a correction matrix that transforms raw sensor outputs into calibrated vectors.
-        </p>
-        <p style="margin: 8px 0;">This matrix was later applied during post-processing to compute corrected:</p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>acceleration vectors (gravity reference)</li>
-          <li>magnetic field vectors (north reference)</li>
-        </ul>
-        <p style="margin: 8px 0;">
-          This ensured the calculated azimuth, inclination, and toolface values were derived from physically valid calibrated inputs.
-        </p>
-      </li>
+      <p>
+        The firmware continuously monitors the gyro-derived RPM and applies a threshold check: if rotation is below the threshold for a stable hold period, the drill string is declared stationary and the survey measurement is captured. If rotation exceeds the threshold, the measurement is suppressed. This gating logic prevents invalid readings from entering the dataset without requiring any additional hardware.
+      </p>
 
-      <li>
-        <b>Calibration outcome</b>
-        <p style="margin: 8px 0;">
-          To validate repeatability and ensure the calibration workflow was not specific to a single hardware unit, three independent survey tools were tested on the same calibration rig using identical orientation sequences. Each tool was rotated through known azimuth, inclination, and toolface angles, and the computed outputs were compared against the rig reference angles.
-        </p>
-        <p style="margin: 8px 0;">
-          The results confirmed that the calibration routine produced consistent performance across multiple tools, with near-zero mean error (low bias) and stable standard deviation, indicating strong repeatability and manufacturing robustness.
-        </p>
-        <div class="figure">
-          <img src="../assets/SURVEY_Tool_1_2_3_combined_8K.png" alt="Survey Tool 1 vs Tool 2 vs Tool 3 Combined Plot">
-        </div>
-        <div class="caption">Figure 7: Survey Tool 1 vs Tool 2 vs Tool 3 Combined Plot.</div>
-        <div class="figure">
-          <img src="../assets/RMS_StdDev_MaxAbs_Combined.png" alt="RMS Error, Standard Deviation, and Max Absolute Error Comparison">
-        </div>
-        <div class="caption">Figure 8: RMS Error, Standard Deviation, and Max Absolute Error Comparison (Tool 1 vs Tool 2 vs Tool 3).</div>
-        <div class="figure">
-          <img src="../assets/Error_Distribution_Histogram_Comparison_Tool123.png" alt="Error Distribution">
-        </div>
-        <div class="caption">Figure 9: Error Distribution (Tool 1 vs Tool 2 vs Tool 3).</div>
-        <div class="figure">
-          <img src="../assets/Candlestick_Error_Comparison_RedBlue.png" alt="Survey Tool Error Candlestick Plot">
-        </div>
-        <div class="caption">Figure 10: Survey Tool Error Candlestick Plot (Azimuth / Inclination / Toolface).</div>
-        <p style="margin: 8px 0;"><b>Key Calibration Observations:</b></p>
-        <ul style="margin: 8px 0 0 20px;">
-          <li>The <b>mean error remains close to zero</b> across all three tools, confirming minimal systematic bias after calibration.</li>
-          <li><b>Inclination achieved the highest stability</b>, with RMS error consistently around <b>0.047°–0.048°</b>.</li>
-          <li><b>Azimuth RMS error remained within 0.13°–0.16°</b>, demonstrating reliable magnetic heading performance.</li>
-          <li><b>Toolface RMS error remained below 0.10°</b>, confirming accurate rotational orientation estimation.</li>
-          <li>The results confirm strong <b>repeatability across multiple survey tool builds</b>, supporting field reliability.</li>
-        </ul>
-        <p style="margin: 8px 0;">The final validation demonstrated:</p>
-        <ul style="margin: 8px 0 0 20px;">
-          <li style="list-style-type: none; margin-left: -20px; padding-left: 20px; text-indent: -20px;">❖ <b>Azimuth error within ±0.33°</b></li>
-          <li style="list-style-type: none; margin-left: -20px; padding-left: 20px; text-indent: -20px;">❖ <b>Inclination error within ±0.11°</b></li>
-          <li style="list-style-type: none; margin-left: -20px; padding-left: 20px; text-indent: -20px;">❖ <b>Toolface error within ±0.25°</b></li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+      <h3>Experimental Validation</h3>
+      <p>
+        To validate the rotation detection approach, controlled tests were run at multiple known rotational speeds. Gyroscope-derived RPM was compared against reference RPM values recorded during each test.
+      </p>
 
-  <div class="qbox">
-    <p class="q-title">How was drill string rotation detected and validated?</p>
-    <div class="q-sep"></div>
-    <p>
-      Since downhole survey measurements (azimuth, inclination, and toolface) must be taken when the drill string is stationary, the system required a reliable method to detect drill string rotation in real time. If rotation is not correctly detected, dynamic motion and vibration can corrupt the magnetic field readings and introduce significant heading/toolface errors. To address this, drill string rotation was detected using the gyroscope signal from the inertial sensor stack.
-    </p>
+      <div class="fig-pair">
+        <figure class="figure" style="margin:0">
+          <img src="../assets/DegreeSec_and_RPM_Subplot_upto2020_signflipped.png" alt="Gyroscope angular velocity and RPM vs time">
+          <figcaption>Fig. 11 — Gyroscope angular velocity (°/s) and derived RPM vs time across the test sequence, showing clean step responses at each commanded speed.</figcaption>
+        </figure>
+        <figure class="figure" style="margin:0">
+          <img src="../assets/MeasuredRPM_vs_GyroRPM_Styled.png" alt="Measured RPM vs gyro-derived RPM">
+          <figcaption>Fig. 12 — Measured RPM vs gyro-derived RPM. The close alignment to the ideal y = x line confirms highly linear and accurate rotation sensing across the full tested range.</figcaption>
+        </figure>
+      </div>
 
-    <ul class="subheading-list">
-      <li>
-        <b>Rotation Detection Principle</b>
-        <p style="margin: 8px 0;">
-          The gyroscope measures angular velocity (°/s). When the drill string rotates, the gyro output increases proportionally with rotational speed. Drill string rotation was detected using the gyroscope Z-axis (aligned with the tool axis).
-        </p>
-        <p style="margin: 8px 0;">
-          To convert gyro output into rotational speed, the measured angular velocity was converted into RPM using:
-        </p>
-        <p style="text-align: center; margin: 12px 0; font-size: 16px;">
-          $$RPM = \frac{\omega \text{ (deg/s)}}{360} \times 60$$
-        </p>
-        <p style="margin: 8px 0;">
-          This allowed the firmware/software pipeline to estimate drill string rotation rate directly from the inertial sensor output.
-        </p>
-      </li>
+      <div class="result-grid">
+        <div class="result-item"><span class="rv">0.437 RPM</span><span class="rl">Mean Error</span></div>
+        <div class="result-item"><span class="rv">0.374 RPM</span><span class="rl">Std Deviation</span></div>
+        <div class="result-item"><span class="rv">0.564 RPM</span><span class="rl">RMS Error</span></div>
+        <div class="result-item"><span class="rv">0.499 RPM</span><span class="rl">Mean Abs Error</span></div>
+      </div>
 
-      <li>
-        <b>Experimental Validation</b>
-        <p style="margin: 8px 0;">
-          To validate gyro-based rotation detection, controlled rotation tests were performed by running the drill assembly at multiple known rotational speeds. Gyroscope-derived RPM was compared against reference RPM values recorded during the experiment. The experimental results are shown below:
-        </p>
-        <div class="figure img-medium">
-          <img src="../assets/DegreeSec_and_RPM_Subplot_upto2020_signflipped.png" alt="Gyroscope angular velocity and computed RPM vs time">
-        </div>
-        <div class="caption">Figure 11: Gyroscope angular velocity and computed RPM vs time.</div>
-        <div class="figure img-medium">
-          <img src="../assets/MeasuredRPM_vs_GyroRPM_Styled.png" alt="Measured RPM vs Gyro-derived RPM comparison">
-        </div>
-        <div class="caption">Figure 12: Measured RPM vs Gyro-derived RPM comparison plot.</div>
-        <p style="margin: 8px 0;">
-          The results confirmed that the gyro-based method provides highly linear and accurate rotation sensing across the tested speed range. The measured RPM values closely followed the ideal reference line (y = x), confirming strong agreement between gyro RPM estimation and the actual measured RPM. The final RPM error statistics were:
-        </p>
-        <ul style="margin: 8px 0 0 20px;">
-          <li style="list-style-type: none; margin-left: -20px; padding-left: 20px; text-indent: -20px;">❖ <i>Mean Error:</i> <b>0.437 RPM</b></li>
-          <li style="list-style-type: none; margin-left: -20px; padding-left: 20px; text-indent: -20px;">❖ <i>Standard Deviation:</i> <b>0.374 RPM</b></li>
-          <li style="list-style-type: none; margin-left: -20px; padding-left: 20px; text-indent: -20px;">❖ <i>RMS Error:</i> <b>0.564 RPM</b></li>
-          <li style="list-style-type: none; margin-left: -20px; padding-left: 20px; text-indent: -20px;">❖ <i>Mean Absolute Error:</i> <b>0.499 RPM</b></li>
-        </ul>
-      </li>
+      <p>
+        Sub-1 RPM accuracy across the full tested speed range confirms that the gyroscope-based approach is reliable for survey gating. In practice, the threshold for "stationary" is set well above the measurement noise floor, so these error levels do not affect the gate logic — a rotating drill string produces a gyro signal orders of magnitude larger than the 0.5 RPM RMS noise.
+      </p>
+    </div>
 
-      <li>
-        <b>Rotation Detection Outcome</b>
-        <p style="margin: 8px 0;">
-          The experimental validation confirmed that gyroscope-based RPM estimation is a reliable method for drill string rotation detection, with sub-1 RPM maximum absolute error across the tested range. This capability is critical for survey tool reliability because it enables the system to:
-        </p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>detect when the drill string is rotating</li>
-          <li>gate survey measurements to stationary conditions</li>
-          <li>prevent invalid azimuth/toolface readings caused by dynamic motion and magnetic disturbance</li>
-        </ul>
-        <p style="margin: 8px 0;">
-          Overall, gyro-based rotation detection provided an accurate and low-overhead method for validating survey measurement conditions in real drilling operation.
-        </p>
-      </li>
+    <!-- 08 HART TELEMETRY -->
+    <div class="section">
+      <p class="section-label">08 — HART Telemetry</p>
+      <h2>Long-Distance Surface Communication</h2>
+      <p>
+        In a real drilling operation, the survey tool may be deployed hundreds of metres or several kilometres below the surface. Conventional UART-style digital communication degrades rapidly over these distances — series resistance, distributed cable capacitance, EMI pickup from drilling machinery, and signal attenuation all make short-range protocols unreliable at cable lengths beyond a few tens of metres.
+      </p>
+      <p>
+        To solve this, the communication system was built around an industrial <strong>24V 4–20 mA current-loop architecture with HART modulation</strong>. Current-loop signalling is inherently robust over long distances because the signal is carried as a current rather than a voltage — it is immune to resistive voltage drop along the cable, and the modulated HART signal rides on top of the DC current loop at 1200 baud. This combination gives the system both an analog current output (usable for simple data readout) and a digital HART channel for structured data packets.
+      </p>
+      <p>
+        The Survey PCB directly controls the HART modem and current-loop transmitter via SPI, making it the master controller for all telemetry. The IS Comms PCB provides the front-end — the energy-limited transmitter circuit designed to comply with intrinsic safety requirements for hazardous mining environments.
+      </p>
 
-      <li>
-        <b>Firmware Implementation in Final Survey Tool</b>
-        <p style="margin: 8px 0;">
-          In the final embedded survey tool implementation, drill string RPM detection was performed directly inside the STM32 firmware in real time. The firmware continuously monitored angular rate (°/s) and applied a threshold check:
-        </p>
-        <ul style="margin: 8px 0 0 20px;">
-          <li style="list-style-type: none; margin-left: -20px; padding-left: 20px; text-indent: -20px;">❖ If gyro rate stays below a threshold → <b>rotation = stopped</b></li>
-          <li style="list-style-type: none; margin-left: -20px; padding-left: 20px; text-indent: -20px;">❖ If gyro rate exceeds the threshold → <b>rotation = active</b></li>
-        </ul>
-        <p style="margin: 8px 0;">
-          The gyroscope-derived RPM value was continuously monitored, and survey measurements were only captured when the firmware confirmed that the drill string had fully stopped rotating (RPM below a defined threshold for a stable duration).
-        </p>
-      </li>
-    </ul>
-  </div>
+      <h3>Cable Validation — 1.4 km Test</h3>
+      <p>
+        To confirm that communication would survive real-world cable lengths, testing was conducted using a 4-core armoured Camesa drilling cable (73.8 Ω/km resistance, 118 pF/m capacitance). End-to-end resistance measurement confirmed approximately <strong>1.4 km of cable per conductor</strong>. Communication was validated at 1200 baud over this length, with oscilloscope captures confirming successful packet transmission across all tested configurations.
+      </p>
 
-  <div class="qbox">
-    <p class="q-title">How was SURVEY data transmitted to the surface?</p>
-    <div class="q-sep"></div>
-    <p>
-      In real drilling operations, the survey tool must transmit orientation data over very long drill-string/cable runs (often several kilometres) in a harsh mining environment. Conventional short-range UART-style telemetry is not suitable at these distances, as signal integrity degrades due to series resistance, distributed cable capacitance, EMI pickup, and progressive attenuation.
-    </p>
-    <p>
-      To address this, the communication system was designed around an industrial 24 V, 4–20 mA current-loop architecture with HART modulation, enabling robust long-distance telemetry from downhole to the surface while remaining compatible with intrinsically safe field deployment.
-    </p>
-    <p>
-      The survey tool's main MCU (located on the Survey PCB) directly controlled the HART modem and 4–20 mA transmitter circuitry through an SPI interface. This ensured the Survey PCB remained the master controller responsible for data formatting and output control, while the HART modem provided a deterministic analog + digital telemetry front-end capable of reliable transmission over long cable lengths.
-    </p>
-
-    <ul class="subheading-list">
-      <li>
-        <b>Long Cable Validation Testing for HART</b>
-        <p style="margin: 8px 0;">
-          To validate whether the communication could survive real-world cable lengths, testing was conducted using a 4-core, 4.80 mm diameter armored Camesa cable. The cable datasheet values were:
-        </p>
-        <ul style="list-style-type: circle; margin: 8px 0 0 20px;">
-          <li>Resistance: 73.8 Ω/km</li>
-          <li>Capacitance: 118 pF/m</li>
-        </ul>
-        <p style="margin: 8px 0;">
-          A resistance of 105 Ω per wire was measured end-to-end, confirming a cable length of approximately 1.4 km per conductor.
-        </p>
-        <div class="figure img-tiny">
+      <div class="fig-pair">
+        <figure class="figure" style="margin:0">
           <img src="../assets/multimeter.png" alt="Cable resistance measurement">
-        </div>
-        <div class="caption">Figure 13: Resistance measurement.</div>
-        <p style="margin: 8px 0;">
-          Communication was tested at 1200 baud, using the survey board and comms board as the transmitter and the receiver setup connected at the far end of the cable. Oscilloscope captures confirmed successful packet transmission at all tested lengths, with attenuation increasing as expected due to cable loading effects.
-        </p>
-        <div class="figure img-small">
+          <figcaption>Fig. 13 — Resistance measurement confirming ~105 Ω end-to-end per conductor, corresponding to approximately 1.4 km of cable length.</figcaption>
+        </figure>
+        <figure class="figure" style="margin:0">
           <img src="../assets/HART.png" alt="HART waveform over 1.4 km cable">
-        </div>
-        <div class="caption">Figure 14: HART waveform validation over 1.4 km cable length (FSK burst + tone behaviour).</div>
-      </li>
-
-      <li>
-        <b>Validation: Survey Accuracy During Active HART Telemetry</b>
-        <p style="margin: 8px 0;">
-          To ensure the survey system maintained accuracy under real drilling conditions, the complete calibration validation routine was repeated while the tool was actively transmitting data using HART communication over a 1.4 km cable length. This test was critical because long cable runs introduce additional challenges such as signal attenuation, distributed capacitance, EMI pickup, and ground-coupled noise, all of which could potentially interfere with sensitive inertial and magnetic sensor measurements.
-        </p>
-        <p style="margin: 8px 0;">
-          The objective of this test was to confirm that operating the 4–20 mA HART telemetry system in parallel with sensor acquisition would not inject electrical noise into the measurement chain or corrupt the orientation computation process.
-        </p>
-        <p style="margin: 8px 0;">
-          The results showed that the measured azimuth, inclination, and toolface errors remained consistent with the original baseline calibration dataset, even during active long-distance telemetry. This confirmed that the survey PCB, sensor front-end, and communication system were electrically well-isolated and robust enough to support field deployment.
-        </p>
-        <p style="margin: 8px 0;">
-          Figure 14 demonstrates the close agreement between baseline calibration results and the repeated calibration performed during HART transmission over 1.4 km, validating that the system can maintain survey-grade accuracy while operating in a realistic long-distance drilling telemetry environment.
-        </p>
-        <div class="figure">
-          <img src="../assets/SURVEY_Tool1_Original_vs_HART.png" alt="Tool 1 Original vs HART 1.4 km Calibration Comparison">
-        </div>
-        <div class="caption">Figure 15: Tool 1 Original vs HART 1.4 km Calibration Comparison.</div>
-      </li>
-    </ul>
-  </div>
-
-  <div class="qbox">
-    <p class="q-title">What did the final embedded hardware implementation look like?</p>
-    <div class="q-sep"></div>
-    <p>
-      After successful calibration and validation testing, the survey tool was implemented as a compact embedded PCB system designed specifically for harsh drilling environments. The final hardware combined multi-sensor inertial measurement capability, low-power embedded control, and long-distance industrial telemetry, packaged in a form suitable for integration into a downhole survey housing.
-    </p>
-    <p>
-      The final embedded design consisted of a Survey PCB acting as the core measurement and control board. It interfaced with multiple inertial and magnetic sensors for redundancy, handled synchronized sensor sampling, and formatted the recorded raw data for transmission. The same PCB also served as the master controller for the communication system, controlling the external HART modem/current-loop circuitry via an SPI interface.
-    </p>
-    <p>
-      A key part of the final implementation was the addition of a dedicated intrinsically safe communication board, designed around a 24V 4–20 mA HART telemetry system, enabling reliable transmission of survey data over long cable/drill rod distances. This allowed the tool to operate in hazardous mining environments while maintaining compliance with intrinsic safety energy limitations.
-    </p>
-    <p>
-      The overall hardware architecture was therefore split into two tightly coupled modules:
-    </p>
-    <ul style="margin: 8px 0 0 20px;">
-      <li><b>Survey PCB</b> (Sensor + MCU board) for measurement, logging, formatting, and system control</li>
-      <li><b>IS COMMS board</b> (HART 4–20 mA transmitter front-end) for robust long-distance telemetry</li>
-    </ul>
-
-    <p style="margin: 12px 0 8px;"><b>Final PCB Prototype</b></p>
-    <div class="figure">
-      <img src="../assets/survey_pcb.png" alt="Final Survey PCB prototype">
+          <figcaption>Fig. 14 — HART FSK waveform captured at the receiver end of the 1.4 km cable. Signal integrity is maintained with expected attenuation from cable loading effects.</figcaption>
+        </figure>
+      </div>
     </div>
-    <div class="caption">Figure 16: Final Survey PCB prototype integrating redundant inertial/magnetic sensing, synchronized data acquisition, and embedded control firmware.</div>
-    <div class="figure">
-      <img src="../assets/comms_pcb.png" alt="Final COMMS PCB prototype">
-    </div>
-    <div class="caption">Figure 17: Final COMMS PCB prototype implementing SPI-controlled HART modem + 4–20 mA current-loop transmission for long-distance surface telemetry.</div>
-  </div>
 
-  <div class="qbox">
-    <p class="q-title">What was the final engineering outcome?</p>
-    <div class="q-sep"></div>
-    <p>
-      This project delivered a complete IMU-based drilling survey system capable of accurately measuring azimuth, inclination, toolface, and detecting drill string rotation, enabling reliable borehole orientation tracking in real drilling environments. A redundant sensor architecture was implemented to improve confidence and repeatability, while maintaining low-power embedded operation suitable for downhole deployment.
-    </p>
-    <p>
-      The survey tool was successfully calibrated and validated using a dedicated orientation calibration rig, demonstrating strong repeatability across multiple tools. Experimental results confirmed high measurement precision, achieving azimuth accuracy within ±0.35°, inclination accuracy within ±0.11°, and toolface accuracy within ±0.25° under controlled calibration testing.
-    </p>
-    <p>
-      To support real drilling deployment, a robust telemetry solution was developed using an intrinsically safe 24V 4–20 mA HART communication system, allowing survey data transmission over long cable lengths. Communication testing confirmed stable waveform integrity over 1.4 km, and validation experiments demonstrated that survey accuracy remained reliable even during active HART telemetry operation.
-    </p>
-    <p>
-      Overall, the work resulted in a validated embedded platform consisting of a Survey PCB and a dedicated COMMS PCB, combining precision sensing, intrinsic safety design principles, and long-range industrial communication—forming a practical and scalable foundation for field-ready downhole survey tools.
-    </p>
+    <!-- 09 HART ACCURACY VALIDATION -->
+    <div class="section">
+      <p class="section-label">09 — HART Accuracy Validation</p>
+      <h2>Survey Accuracy Under Active Telemetry</h2>
+      <p>
+        Demonstrating that HART communication works over 1.4 km is necessary but not sufficient. The more important question is whether operating the current-loop telemetry system in parallel with inertial and magnetic sensor acquisition introduces any electrical noise that degrades measurement accuracy. A 24V current-loop switching at 1200 baud is an active noise source on the same PCB as sensitive magnetometers and accelerometers — if the electrical isolation is inadequate, the HART signal could inject noise into the sensor readings and corrupt orientation outputs.
+      </p>
+      <p>
+        To test this, the full three-tool calibration validation routine was repeated while each tool was actively transmitting HART data over the 1.4 km cable. The azimuth, inclination, and toolface errors recorded during active telemetry were compared against the original baseline calibration results.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/SURVEY_Tool1_Original_vs_HART.png" alt="Tool 1 original vs HART 1.4 km calibration comparison">
+        <figcaption>Fig. 15 — Tool 1: original baseline calibration vs calibration repeated during active HART transmission over 1.4 km. The close agreement across azimuth, inclination, and toolface confirms that the telemetry system does not measurably affect sensor measurement quality.</figcaption>
+      </figure>
+
+      <p>
+        The results confirmed that orientation errors during active HART transmission were indistinguishable from the baseline. This validates that the Survey PCB layout, power supply filtering, and sensor front-end design provide adequate electrical isolation between the high-power telemetry circuitry and the sensitive inertial and magnetic measurement chain — a non-trivial design outcome for a compact, intrinsically safe downhole instrument.
+      </p>
+    </div>
+
+    <!-- 10 HARDWARE -->
+    <div class="section">
+      <p class="section-label">10 — Hardware</p>
+      <h2>Final PCB Implementation</h2>
+      <p>
+        The final hardware implementation consists of two custom PCBs designed specifically for the downhole drilling environment. Both boards were designed under intrinsic safety constraints, with component selection, supply architecture, and power dissipation all governed by IS energy-limiting requirements for hazardous mining environments.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/survey_pcb.png" alt="Final Survey PCB prototype">
+        <figcaption>Fig. 16 — Survey PCB: the core measurement and control board, integrating redundant IMU and magnetometer sensors, STM32 MCU, synchronised multi-sensor acquisition, and SPI control of the HART modem. All sensor acquisition and data formatting originates here.</figcaption>
+      </figure>
+
+      <figure class="figure">
+        <img src="../assets/comms_pcb.png" alt="Final COMMS PCB prototype">
+        <figcaption>Fig. 17 — IS Comms PCB: the intrinsically safe telemetry front-end implementing HART modulation on a 24V 4–20 mA current loop. Designed for reliable long-distance surface telemetry from downhole deployments in hazardous environments.</figcaption>
+      </figure>
+    </div>
+
+    <!-- 11 OUTCOME -->
+    <div class="section">
+      <p class="section-label">11 — Outcome</p>
+      <h2>Engineering Result</h2>
+      <div class="outcome-box">
+        <p>
+          A complete, intrinsically safe IMU-based downhole survey system delivering azimuth accuracy within ±0.33°, inclination within ±0.11°, and toolface within ±0.25°, validated across three independently built tools on a dedicated calibration rig. Gyroscope-based drill rotation detection achieved 0.564 RPM RMS error — providing reliable survey gating to prevent readings during active drilling. HART telemetry was validated over 1.4 km of armoured drilling cable, and accuracy was confirmed to be unaffected by active telemetry operation — demonstrating adequate electrical isolation between the communication system and the sensitive sensor measurement chain. The final platform, comprising a Survey PCB and an IS Comms PCB, forms a practical and scalable foundation for field-ready downhole survey deployment in hazardous mining environments.
+        </p>
+      </div>
+    </div>
+
   </div>
 
 </body>
 </html>
-
