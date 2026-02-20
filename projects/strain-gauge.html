@@ -1231,9 +1231,6 @@
       <p>
         It is important to note that this measured drift figure is not just the strain gauge drift in isolation. It is the <strong>combined thermal drift of the entire system</strong> — including the strain gauges, the 24-bit ADC, the filter resistors, the LDO excitation supply, and any other components in the signal chain. Each of these contributes a small temperature-dependent error, and what is reported here is the net effect of all of them together. This makes the 22.50 ppm/°C figure a true end-to-end system specification, not a component-level one.
       </p>
-      <p>
-        Some residual drift remains after reference subtraction because the technique has a natural limit. Reference subtraction works by assuming that temperature affects all channels in the same way — so subtracting one cancels the shared effect. In practice, individual strain gauges come from manufacturing with slightly different thermal responses. Reference subtraction removes what they all have in common, but cannot remove the small differences between them. The remaining drift you see after compensation is simply each channel's individual thermal response minus the reference channel's response — and reducing this further would require characterising each gauge's thermal behaviour individually and applying a unique correction per channel, which is impractical for a compact field instrument.
-      </p>
     </div>
 
 
