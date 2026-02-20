@@ -1,627 +1,1348 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dr. Utkarsh Jadli | Portfolio</title>
-
+  <title>Strain Gauge Instrumentation System — Dr. Utkarsh Jadli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    body{
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      max-width: 980px;
-      margin: 40px auto;
-      padding: 0 18px;
-      line-height: 1.65;
-      color:#111;
-      background:#fff;
+    :root {
+      --bg: #0e0f11;
+      --bg2: #13151a;
+      --bg3: #1a1d24;
+      --border: #2a2d35;
+      --accent: #e8a040;
+      --accent2: #c47820;
+      --text: #d4d6db;
+      --text-dim: #7a7e8a;
+      --text-bright: #f0f1f3;
+      --green: #4ec98a;
+      --mono: 'IBM Plex Mono', monospace;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Inter', sans-serif;
     }
-    h1{
-      font-size: 50px;   /* Increased name size */
-      margin: 0 0 10px;
-      font-weight: 800;
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
     }
-    
-    .subtitle{
-      font-size: 20px;   /* Increased designation size */
-      color:#444;
-      margin:0 0 22px;
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ---- HEADER ---- */
+    header {
+      position: relative;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      background: var(--bg2);
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .back-link {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .back-link::before { content: '←'; font-size: 1rem; }
+
+    .header-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid var(--accent2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    /* ---- HERO ---- */
+    .hero {
+      position: relative;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4rem 2rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: var(--text-bright);
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+    }
+
+    .hero-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+    }
+    .hero-role span {
+      color: var(--green);
+      background: rgba(78,201,138,0.08);
+      border: 1px solid rgba(78,201,138,0.2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    .hero-intro {
+      font-size: 1.05rem;
+      color: var(--text);
+      max-width: 680px;
+      line-height: 1.8;
+    }
+
+    /* ---- SPECS BAR ---- */
+    .specs-bar {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .specs-bar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+    .spec-item {
+      padding: 1.4rem 1rem;
+      border-right: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+    }
+    .spec-item:last-child { border-right: none; }
+    .spec-item:nth-child(1) { animation-delay: 0.1s; }
+    .spec-item:nth-child(2) { animation-delay: 0.15s; }
+    .spec-item:nth-child(3) { animation-delay: 0.2s; }
+    .spec-item:nth-child(4) { animation-delay: 0.25s; }
+    .spec-item:nth-child(5) { animation-delay: 0.3s; }
+    .spec-item:nth-child(6) { animation-delay: 0.35s; }
+    .spec-item:nth-child(7) { animation-delay: 0.4s; }
+
+    .spec-value {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .spec-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ---- CONTENT ---- */
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    .section {
+      padding: 3.5rem 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .section:nth-of-type(1) { animation-delay: 0.2s; }
+    .section:nth-of-type(2) { animation-delay: 0.3s; }
+    .section:nth-of-type(3) { animation-delay: 0.35s; }
+    .section:nth-of-type(4) { animation-delay: 0.4s; }
+    .section:nth-of-type(5) { animation-delay: 0.45s; }
+    .section:nth-of-type(6) { animation-delay: 0.5s; }
+    .section:nth-of-type(7) { animation-delay: 0.55s; }
+    .section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 60px;
+    }
+
+    h2 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--text-bright);
+      margin-bottom: 1.4rem;
+      line-height: 1.2;
+    }
+
+    h3 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--text-bright);
+      margin: 2rem 0 0.8rem;
+    }
+    h3:first-of-type { margin-top: 0; }
+
+    p {
+      color: var(--text);
+      margin-bottom: 1rem;
+      max-width: 720px;
+    }
+    p:last-child { margin-bottom: 0; }
+
+    strong {
+      color: var(--text-bright);
       font-weight: 500;
     }
-    
-    .contact{
-      font-size: 18px;   /* Increased links + location size */
-      line-height: 1.8;
-    }
-    
-    .contact a{
-      font-size: 18px;   /* Increased clickable link font */
-      color:#0b66c3;
-      text-decoration: none;
-    }
-    
-    .contact a: hover{
-      text-decoration: underline;
+
+    /* ---- COMPONENT CARDS ---- */
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 1.5rem;
     }
 
-    h2{
-      margin-top:46px;
-      border-bottom:2px solid #eee;
-      padding-bottom:10px;
-      font-size:36px;
-      font-weight: 800;
+    .component-card {
+      background: var(--bg2);
+      padding: 1.5rem;
+      transition: background 0.2s;
     }
-    h3{margin:26px 0 8px;font-size:20px}
-    h4{margin:18px 0 8px;font-size:16px}
-    .project{
-      padding:16px 18px;
-      border:1px solid #eee;
-      border-radius:12px;
-      background:#fafafa;
-      margin-bottom:18px;
-    }
-    ul{margin:8px 0 0 20px}
-    li{margin:6px 0}
-    code{background:#f3f3f3;padding:2px 6px;border-radius:6px}
-    .kpi{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:10px;
-    }
-    .kpi span{
-      display:inline-block;
-      border:1px solid #e6e6e6;
-      background:#fff;
-      border-radius:999px;
-      padding:6px 10px;
-      font-size:13px;
-    }
-    .figure{
-      margin:12px 0 0;
-      padding:10px;
-      background:#fff;
-      border:1px solid #eee;
-      border-radius:12px;
-    }
-    .figure img{
-      width:100%;
-      height:auto;
-      border-radius:10px;
-      display:block;
-    }
-    .caption{
-      font-size:13px;
-      color:#555;
-      margin-top:8px;
-    }
-    .muted{color:#555}
-    .hr{height:1px;background:#eee;margin:18px 0}
+    .component-card:hover { background: var(--bg3); }
 
-    /* ============================
-       Project formatting upgrades
-       ============================ */
-
-    /* 1) Project title: bigger, red, bold */
-    .project-title{
-      font-size: 34px;
-      font-weight: 800;
-      color: #c00000;
-      margin: 20px 0 18px;
+    .component-card .cc-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .component-card h4 {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-bright);
+      margin-bottom: 0.6rem;
+    }
+    .component-card p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin: 0;
     }
 
-    /* 2) Questions: bigger, blue, bold */
-    .q-title{
-      font-size:18px;
-      font-weight:800;
-      color:#0b66c3;
-      margin:0;
+    /* ---- GAIN TABLE ---- */
+    .table-wrap {
+      overflow-x: auto;
+      margin: 1.5rem 0;
     }
 
-    /* 3) Box each question */
-    .qbox{
-      background:#fff;
-      border:1px solid #e8e8e8;
-      border-radius:12px;
-      padding:14px 16px;
-      margin:14px 0;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 0.8rem;
     }
-
-    /* separator line after each question title */
-    .q-sep{
-      height:1px;
-      background:#eeeeee;
-      margin:10px 0 12px;
+    thead tr {
+      background: var(--bg3);
+      border-bottom: 2px solid var(--accent2);
     }
-
-    /* 4) Subheadings under a question: smaller than question, keep color */
-    .subhead{
-      font-size:15px;
-      font-weight:800;
-      margin:12px 0 6px;
-    }
-
-    /* tighten lists inside qboxes */
-    .qbox ul{margin:8px 0 0 20px}
-    .qbox li{margin:5px 0}
-    .subheading-list{
-      margin: 18px 0 8px 25px;
-      padding: 0;
-    }
-    
-    .subheading-list li{
-      font-size: 16px;
+    th {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       font-weight: 400;
-      color: #111;
-      margin: 10px 0 6px;
+    }
+    td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    tr.rejected td { color: var(--text-dim); text-decoration: line-through; opacity: 0.5; }
+    tr.selected { background: rgba(232,160,64,0.05); }
+    tr.selected td { color: var(--text-bright); }
+    td.tag-cell { padding-right: 0; }
+    .tag-selected {
+      display: inline-block;
+      font-size: 0.65rem;
+      background: rgba(78,201,138,0.1);
+      color: var(--green);
+      border: 1px solid rgba(78,201,138,0.25);
+      padding: 0.1rem 0.45rem;
+      border-radius: 2px;
+      letter-spacing: 0.05em;
+    }
+    .tag-rejected {
+      display: inline-block;
+      font-size: 0.65rem;
+      background: rgba(200,80,80,0.1);
+      color: #e07070;
+      border: 1px solid rgba(200,80,80,0.2);
+      padding: 0.1rem 0.45rem;
+      border-radius: 2px;
+      letter-spacing: 0.05em;
     }
 
-    .contact {
-      font-size: 20px;
-      line-height: 1.8;
+    /* ---- CHALLENGE / SOLUTION ---- */
+    .cs-list { display: flex; flex-direction: column; gap: 1px; margin-top: 1.5rem; background: var(--border); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+
+    .cs-item {
+      background: var(--bg2);
+      padding: 1.4rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      transition: background 0.2s;
     }
-    
-    .contact img {
-      width: 28px;
-      height: 28px;
-      vertical-align: middle;
-      margin-right: 10px;
+    .cs-item:hover { background: var(--bg3); }
+
+    @media (max-width: 640px) {
+      .cs-item { grid-template-columns: 1fr; }
+      .specs-bar-inner { grid-template-columns: repeat(2, 1fr); }
     }
-    
-    .contact a {
-      font-size: 20px;
-      color: #0b66c3;
-      text-decoration: none;
+
+    .cs-challenge, .cs-solution {
+      font-size: 0.875rem;
     }
-    
-    .contact a: hover {
-      text-decoration: underline;
-    
+    .cs-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
     }
-    
-    .subheading-list li i b{
-      font-weight: 700;
-      font-style: italic;
+    .cs-challenge .cs-label { color: #e07070; }
+    .cs-solution .cs-label { color: var(--green); }
+    .cs-challenge p, .cs-solution p { font-size: 0.875rem; color: var(--text); margin: 0; max-width: none; }
+
+    /* ---- RESULT CALLOUTS ---- */
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1.5rem 0;
     }
+    .result-item {
+      background: var(--bg2);
+      padding: 1.2rem 1.4rem;
+    }
+    .result-item .rv {
+      font-family: var(--mono);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .result-item .rl {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ---- IMAGES ---- */
+    .figure {
+      margin: 2rem 0;
+    }
+    .figure img {
+      width: 100%;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .figure figcaption {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-top: 0.6rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* ---- OUTCOME BOX ---- */
+    .outcome-box {
+      background: linear-gradient(135deg, rgba(232,160,64,0.08), rgba(232,160,64,0.03));
+      border: 1px solid rgba(232,160,64,0.25);
+      border-radius: 4px;
+      padding: 2rem;
+      margin-top: 1.5rem;
+    }
+    .outcome-box p {
+      font-size: 1rem;
+      color: var(--text);
+      margin: 0;
+      max-width: none;
+    }
+
+    /* ---- INLINE CODE ---- */
+    code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      color: var(--accent);
+      background: rgba(232,160,64,0.08);
+      padding: 0.1em 0.4em;
+      border-radius: 2px;
+    }
+
+    /* ---- ANIMATIONS ---- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* hero animate on load */
+    .hero { opacity: 0; animation: fadeUp 0.7s ease 0.05s forwards; }
+    .specs-bar { opacity: 0; animation: fadeUp 0.6s ease 0.25s forwards; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
   </style>
 </head>
-
 <body>
-  <p><a href="../index.html">← Back to Home</a></p>
-  <!-- ===================================================== -->
-  <!-- PROJECT 1 -->
-  <!-- ===================================================== -->
-  <h3 class="project-title"> Strain Gauge Instrumentation System</h3>
-  <div class="project">
-    <p><b>Role:</b> Electronics Design + Firmware + Validation Testing</p>
 
-    <div class="qbox">
-      <div class="q-title">What was the goal?</div>
-      <div class="q-sep"></div>
-      <p>Built a multi-channel, low-noise, and low-power strain measurement system for harsh field use.</p>
+  <header>
+    <div class="header-inner">
+      <a href="../index.html" class="back-link">Back to Portfolio</a>
+      <span class="header-tag">Instrumentation</span>
+    </div>
+  </header>
+
+  <div class="hero">
+    <p class="hero-eyebrow">Project 02 — Field Instrumentation</p>
+    <h1>Strain Gauge Instrumentation System</h1>
+    <div class="hero-role">
+      <span>PCB Design</span>
+      <span>Analog Front-End</span>
+      <span>Firmware</span>
+      <span>Signal Processing</span>
+      <span>Validation Testing</span>
+    </div>
+    <p class="hero-intro">
+      A multi-channel, low-noise strain measurement system designed and validated for in-situ rock stress measurement in pilot boreholes — constrained to fit inside a 27 mm diameter cylindrical housing. The system spans the full acquisition chain: bridge excitation, analog front-end conditioning, 24-bit ADC acquisition, embedded firmware, and thermal drift compensation. Validated through beam bending against Euler–Bernoulli theory, 67-hour thermal drift characterisation, and full-system UCS machine testing with a rectangular rosette gauge configuration.
+    </p>
+  </div>
+
+  <div class="specs-bar">
+    <div class="specs-bar-inner">
+      <div class="spec-item">
+        <span class="spec-value">17.8</span>
+        <span class="spec-label">ENOB (bits)</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">2.33 µε</span>
+        <span class="spec-label">RMSE</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">0.097 µV</span>
+        <span class="spec-label">RMS Noise</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">22.50</span>
+        <span class="spec-label">ppm/°C Drift</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">1.83 µε</span>
+        <span class="spec-label">Max RMS (UCS)</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">~1250 µε</span>
+        <span class="spec-label">Peak UCS Strain</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">~40 mA</span>
+        <span class="spec-label">Supply Current</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">27 mm</span>
+        <span class="spec-label">Housing Dia.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- APPLICATION CONTEXT -->
+    <div class="section">
+      <p class="section-label">01 — Application</p>
+      <h2>What Is This System Actually For?</h2>
+      <p>
+        This strain gauge instrumentation system is the sensing core of a <strong>rock stress measurement tool</strong> deployed in pilot holes during geotechnical drilling campaigns. Understanding in-situ rock stress is critical in mining, tunnelling, and civil engineering — it informs structural design, slope stability analysis, and excavation planning.
+      </p>
+      <h2>Why Resolution Matters in Rock Stress Measurement</h2>
+      <p>
+        In practical rock stress and in-situ strain measurement — such as overcoring or hollow inclusion cell systems — a microstrain resolution of around <strong>1–5 µε</strong> is typically required to obtain reliable stress calculations. Anything worse than ~10 µε can significantly increase uncertainty in the derived stress state.
+      </p>
+      <p>
+        This requirement is strongly driven by rock stiffness. Because strain is inversely proportional to Young's modulus (<em>ε = σ/E</em>), stiff competent rocks such as granite or basalt produce relatively small strain responses to a given stress change — often only a few hundred microstrain. The instrument must therefore resolve small strain variations reliably to maintain accuracy in stress inversion. Softer or more fractured rocks generate much larger strain responses (sometimes exceeding 1000 µε for similar stress levels), making measurement easier, but stress instruments are generally designed to meet the more demanding case of stiff rock.
+      </p>
+      <p>
+        This places the system's validated <strong>RMSE of 2.33 µε</strong> and <strong>average standard deviation of 1.44 µε</strong> squarely within the required performance envelope — sufficient for reliable stress calculations even in high-modulus rock formations.
+      </p>
     </div>
 
-    <div class="qbox">
-      <div class="q-title">What constraints mattered most?</div>
-      <div class="q-sep"></div>
-      <ul>
-        <li>Low noise and stability</li>
-        <li>Repeatable calibration</li>
-        <li>Thermal drift control</li>
-        <li>Robust operation in field conditions</li>
-        <li>Entire electronics assembly required to fit inside a <b>27 mm diameter</b> cylindrical tube, driving compact PCB layout and component placement strategy suitable for field-deployable instrumentation.</li>
-      </ul>
-    </div>
+    <!-- SYSTEM BLOCK DIAGRAM -->
+    <div class="section">
+      <p class="section-label">02 — System Architecture</p>
+      <h2>Signal Chain Overview</h2>
+      <p>The complete acquisition chain runs from strain gauge excitation through to post-processed microstrain output in Python. Each stage introduces noise, offset, or drift that the system design must manage.</p>
 
-    <div class="qbox">
-      <div class="q-title">What did I design?</div>
-      <div class="q-sep"></div>
-      <p>End-to-end strain instrumentation: excitation + analog front-end conditioning + ADC acquisition + MCU control + calibration workflow.</p>
+      <div class="block-diagram">
+        <!-- Row 1: Physical input -->
+        <div class="bd-row">
+          <div class="bd-box bd-sensor">
+            <span class="bd-icon">⊞</span>
+            <span class="bd-title">1000 Ω Quarter-Bridge<br>Strain Gauges</span>
+            <span class="bd-sub">×7 active channels</span>
+          </div>
+          <div class="bd-arrow">→</div>
+          <div class="bd-box bd-analog">
+            <span class="bd-icon">⚡</span>
+            <span class="bd-title">Wheatstone Bridge<br>+ 3V LDO Excitation</span>
+            <span class="bd-sub">Stable regulated supply</span>
+          </div>
+          <div class="bd-arrow">→</div>
+          <div class="bd-box bd-analog">
+            <span class="bd-icon">∿</span>
+            <span class="bd-title">PGA<br>(Integrated in ADC)</span>
+            <span class="bd-sub">Gain 16 or 32</span>
+          </div>
+          <div class="bd-arrow">→</div>
+          <div class="bd-box bd-digital">
+            <span class="bd-icon">⊞</span>
+            <span class="bd-title">24-bit ADC<br>(TI ADS131)</span>
+            <span class="bd-sub">OSR 256, SPI interface</span>
+          </div>
+        </div>
 
-      <div class="kpi">
-        <span><b>Excitation:</b> 3 V LDO</span>
-        <span><b>ADC OSR:</b> 256</span>
-        <span><b>Gain:</b> 32 (default), 16 (high-strain)</span>
-        <span><b>Beam test:</b> 1–13 mm displacement</span>
-        <span><b>RMSE:</b> 2.33 µε</span>
-        <span><b>Avg SD:</b> 1.44 µε</span>
-        <span><b>Thermal drift:</b> 22.52 ppm/°C</span>
-        <span><b>RMS noise:</b> 0.097 µV</span>
-        <span><b>ENOB:</b> ~17.8 bits</span>
-        <span><b>Current:</b> ~40 mA</span>
+        <!-- Aux sensor row -->
+        <div class="bd-aux-row">
+          <div class="bd-box bd-sensor bd-small">
+            <span class="bd-title">NTC Thermistor</span>
+            <span class="bd-sub">Ch8 — temp sensing</span>
+          </div>
+          <div class="bd-arrow-up">↑</div>
+          <div class="bd-box bd-sensor bd-small">
+            <span class="bd-title">Internal Reference</span>
+            <span class="bd-sub">Drift compensation baseline</span>
+          </div>
+          <div class="bd-arrow-up">↑</div>
+        </div>
+
+        <!-- Row 2: Digital processing -->
+        <div class="bd-row bd-row2">
+          <div class="bd-box bd-digital">
+            <span class="bd-icon">⊡</span>
+            <span class="bd-title">STM32 MCU</span>
+            <span class="bd-sub">Acquisition + CRC8 + UART</span>
+          </div>
+          <div class="bd-arrow">→</div>
+          <div class="bd-box bd-comms">
+            <span class="bd-icon">⇌</span>
+            <span class="bd-title">UART / RS-232<br>Comms Protocol</span>
+            <span class="bd-sub">Command / Response + CRC8</span>
+          </div>
+          <div class="bd-arrow">→</div>
+          <div class="bd-box bd-software">
+            <span class="bd-icon">🐍</span>
+            <span class="bd-title">Python<br>Post-Processing</span>
+            <span class="bd-sub">Ref. subtraction, µε, E calc</span>
+          </div>
+          <div class="bd-arrow">→</div>
+          <div class="bd-box bd-output">
+            <span class="bd-icon">📊</span>
+            <span class="bd-title">Microstrain Output<br>+ Young's Modulus</span>
+            <span class="bd-sub">Validated field data</span>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        .block-diagram {
+          margin: 2rem 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .bd-row {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          flex-wrap: wrap;
+        }
+        .bd-row2 { margin-top: 0.3rem; }
+        .bd-aux-row {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding-left: 0;
+          margin: 0.2rem 0 0.2rem 0;
+        }
+        .bd-box {
+          background: var(--bg2);
+          border: 1px solid var(--border);
+          border-radius: 3px;
+          padding: 0.8rem 1rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          min-width: 130px;
+          flex: 1;
+          max-width: 170px;
+          gap: 0.2rem;
+          transition: border-color 0.2s, background 0.2s;
+        }
+        .bd-box:hover { background: var(--bg3); }
+        .bd-box.bd-small {
+          padding: 0.55rem 0.8rem;
+          min-width: 110px;
+          max-width: 140px;
+        }
+        .bd-sensor  { border-top: 2px solid #6ab0e0; }
+        .bd-analog  { border-top: 2px solid var(--accent); }
+        .bd-digital { border-top: 2px solid #a070d0; }
+        .bd-comms   { border-top: 2px solid #60b890; }
+        .bd-software{ border-top: 2px solid var(--green); }
+        .bd-output  { border-top: 2px solid var(--accent); }
+        .bd-icon { font-size: 1rem; }
+        .bd-title {
+          font-family: var(--sans);
+          font-size: 0.78rem;
+          font-weight: 500;
+          color: var(--text-bright);
+          line-height: 1.3;
+        }
+        .bd-sub {
+          font-family: var(--mono);
+          font-size: 0.62rem;
+          color: var(--text-dim);
+          letter-spacing: 0.03em;
+        }
+        .bd-arrow {
+          font-size: 1.2rem;
+          color: var(--border);
+          flex-shrink: 0;
+        }
+        .bd-arrow-up {
+          font-size: 1rem;
+          color: var(--border);
+          flex-shrink: 0;
+          align-self: center;
+        }
+        .bd-legend {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+        .bd-legend-item {
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-family: var(--mono);
+          font-size: 0.65rem;
+          color: var(--text-dim);
+        }
+        .bd-legend-dot {
+          width: 10px;
+          height: 3px;
+          border-radius: 1px;
+        }
+        @media (max-width: 700px) {
+          .bd-row, .bd-aux-row { gap: 0.3rem; }
+          .bd-box { min-width: 90px; font-size: 0.7rem; }
+        }
+      </style>
+
+      <div class="bd-legend">
+        <div class="bd-legend-item"><div class="bd-legend-dot" style="background:#6ab0e0"></div> Sensors</div>
+        <div class="bd-legend-item"><div class="bd-legend-dot" style="background:var(--accent)"></div> Analog</div>
+        <div class="bd-legend-item"><div class="bd-legend-dot" style="background:#a070d0"></div> Digital</div>
+        <div class="bd-legend-item"><div class="bd-legend-dot" style="background:#60b890"></div> Comms</div>
+        <div class="bd-legend-item"><div class="bd-legend-dot" style="background:var(--green)"></div> Software</div>
       </div>
     </div>
 
-    <div class="qbox">
-      <div class="q-title">How the components were selected?</div>
-      <div class="q-sep"></div>
-
-      <div class="subhead">1. Strain gauge</div>
+    <!-- CHANNEL CONFIGURATION -->
+    <div class="section">
+      <p class="section-label">03 — Channel Configuration</p>
+      <h2>8 Inputs + 1 Internal Reference</h2>
       <p>
-        To reduce excitation power while maintaining good signal sensitivity, <b>1000 Ω quarter-bridge strain gauges</b> were selected.
-        Compared to typical 120 Ω / 350 Ω gauges, the higher resistance significantly reduces current draw, improving overall battery
-        life without compromising measurement quality.
+        The ADC supports 8 external input channels plus one internal reference channel, used as follows:
       </p>
 
-      <div class="subhead">2. ADC + Amplification</div>
-      <p>
-        For signal amplification and analog-to-digital conversion, the <b>Texas Instruments 24-bit ADC</b> was selected.
-        This device integrates a high-resolution multi-channel ADC along with an internal programmable gain amplifier (PGA),
-        making it well-suited for low-level strain gauge measurements.
-      </p>
-      <p class="muted">The ADC was chosen primarily because it supports:</p>
-      <ul>
-        <li>Simultaneous multi-channel sampling, enabling synchronised strain measurements across multiple sensors</li>
-        <li>High resolution conversion, allowing accurate capture of microvolt-level strain signals</li>
-        <li>Integrated PGA, reducing the need for external analog amplification stages</li>
-        <li>Low noise performance, improving measurement stability and repeatability</li>
-        <li>SPI digital interface, simplifying MCU communication and data acquisition</li>
-      </ul>
+      <div class="table-wrap" style="margin-top:1.2rem;">
+        <table>
+          <thead>
+            <tr>
+              <th>Channel</th>
+              <th>Function</th>
+              <th>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="selected">
+              <td>CH1 – CH7</td>
+              <td>Quarter-bridge strain gauges</td>
+              <td>Active strain measurement (7 independent gauges)</td>
+            </tr>
+            <tr>
+              <td>CH8</td>
+              <td>NTC thermistor output</td>
+              <td>Temperature logging for thermal drift characterisation</td>
+            </tr>
+            <tr>
+              <td>Internal Ref</td>
+              <td>ADC internal reference channel</td>
+              <td>Drift compensation baseline — subtracted from all active channels to cancel common-mode temperature effects</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-      <div class="subhead">3. Microcontroller</div>
-      <p>
-        The <b>STM32 ultra-low-power microcontroller</b> was selected as the main control unit of the strain gauge instrumentation system.
-        It was responsible for coordinating data acquisition, managing system calibration, and implementing power-optimised operation
-        for long-term field deployment.
-      </p>
-      <p class="muted">The STM32 MCU was chosen primarily due to its:</p>
-      <ul>
-        <li>Ultra-low power architecture, enabling extended battery life in remote environments</li>
-        <li>SPI peripheral support, required for reliable communication with the 24-bit ADC</li>
-        <li>Sufficient Flash and RAM, for firmware, calibration storage, and acquisition logic</li>
-        <li>Robust GPIO and timer peripherals, useful for system control, synchronization, and debugging</li>
-      </ul>
-
-      <div class="subhead">4. Excitation Source</div>
-      <p>
-        A stable and low-noise excitation source was critical to ensure accurate and repeatable strain measurements, since any variation
-        in bridge excitation directly affects the measured output voltage.
-      </p>
-      <p>
-        The excitation stage was implemented using a <b>3 V LDO regulator</b>, which provided a clean and regulated excitation supply
-        for the Wheatstone bridge. This ensured stable operation under battery voltage variation, reduced supply ripple, and improved
-        overall measurement consistency.
-      </p>
-      <p>
-        Using the LDO-based excitation approach provided a reliable and low-noise bridge supply, supporting accurate strain measurements
-        in harsh field conditions.
+      <p style="margin-top:1rem;">
+        Having the NTC thermistor on a dedicated ADC channel — sampled synchronously with the strain channels — means every data frame carries both strain and temperature readings, allowing the Python post-processing pipeline to correlate drift directly with temperature change without any timing ambiguity.
       </p>
     </div>
 
-    <div class="qbox">
-      <div class="q-title">What was the Gain Selection &amp; Amplification Strategy?</div>
-      <div class="q-sep"></div>
-
+    <!-- DESIGN CONSTRAINTS -->
+    <div class="section">
+      <p class="section-label">04 — Context &amp; Constraints</p>
+      <h2>Physical and Performance Constraints</h2>
       <p>
-        Since quarter-bridge strain gauge outputs are typically in the microvolt to millivolt range, gain selection was critical to maximise ADC
-        resolution without saturating the input. The system gain was selected based on two key factors: <b>offset tolerance of strain gauges</b>
-        and the expected <b>full-scale strain range</b>.
+        Strain gauges generate signals in the microvolt to millivolt range, making the entire acquisition chain — excitation stability, amplifier noise, ADC resolution, and thermal behaviour — critical to final accuracy. For this system, those challenges were compounded by a severe physical constraint: the entire electronics assembly had to fit inside a <strong>27 mm diameter tube</strong>, placing tight pressure on PCB layout and component selection.
       </p>
-
-      <ul class="subheading-list">
-        <li><b>Offset-Based Gain Validation (Datasheet)</b></li>
-      </ul>
-
       <p>
-        From the strain-gauge datasheet, the strain gauge resistance tolerance is <b>1000 ± 4 Ω</b>, meaning worst-case gauge resistance can be
-        996 Ω to 1004 Ω. This produces a worst-case bridge offset of approximately:
-      </p>
-      <ul>
-        <li>+3.7 mV</li>
-        <li>−3.7 mV</li>
-      </ul>
-      <p>
-        This was calculated using the bridge output voltage error relative to the 1.5 V reference level. The 24-bit ADC full-scale range (FSR)
-        for different gain settings was evaluated:
-      </p>
-      <ul>
-        <li>Gain 16 → ±75 mV</li>
-        <li>Gain 32 → ±37.5 mV</li>
-        <li>Gain 64 → ±18.75 mV</li>
-        <li>Gain 128 → ±9.375 mV</li>
-      </ul>
-      <p>Thus, based on datasheet offsets alone, all gain settings would remain within range.</p>
-
-      <ul class="subheading-list">
-        <li><b>Offset-Based Gain Validation (Experimental Testing)</b></li>
-      </ul>
-      <p>
-        To validate real-world offsets, experimental testing was performed across <b>7 sets</b> of strain measurement systems, each containing
-        <b>21 strain gauges</b>. The measured worst-case offset observed was:
-      </p>
-      <ul>
-        <li>−12.73 mV (worst-case)</li>
-      </ul>
-      <p>This corresponds to an effective resistance tolerance of approximately:</p>
-      <ul>
-        <li>1000 ± 18 Ω</li>
-      </ul>
-      <p>
-        This experimental offset is significantly higher than datasheet expectations and directly impacts gain selection. Because the worst-case
-        offset (−12.73 mV) exceeds the safe range for Gain 128 (±9.375 mV), <b>Gain 128 was eliminated</b> from the final design.
-      </p>
-
-      <ul class="subheading-list">
-        <li><b>Offset-Strain Range and Saturation Considerations</b></li>
-      </ul>
-      <p>
-        From the datasheet, the ultimate strain rating is <b>20000 µm/m</b>, which corresponds to:
-      </p>
-      <ul>
-        <li>ΔR ≈ 42 Ω</li>
-        <li>Offset voltage shift ≈ +31.6 mV</li>
-      </ul>
-      <p>
-        At this strain level, gains 64 and 128 would saturate, while gains 32 and 16 remain within range.
-      </p>
-
-      <ul class="subheading-list">
-        <li><b>Final Gain Strategy</b></li>
-      </ul>
-      <p>Based on both datasheet analysis and real experimental data:</p>
-      <ul>
-        <li>Gain 128 was rejected due to excessive real-world offsets.</li>
-        <li>Gain 64 was limited due to saturation risk at higher strain values.</li>
-        <li>Gain 32 and Gain 16 were selected as safe operating gains, providing a balance between resolution and measurement headroom.</li>
-      </ul>
-      <p>
-        This ensured robust strain acquisition under manufacturing tolerance variation, real-world offset conditions, and high-strain events in field operation.
+        Beyond size, the system needed to meet a set of field-deployment requirements: low power consumption for battery operation, repeatable calibration, stable performance under real-world temperature variation, and multi-channel synchronised sampling. None of these are unusual requirements in isolation — achieving them together in a compact, validated package is what this project was about.
       </p>
     </div>
-    
-    <div class="qbox">
-      <div class="q-title">What were the firmware challenges and how was it solved?</div>
-      <div class="q-sep"></div>
-    
-      <p>
-        Although strain calculations were performed offline, firmware acted as a real-time acquisition engine:
-        deterministic ADC sampling, reliable UART streaming, and robust data integrity checks to ensure
-        long-duration testing remained repeatable and traceable.
-      </p>
-    
-      <ul class="subheading-list">
-    
-        <li>
-          <i><b>Challenge:</b></i> Reliable multi-channel acquisition without dropped samples or channel misalignment.
-          <br>
-          <i><b>Solution:</b></i> Implemented a deterministic sampling loop with fixed channel sequencing (read-all mode),
-          ensuring every ADC frame contained synchronized readings from all channels.
-        </li>
-    
-        <li>
-          <i><b>Challenge:</b></i> Maintaining timing stability while streaming large data frames over UART.
-          <br>
-          <i><b>Solution:</b></i> Used structured binary/encoded messages with a defined command-response protocol, allowing
-          the host to request channel reads, repetition mode, gain, and OSR configuration without disrupting sampling.
-        </li>
-    
-        <li>
-          <i><b>Challenge:</b></i> Gain and OSR needed to be tunable during validation to balance noise performance vs signal headroom.
-          <br>
-          <i><b>Solution:</b></i> Added firmware commands to dynamically configure gain and oversampling ratio (OSR), allowing rapid
-          tuning during bench tests without reflashing firmware.
-        </li>
-    
-        <li>
-          <i><b>Challenge:</b></i> Corrupted UART packets can silently invalidate strain measurements during long logging sessions.
-          <br>
-          <i><b>Solution:</b></i> Added CRC8 validation in every response packet. The Python script verifies CRC8 and rejects invalid
-          frames, preventing bad data from contaminating post-processing results.
-        </li>
-    
-        <li>
-          <i><b>Challenge:</b></i> Long-duration experiments required machine-readable logs that could be automatically parsed for drift analysis.
-          <br>
-          <i><b>Solution:</b></i> Streamed data in a consistent tagged format (timestamp, board type, response type, channel data, 
-          gain states, sample state, CRC), enabling direct parsing and automated plotting in Python.
-        </li>
-    
-        <li>
-          <i><b>Challenge:</b></i> Embedded firmware needed to remain lightweight while still supporting calibration and validation workflows.
-          <br>
-          <i><b>Solution:</b></i> Kept the microcontroller focused only on deterministic acquisition + transport, while higher-level processing
-          (reference subtraction, microstrain conversion, ΔR calculation, and drift plots) was handled offline in a Python pipeline.
-        </li>
-    
-        <li>
-          <i><b>Challenge:</b></i> Ensuring measurement repeatability across multiple test setups and wiring conditions.
-          <br>
-          <i><b>Solution:</b></i> Included a board-ID and configuration reporting feature so every dataset captured the exact test configuration
-          (gain/OSR/sample count), improving traceability during validation.
-        </li>
-    
-      </ul>
-    </div>
 
+    <!-- COMPONENT SELECTION -->
+    <div class="section">
+      <p class="section-label">05 — Component Selection</p>
+      <h2>Choosing the Right Parts for the Right Reasons</h2>
+      <p>Each component was selected based on a specific constraint or performance requirement, not just datasheet headline specs.</p>
 
-    
-    <div class="qbox">
-      <div class="q-title">How was system accuracy validated experimentally?</div>
-      <div class="q-sep"></div>
-
-      <ul class="subheading-list">
-        <li><b>Test setup</b></li>
-      </ul>
-      <p>
-        A beam bending calibration was performed by applying controlled end displacement in steps from <b>1 mm to 13 mm</b> while measuring strain
-        from the strain gauge readout chain (bridge excitation → 24-bit ADC → STM32). The beam geometry used in the analytical model matched the test
-        specimen parameters (e.g., length ≈ 340 mm, width ≈ 32 mm, thickness ≈ 3 mm, gauge location length ≈ 310 mm).
-      </p>
-      
-      <ul class="subheading-list">
-        <li><b>Analytical strain modelling (Euler–Bernoulli beam theory)</b></li>
-      </ul>
-      <p>An analytical strain prediction was generated using standard small-deflection beam theory:</p>
-      <ul>
-        <li>Convert the applied displacement to bending curvature for the given loading/support condition.</li>
-        <li>
-          Compute surface strain at the gauge location using:
-          <br/>
-          <code>ε(x) = κ(x) · (t/2)</code>
-          <br/>
-          where <code>t</code> is beam thickness and <code>κ(x)</code> is curvature from the model.
-        </li>
-      </ul>
-      <p>This produced the “Calculated µStrain” series in the plot.</p>
-
-       <ul class="subheading-list">
-        <li><b>Experimental strain (ADC-based)</b></li>
-      </ul>
-      <p>
-        The experimental strain was derived from the ADC readings by converting output code → µstrain using the bridge-based equations (with 3 V excitation).
-      </p>
-
-      <ul class="subheading-list">
-        <li><b>Results and comparison</b></li>
-      </ul>
-      <ul>
-        <li>The experimental curve closely overlays the analytical curve across 1–13 mm, showing strong linear agreement (near-identical lines).</li>
-        <li>Error stayed small across the sweep:</li>
-        <ul>
-          <li>Max |error| ≈ 3.37 µstrain</li>
-          <li>RMSE ≈ 2.33 µstrain</li>
-          <li>MSE ≈ 5.07 (µstrain²)</li>
-          <li>Average SD ≈ 1.44 µstrain</li>
-        </ul>
-      </ul>
-
-      <div class="figure">
-        <img src="../assets/beam_bending_microstrain_highres.png" alt="Beam bending test: displacement vs microstrain"/>
-        <div class="caption">Beam bending validation: analytical vs ADC-derived microstrain (1–13 mm displacement).</div>
+      <div class="component-grid">
+        <div class="component-card">
+          <p class="cc-tag">Sensor</p>
+          <h4>1000 Ω Quarter-Bridge Strain Gauges</h4>
+          <p>Higher resistance than the typical 120 Ω or 350 Ω gauges, which directly reduces excitation current draw and extends battery life — without compromising signal sensitivity.</p>
+        </div>
+        <div class="component-card">
+          <p class="cc-tag">ADC + Amplification</p>
+          <h4>Texas Instruments 24-bit ADC</h4>
+          <p>Chosen for integrated PGA (eliminating external amplification), simultaneous multi-channel sampling for synchronised strain readings, and SPI interface for clean MCU communication. 24-bit resolution allows accurate capture of microvolt-level signals.</p>
+        </div>
+        <div class="component-card">
+          <p class="cc-tag">Microcontroller</p>
+          <h4>STM32 Ultra-Low-Power MCU</h4>
+          <p>Selected for its ultra-low-power architecture, SPI peripheral support for the ADC, and sufficient flash and RAM for calibration storage and acquisition logic. Keeps the system light on current while handling deterministic timing.</p>
+        </div>
+        <div class="component-card">
+          <p class="cc-tag">Excitation</p>
+          <h4>3 V LDO Regulator</h4>
+          <p>A stable, low-noise excitation supply was critical because any variation in bridge excitation directly corrupts the output. The LDO provides clean, regulated 3 V regardless of battery voltage variation, reducing supply ripple and measurement inconsistency.</p>
+        </div>
       </div>
     </div>
 
-    <div class="qbox">
-      <div class="q-title">What was system sensitivity?</div>
-      <div class="q-sep"></div>
+    <!-- GAIN SELECTION -->
+    <div class="section">
+      <p class="section-label">06 — Gain Selection</p>
+      <h2>Why Gain Selection Required Experimental Validation</h2>
       <p>
-        System sensitivity was quantified through calibration testing by correlating theoretical strain (beam bending model) with raw ADC output codes.
-        The calibration results showed a linear response across the operating range, confirming stable excitation, consistent signal conditioning, and repeatable ADC performance.
+        Quarter-bridge outputs are in the microvolt to millivolt range, so gain selection is critical: too low and you waste ADC resolution; too high and you risk saturation from offset voltages. The standard approach is to check datasheet resistance tolerance and work out worst-case bridge offset — which suggested that all gain settings from 16 to 128 would be safe.
       </p>
-      <p class="muted">The measured system sensitivity was:</p>
-      <ul>
-        <li><b>0.00284 µε/LSB</b> (≈ 352.5 LSB per µε)</li>
-        <li>Equivalent effective input sensitivity of approximately <b>0.00127 µV/µε</b></li>
-      </ul>
       <p>
-        This sensitivity enabled reliable sub-microstrain detection and provided sufficient resolution for low-strain field measurements while maintaining adequate headroom for offset and temperature drift effects.
+        That assumption didn't hold. Experimental testing across <strong>7 system sets, 21 gauges each</strong>, revealed a worst-case offset of <code>−12.73 mV</code>, corresponding to an effective gauge resistance tolerance of <strong>1000 ± 18 Ω</strong> — significantly worse than the datasheet's ±4 Ω. This immediately eliminated Gain 128, whose ADC input range of ±9.375 mV would saturate under real conditions.
       </p>
-    </div>
+      <p>
+        Full-scale strain range further constrained the choice. At the ultimate strain rating of 20,000 µm/m, the bridge output shifts by approximately +31.6 mV, which saturates Gain 64 in high-strain scenarios. The final design therefore uses <strong>Gain 32 as default</strong> and <strong>Gain 16 for high-strain events</strong>, balancing resolution with adequate measurement headroom.
+      </p>
 
-    <div class="qbox">
-      <div class="q-title">What was the Noise performance &amp; Effective Resolution?</div>
-      <div class="q-sep"></div>
-      <p>
-        To quantify the system noise floor and effective resolution, a zero-strain dataset was recorded with the beam unloaded.
-        The ADC sampled at <b>256 samples/sec</b>. The MCU collected ADC data continuously and reported one output sample every <b>2 seconds</b>.
-      </p>
-      <p class="muted">Noise measured from zero-strain data:</p>
-      <ul>
-        <li>RMS noise: <b>0.097 µV RMS</b></li>
-        <li>Noise density: <b>0.195 µV/√Hz</b></li>
-        <li>Effective resolution (ENOB): <b>~17.8 bits</b> (Gain = 32)</li>
-      </ul>
-      <p>
-        This test experimentally validated the system’s low-noise acquisition performance and confirmed that averaging-based sampling significantly improved the measurement resolution for long-duration strain monitoring in field conditions.
-      </p>
-    </div>
-
-    <div class="qbox">
-      <div class="q-title">How was thermal drift quantified and compensated?</div>
-      <div class="q-sep"></div>
-
-      <!-- 7) Bullet point all subheadings -->
-      <ul class="subheading-list">
-        <li><b>How drift was quantified?</b></li>
-      </ul>
-      <p>
-        To measure real-world thermal drift, the complete system (bridge excitation + ADC + MCU) was left running overnight with no mechanical load change.
-        During the test:
-      </p>
-      <ul>
-        <li>Temperature was logged continuously, showing a natural swing of roughly <b>~14.3°C</b> (about ~26°C down to ~12–13°C and back up).</li>
-        <li>In parallel, strain output from all channels was recorded as “MicroStrain”, so any remaining change is dominated by temperature-driven drift rather than applied strain.</li>
-      </ul>
-      <p>
-        To convert the observed drift into an electrical quantity, the strain variations were mapped back to an equivalent resistance change (ΔR) of the 1000 Ω gauge (GF ≈ 2.1 was used in the sheet).
-        The results summary from the dataset:
-      </p>
-      <ul>
-        <li>Max deviation range (worst channel): ΔR ≈ <b>0.322 Ω</b></li>
-        <li>As % of 1000 Ω: <b>0.000322%</b></li>
-        <li>Equivalent drift: <b>≈ 322 ppm</b> over the test window</li>
-        <li>Drift per °C: <b>≈ 22.52 ppm/°C</b> (computed over the 14.3°C temperature span)</li>
-      </ul>
-      <p>This gives a clear, comparable “ppm/°C” figure for thermal stability.</p>
-
-      <div class="figure">
-        <img src="../assets/temp_vs_time_highres.png" alt="Temperature vs time"/>
-        <div class="caption">Temperature vs time during overnight thermal drift test (~14.3°C swing).</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Gain</th>
+              <th>ADC FSR (±)</th>
+              <th>vs. Worst Offset</th>
+              <th>vs. Full-Scale Strain</th>
+              <th>Decision</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="rejected">
+              <td>128</td><td>9.375 mV</td><td>Saturates (−12.73 mV)</td><td>Saturates</td>
+              <td><span class="tag-rejected">Rejected</span></td>
+            </tr>
+            <tr>
+              <td>64</td><td>18.75 mV</td><td>Safe</td><td>Risk at high strain</td>
+              <td><span class="tag-rejected">Not used</span></td>
+            </tr>
+            <tr class="selected">
+              <td>32</td><td>37.5 mV</td><td>Safe</td><td>Safe</td>
+              <td><span class="tag-selected">Default</span></td>
+            </tr>
+            <tr class="selected">
+              <td>16</td><td>75 mV</td><td>Safe</td><td>Safe</td>
+              <td><span class="tag-selected">High-Strain</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <div class="figure">
-        <img src="../assets/microstrain_calc_all_channels_highres.png" alt="Microstrain vs time across channels"/>
-        <div class="caption">Microstrain vs time across channels during thermal drift test (no mechanical load change).</div>
-      </div>
-
-       <ul class="subheading-list">
-        <li><b>How drift was compensated?</b></li>
-      </ul>
-      <p>
-        Compensation was done by <b>Reference subtraction (common-mode cancellation)</b>. A dedicated reference channel was used as a baseline and subtracted from all active channels.
-        The strain traces were processed as “Ref Subtracted”, meaning a reference channel / baseline term was subtracted from each measurement to cancel excitation/ADC/common-mode temperature effects shared across channels.
-      </p>
-
-      <div class="figure">
-        <img src="../assets/microstrain_reference_subtracted_highres.png" alt="Microstrain reference-subtracted"/>
-        <div class="caption">Reference subtraction result (“Ref Subtracted”) showing common-mode temperature effects reduced.</div>
-      </div>
-
-      <div class="figure">
-        <img src="../assets/change_in_resistance_highres.png" alt="Change in resistance vs time"/>
-        <div class="caption">Equivalent change in resistance (ΔR) derived from microstrain drift data.</div>
-      </div>
-    </div>
-
-    <div class="qbox">
-      <div class="q-title">What was the power consumption of the system?</div>
-      <div class="q-sep"></div>
-      <p>
-        With a measured current consumption of <b>~40 mA</b>, the system achieves <b>~62.5 hours (~2.6 days)</b> continuous runtime using
-        <b>4×AA (2500 mAh)</b> batteries in series.
+      <p style="margin-top:1rem;">
+        This is a good example of why datasheet analysis alone is insufficient for production designs. The experimental offset data changed the gain selection outcome meaningfully — and doing that testing across a realistic sample size (147 gauges) gave confidence the final choice was robust.
       </p>
     </div>
 
-    <div class="qbox">
-      <div class="q-title">What was the final engineering outcome?</div>
-      <div class="q-sep"></div>
+    <!-- FIRMWARE -->
+    <div class="section">
+      <p class="section-label">07 — Firmware</p>
+      <h2>The MCU as a Real-Time Acquisition Engine</h2>
       <p>
-        A validated multi-channel strain measurement system demonstrating low-noise performance, strong analytical correlation, and thermal stability suitable for harsh industrial field deployment.
-        Overall, the design achieved the required balance of <b>high sensitivity</b>, <b>low noise</b>, <b>low power consumption</b>, and <b>field robustness</b>, delivering a practical instrumentation platform ready for real-world industrial use.
+        Strain calculations were handled offline in Python, so the firmware had one job: capture accurate, synchronised, time-stamped data reliably over long sessions, and make that data fully traceable. That sounds simple. In practice, it meant solving several concrete problems.
+      </p>
+
+      <div class="cs-list">
+        <div class="cs-item">
+          <div class="cs-challenge">
+            <p class="cs-label">Challenge</p>
+            <p>Multi-channel acquisition without dropped samples or channel misalignment.</p>
+          </div>
+          <div class="cs-solution">
+            <p class="cs-label">Solution</p>
+            <p>Deterministic sampling loop with fixed channel sequencing (read-all mode), ensuring every ADC frame contained synchronised readings from all channels simultaneously.</p>
+          </div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-challenge">
+            <p class="cs-label">Challenge</p>
+            <p>Timing stability while streaming large data frames over UART.</p>
+          </div>
+          <div class="cs-solution">
+            <p class="cs-label">Solution</p>
+            <p>Structured binary/encoded messages with a command-response protocol, allowing the host to configure gain, OSR, and sampling mode without interrupting acquisition.</p>
+          </div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-challenge">
+            <p class="cs-label">Challenge</p>
+            <p>Corrupted UART packets silently invalidating strain data during long logging sessions.</p>
+          </div>
+          <div class="cs-solution">
+            <p class="cs-label">Solution</p>
+            <p>CRC8 validation on every response packet. The Python pipeline verifies CRC8 and rejects invalid frames before any post-processing begins.</p>
+          </div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-challenge">
+            <p class="cs-label">Challenge</p>
+            <p>Gain and OSR needed to be tunable during bench validation without reflashing firmware.</p>
+          </div>
+          <div class="cs-solution">
+            <p class="cs-label">Solution</p>
+            <p>Runtime firmware commands to dynamically configure gain and oversampling ratio, enabling rapid iteration during testing without a build-flash cycle.</p>
+          </div>
+        </div>
+        <div class="cs-item">
+          <div class="cs-challenge">
+            <p class="cs-label">Challenge</p>
+            <p>Ensuring measurement repeatability was traceable across multiple test setups and wiring conditions.</p>
+          </div>
+          <div class="cs-solution">
+            <p class="cs-label">Solution</p>
+            <p>Board-ID and configuration reporting included in every dataset header, so gain, OSR, and sample count were always captured alongside the measurements themselves.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PYTHON PIPELINE -->
+    <div class="section">
+      <p class="section-label">08 — Data Pipeline</p>
+      <h2>Python Post-Processing Pipeline</h2>
+      <p>
+        The STM32 firmware acts purely as a deterministic acquisition and transport engine — it doesn't compute microstrain. All signal processing, calibration, reference subtraction, drift correction, and Young's modulus calculation are handled offline in a Python pipeline. This keeps the firmware simple and deterministic while allowing the post-processing logic to evolve without firmware reflashing.
+      </p>
+      <p>
+        Every response frame from the board is a structured, tagged, CRC8-validated packet. A sample line from a logging session looks like this:
+      </p>
+
+      <div class="log-block">
+        <div class="log-line">
+          <span class="log-ts">2025-09-09 10:58:37.880370</span><span class="log-comma">,</span>
+          <span class="log-resp">RESPONSE_READ_CHANNEL_ALL</span><span class="log-comma">,</span>
+          <span class="log-label">Data</span><span class="log-comma">,</span>
+          <span class="log-val">-8388608</span><span class="log-comma">,</span>
+          <span class="log-val active-ch">-1784031</span><span class="log-comma">,</span>
+          <span class="log-val active-ch">-1713341</span><span class="log-comma">,</span>
+          <span class="log-val">-8388608</span><span class="log-comma">,</span>
+          <span class="log-val">-8388608</span><span class="log-comma">,</span>
+          <span class="log-val">-8388608</span><span class="log-comma">,</span>
+          <span class="log-val">-8388608</span><span class="log-comma">,</span>
+          <span class="log-val ref-ch">-1765401</span><span class="log-comma">,</span>
+          <span class="log-ntc">NTC: 33225</span><span class="log-comma">,</span>
+          <span class="log-label">Gains</span><span class="log-comma">,</span>
+          <span class="log-gain">5, 5, 5, 5, 5, 5, 5, 5</span><span class="log-comma">,</span>
+          <span class="log-label">SampleState</span><span class="log-comma">,</span>
+          <span class="log-ss">1</span><span class="log-comma">,</span>
+          <span class="log-crc">Crc8: 71, Calculated Crc8: 71</span>
+        </div>
+      </div>
+
+      <div class="log-legend">
+        <div class="log-leg-item"><span class="log-ts ll-swatch">■</span> Timestamp</div>
+        <div class="log-leg-item"><span class="log-resp ll-swatch">■</span> Response type</div>
+        <div class="log-leg-item"><span class="active-ch ll-swatch">■</span> Active strain channels</div>
+        <div class="log-leg-item"><span class="ref-ch ll-swatch">■</span> Reference channel</div>
+        <div class="log-leg-item"><span class="log-ntc ll-swatch">■</span> NTC temperature</div>
+        <div class="log-leg-item"><span class="log-gain ll-swatch">■</span> Gain per channel (code 5 = ×32)</div>
+        <div class="log-leg-item"><span class="log-crc ll-swatch">■</span> CRC8 validation</div>
+      </div>
+
+      <style>
+        .log-block {
+          background: #0a0b0d;
+          border: 1px solid var(--border);
+          border-left: 3px solid var(--accent);
+          border-radius: 3px;
+          padding: 1.2rem 1.4rem;
+          margin: 1.5rem 0 1rem;
+          overflow-x: auto;
+        }
+        .log-line {
+          font-family: var(--mono);
+          font-size: 0.72rem;
+          line-height: 1.9;
+          white-space: nowrap;
+        }
+        .log-comma { color: var(--border); }
+        .log-ts     { color: #7a9ab8; }
+        .log-board  { color: #b080d8; }
+        .log-resp   { color: #60b890; }
+        .log-label  { color: var(--text-dim); }
+        .log-val    { color: var(--text-dim); }
+        .active-ch  { color: var(--accent); }
+        .ref-ch     { color: #60b890; }
+        .log-ntc    { color: #7abfe0; }
+        .log-gain   { color: #c0a060; }
+        .log-ss     { color: var(--text); }
+        .log-crc    { color: #80c080; }
+        .log-legend {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.8rem 1.4rem;
+          margin: 0 0 1.2rem;
+        }
+        .log-leg-item {
+          font-family: var(--mono);
+          font-size: 0.65rem;
+          color: var(--text-dim);
+          display: flex;
+          align-items: center;
+          gap: 0.35rem;
+        }
+        .ll-swatch { font-size: 0.8rem; }
+      </style>
+
+      <p>
+        Values of <code>-8388608</code> represent the minimum 24-bit signed integer value (<code>−2²³</code>) — channels not connected or not in use return this sentinel value, which the Python script filters out before processing. The <strong>Gain code 5</strong> maps to ×32 amplification (see lookup below). The pipeline verifies CRC8 on every frame, discards any invalid packet, then converts valid ADC codes to microstrain using the calibration coefficients, applies reference subtraction for drift compensation, and outputs time-series strain data alongside temperature.
+      </p>
+
+      <h3>Gain Code Lookup</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Code</th><th>Gain</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr><td><code>0</code></td><td>×1</td><td></td></tr>
+            <tr><td><code>1</code></td><td>×2</td><td></td></tr>
+            <tr><td><code>2</code></td><td>×4</td><td></td></tr>
+            <tr><td><code>3</code></td><td>×8</td><td></td></tr>
+            <tr><td><code>4</code></td><td>×16</td><td>High-strain fallback</td></tr>
+            <tr class="selected"><td><code>5</code></td><td>×32</td><td><span class="tag-selected">Default</span> — as seen in log above</td></tr>
+            <tr><td><code>6</code></td><td>×64</td><td></td></tr>
+            <tr class="rejected"><td><code>7</code></td><td>×128</td><td><span class="tag-rejected">Rejected</span> — saturates at real-world offsets</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ACCURACY VALIDATION -->
+    <div class="section">
+      <p class="section-label">09 — Accuracy Validation</p>
+      <h2>Beam Bending Test Against Euler–Bernoulli Theory</h2>
+      <p>
+        System accuracy was validated through a beam bending calibration, applying controlled end displacement from <strong>1 mm to 13 mm</strong> in discrete steps while recording strain from the full acquisition chain. An analytical strain prediction was generated using standard small-deflection Euler–Bernoulli beam theory, converting applied displacement to surface strain at the gauge location for the test specimen geometry (length ≈ 340 mm, width ≈ 32 mm, thickness ≈ 3 mm, gauge position ≈ 310 mm from support).
+      </p>
+      <p>
+        The experimental strain — derived from ADC output codes via the bridge equations at 3 V excitation — closely tracked the analytical prediction across the full displacement range, with near-identical linear behaviour. The error metrics confirmed strong agreement:
+      </p>
+
+      <div class="result-grid">
+        <div class="result-item"><span class="rv">2.33 µε</span><span class="rl">RMSE</span></div>
+        <div class="result-item"><span class="rv">3.37 µε</span><span class="rl">Max |Error|</span></div>
+        <div class="result-item"><span class="rv">1.44 µε</span><span class="rl">Average Std Dev</span></div>
+        <div class="result-item"><span class="rv">352.5 LSB/µε</span><span class="rl">Sensitivity</span></div>
+      </div>
+
+      <p>
+        The measured system sensitivity of <strong>0.00284 µε/LSB</strong> (≈ 352.5 LSB per µε) enabled reliable sub-microstrain detection, with sufficient resolution headroom for offset and temperature drift effects in field conditions.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/beam_bending_microstrain_highres.png" alt="Beam bending validation: analytical vs ADC-derived microstrain">
+        <figcaption>Fig. 1 — Beam bending validation: analytical (Euler–Bernoulli) vs ADC-derived microstrain across 1–13 mm displacement.</figcaption>
+      </figure>
+    </div>
+
+    <!-- NOISE -->
+    <div class="section">
+      <p class="section-label">10 — Noise &amp; Resolution</p>
+      <h2>Quantifying the Noise Floor</h2>
+      <p>
+        Noise performance was quantified by recording a zero-strain dataset with the beam fully unloaded. The ADC sampled at <strong>256 samples/sec</strong> with the MCU reporting one output sample every 2 seconds. This averaging-based approach is a key reason for the low observed noise floor.
+      </p>
+
+      <div class="result-grid">
+        <div class="result-item"><span class="rv">0.097 µV</span><span class="rl">RMS Noise</span></div>
+        <div class="result-item"><span class="rv">0.195 µV/√Hz</span><span class="rl">Noise Density</span></div>
+        <div class="result-item"><span class="rv">~17.8 bits</span><span class="rl">ENOB (Gain 32)</span></div>
+        <div class="result-item"><span class="rv">256</span><span class="rl">ADC OSR</span></div>
+      </div>
+
+      <p>
+        17.8 effective bits is close to the theoretical limit for a well-designed 24-bit acquisition chain and confirms that the analog front end — excitation, PCB layout, and signal conditioning — did not meaningfully degrade the ADC's intrinsic noise performance. For a 27 mm diameter board operating in a field environment, this is a strong result.
       </p>
     </div>
 
-    <div class="qbox">
-      <div class="q-title">What did the final hardware implementation look like?</div>
-      <div class="q-sep"></div>
+    <!-- THERMAL DRIFT -->
+    <div class="section">
+      <p class="section-label">11 — Thermal Drift</p>
+      <h2>67-Hour Thermal Drift Test and Reference Subtraction</h2>
       <p>
-        Custom compact strain acquisition PCB designed to fit inside a <b>27 mm diameter tube</b>, with mounting holes,
-        integrating excitation supply, multi-channel ADC interface, and STM32 control.
+        Thermal drift is a practical concern for any strain system deployed in the field, particularly one intended for long-duration borehole measurements where temperature can vary significantly. Rather than relying on datasheet TCR figures, a direct characterisation was performed: the complete system — bridge excitation, ADC, and MCU — was left running for <strong>67 hours</strong> with no mechanical load applied, logging all seven strain channels, the internal reference channel, and temperature continuously throughout.
       </p>
 
-      <div class="figure">
-        <img src="../assets/strain%20gauge%20adc%20board.png" alt="Final strain gauge ADC board PCB" style="width:100%; border-radius:10px; margin-top:10px;">
-        <div class="caption">Final hardware implementation: compact strain acquisition PCB (excitation, multi-channel ADC interface, STM32 control).</div>
+      <h3>Test Conditions</h3>
+      <p>
+        The test captured <strong>two full thermal cycles</strong>, with temperature peaking at <strong>45–47°C</strong> and returning to a baseline of <strong>9–12°C</strong> — a total differential range of <strong>39.6°C</strong>. The sharp thermal spikes visible in the temperature log correspond to a deliberate heat source introduced at approximately 20 and 44 hours, followed by natural cool-down. This produced a far more demanding characterisation window than a simple overnight test.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/Time_vs_Temperature.png" alt="Temperature vs time over 67-hour drift test">
+        <figcaption>Fig. 2 — Temperature vs time over the 67-hour drift test. Two thermal cycles peak at 45–47°C with baseline at 9–12°C, giving a 39.6°C differential range.</figcaption>
+      </figure>
+
+      <h3>From Microstrain to Resistance Change</h3>
+      <p>
+        Strain gauge drift is most meaningfully expressed as an equivalent change in gauge resistance, as this directly quantifies the measurement error introduced by temperature rather than an applied mechanical load. The conversion from microstrain to ΔR uses the fundamental strain gauge equation:
+      </p>
+
+      <div class="equation-box">
+        <span class="eq-main">ΔR = ε × GF × R₀</span>
+        <div class="eq-terms">
+          <span>ε = microstrain (µε × 10⁻⁶)</span>
+          <span>GF = gauge factor ≈ 2.1</span>
+          <span>R₀ = nominal resistance = 1000 Ω</span>
+        </div>
+      </div>
+
+      <style>
+        .equation-box {
+          background: var(--bg3);
+          border: 1px solid var(--border);
+          border-left: 3px solid var(--accent);
+          border-radius: 3px;
+          padding: 1.2rem 1.6rem;
+          margin: 1.5rem 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+        .eq-main {
+          font-family: var(--mono);
+          font-size: 1.1rem;
+          color: var(--accent);
+          letter-spacing: 0.05em;
+        }
+        .eq-terms {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem 2rem;
+        }
+        .eq-terms span {
+          font-family: var(--mono);
+          font-size: 0.72rem;
+          color: var(--text-dim);
+        }
+      </style>
+
+      <p>
+        For example, a drift of 200 µε corresponds to ΔR = 200 × 10⁻⁶ × 2.1 × 1000 = <strong>0.42 Ω</strong>. Because the gauge resistance is large (1000 Ω), even a small fractional resistance change produces a measurable microstrain reading — which is why quantifying drift in ppm/°C of nominal resistance gives a standardised, comparable figure across different gauge configurations.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/microstrains.png" alt="Microstrain vs time across all channels over 67-hour test">
+        <figcaption>Fig. 3 — Microstrain vs time across all 7 active channels and the reference channel over the 67-hour test. The two thermal cycles are clearly reflected in each channel's drift profile, with the reference channel tracking the common-mode component.</figcaption>
+      </figure>
+
+      <figure class="figure">
+        <img src="../assets/resistance_change.png" alt="Equivalent resistance change vs time — before reference subtraction">
+        <figcaption>Fig. 4 — Equivalent ΔR vs time before reference subtraction. All channels including the reference track the thermal cycles together, confirming the dominant drift mechanism is common-mode.</figcaption>
+      </figure>
+
+      <h3>Compensation: Reference Subtraction</h3>
+      <p>
+        Because temperature affects the bridge excitation, ADC, and all gauges simultaneously, much of the apparent drift is common-mode — it appears on every channel in the same direction. The internal reference channel, with no applied mechanical strain, captures this common-mode component. Subtracting the reference from each active channel cancels the shared thermal effect without requiring individual TCR characterisation of every gauge.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/resistance_change_ref_subtracted.png" alt="Equivalent resistance change after reference subtraction">
+        <figcaption>Fig. 5 — ΔR vs time after reference subtraction. The common-mode thermal component is substantially removed, leaving only the residual per-channel drift — driven by gauge-to-gauge TCR mismatch rather than system-wide temperature effects.</figcaption>
+      </figure>
+
+      <h3>Drift Results</h3>
+      <p>
+        Drift was quantified over the full 39.6°C temperature differential. The worst-case channel was used in both cases.
+      </p>
+
+      <div class="table-wrap" style="margin: 1.5rem 0;">
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Without Ref Subtraction</th>
+              <th>With Ref Subtraction</th>
+              <th>Improvement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Max ΔR (worst channel)</td>
+              <td>1.662 Ω</td>
+              <td>0.891 Ω</td>
+              <td>46% reduction</td>
+            </tr>
+            <tr>
+              <td>Max deviation (% of 1000 Ω)</td>
+              <td>0.00166%</td>
+              <td>0.000891%</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>Max deviation (ppm)</td>
+              <td>1661.9 ppm</td>
+              <td>891.0 ppm</td>
+              <td>—</td>
+            </tr>
+            <tr class="selected">
+              <td>Thermal drift rate</td>
+              <td>41.97 ppm/°C</td>
+              <td><strong>22.50 ppm/°C</strong></td>
+              <td>46% reduction</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        The reference subtraction reduces worst-case drift by <strong>46%</strong> — from 41.97 to 22.50 ppm/°C — across a challenging 39.6°C temperature swing over 67 hours.
+      </p>
+      <p>
+        It is important to note that this measured drift figure is not just the strain gauge drift in isolation. It is the <strong>combined thermal drift of the entire system</strong> — including the strain gauges, the 24-bit ADC, the filter resistors, the LDO excitation supply, and any other components in the signal chain. Each of these contributes a small temperature-dependent error, and what is reported here is the net effect of all of them together. This makes the 22.50 ppm/°C figure a true end-to-end system specification, not a component-level one.
+      </p>
+      <p>
+        Some residual drift remains after reference subtraction because the technique has a natural limit. Reference subtraction works by assuming that temperature affects all channels in the same way — so subtracting one cancels the shared effect. In practice, individual strain gauges come from manufacturing with slightly different thermal responses. Reference subtraction removes what they all have in common, but cannot remove the small differences between them. The remaining drift you see after compensation is simply each channel's individual thermal response minus the reference channel's response — and reducing this further would require characterising each gauge's thermal behaviour individually and applying a unique correction per channel, which is impractical for a compact field instrument.
+      </p>
+    </div>
+
+
+    <!-- UCS TESTING -->
+    <div class="section">
+      <p class="section-label">12 — UCS Machine Testing</p>
+      <h2>Beyond the Bench: Rosette Gauge Testing on a UCS Machine</h2>
+      <p>
+        Beam bending provides a clean, controlled validation of the acquisition chain in a lab setting. But the actual field tool needs to be tested and validated under conditions that more closely resemble how it will be loaded in a borehole — with axial compressive stress applied to a cylindrical body, and no prior knowledge of the principal stress directions.
+      </p>
+
+      <h3>Why a Rosette Gauge?</h3>
+      <p>
+        A single strain gauge only measures deformation along one axis. In a real stress measurement scenario, the orientation of the maximum stress is not known in advance — and assuming it aligns with any particular gauge would introduce systematic error. A three-element rosette is used precisely when the directions and magnitudes of the principal strains and stresses are unknown. The rectangular (0°–45°–90°) rosette was selected for this system. Three gauges oriented at 0° (axial), 45° (diagonal), and 90° (circumferential) are bonded to the cylindrical aluminium body of the tool, simultaneously capturing strain in all three directions under load. From these three measurements, the principal strains, principal stresses, and the angle of maximum stress can all be back-calculated — no prior knowledge of stress orientation required.
+      </p>
+      <p>
+        For the rectangular rosette with gauges A, B, C at 0°, 45°, 90° respectively, the principal strains and their directions are derived from the three measured normal strains using standard transformation equations, giving both the magnitude and orientation of the maximum principal stress. For the aluminium test specimen with a known Young's modulus (60–70 GPa), this provides a direct cross-check: the stress back-calculated from the rosette readings must agree with the independently measured applied load from the UCS machine.
+      </p>
+
+      <h3>Test Configuration</h3>
+      <p>
+        A rosette strain gauge is bonded to a cylindrical aluminium specimen instrumented with the full acquisition chain. The specimen is placed in the UCS machine, which applies a controlled, increasing axial compressive load. The system logs all six active strain channels continuously throughout the loading and unloading cycle. The resulting waveforms capture the full load-hold-unload sequence and confirm that the gauges respond linearly and return cleanly to zero on unloading — a key indicator of elastic (non-permanent) deformation and correct gauge bonding.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/ucs_strain_waveforms.png" alt="UCS machine test: microstrain vs time across 6 channels">
+        <figcaption>Fig. 7 — UCS machine test: microstrain vs time for all 6 active strain channels during axial load application and release. The load-hold-unload profile is clearly visible, with peak strains reaching ~1250 µε on channels 1 and 2 (axial gauges) and positive strains on channels 5 and 6 (circumferential, driven by Poisson expansion).</figcaption>
+      </figure>
+
+      <p>
+        The waveform data reveals physically consistent behaviour across channels. The axial gauges (channels 1–4) show negative microstrain — compressive deformation along the loading axis — while the circumferential gauges (channels 5–6) show positive strain, reflecting Poisson's ratio expansion of the aluminium in the transverse direction. This cross-channel consistency is itself a validation: the sign and relative magnitude of each channel's response is predictable from first principles, and the system reproduces it accurately.
+      </p>
+
+      <h3>Noise Statistics — Pre-Load Baseline (First 20 Samples)</h3>
+      <p>
+        Noise statistics were extracted from the first 20 samples of each channel — captured before significant load was applied — giving a clean measurement of system noise at quasi-zero strain. All channels show RMS noise well below 2 µε, with the majority under 1 µε, confirming the system comfortably meets the 1–5 µε resolution requirement for reliable rock stress inversion.
+      </p>
+
+      <div class="table-wrap" style="margin: 1.5rem 0;">
+        <table>
+          <thead>
+            <tr>
+              <th>Strain Channel</th>
+              <th>Mean (µε)</th>
+              <th>Std Dev (µε)</th>
+              <th>RMS Noise (µε)</th>
+              <th>Peak-to-Peak (µε)</th>
+              <th>Min (µε)</th>
+              <th>Max (µε)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Channel 1</td><td>−0.39</td><td>0.68</td><td><strong>0.68</strong></td><td>2.62</td><td>−1.66</td><td>0.96</td></tr>
+            <tr><td>Channel 2</td><td>0.54</td><td>0.63</td><td><strong>0.63</strong></td><td>2.39</td><td>−0.44</td><td>1.96</td></tr>
+            <tr><td>Channel 3</td><td>0.64</td><td>0.63</td><td><strong>0.63</strong></td><td>2.50</td><td>−0.35</td><td>2.15</td></tr>
+            <tr><td>Channel 4</td><td>−0.31</td><td>0.60</td><td><strong>0.60</strong></td><td>2.25</td><td>−1.46</td><td>0.79</td></tr>
+            <tr><td>Channel 5</td><td>−1.92</td><td>0.98</td><td><strong>0.98</strong></td><td>3.62</td><td>−3.46</td><td>0.16</td></tr>
+            <tr><td>Channel 6</td><td>−4.74</td><td>1.83</td><td><strong>1.83</strong></td><td>7.28</td><td>−7.28</td><td>0.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-item"><span class="rv">0.60–1.83 µε</span><span class="rl">RMS Noise Range</span></div>
+        <div class="result-item"><span class="rv">2.25–7.28 µε</span><span class="rl">Peak-to-Peak Range</span></div>
+        <div class="result-item"><span class="rv">~1250 µε</span><span class="rl">Peak Strain (Ch1–2)</span></div>
+        <div class="result-item"><span class="rv">&lt; 5 µε</span><span class="rl">Resolution Target</span></div>
+      </div>
+
+      <p style="margin-top:1.2rem;">
+        This test goes beyond bench-level validation. The full tool — PCB, gauges, firmware, and acquisition chain — was exercised under realistic compressive loading, confirming both the noise floor and the physical correctness of the multi-channel strain response before field deployment.
+      </p>
+    </div>
+
+    <!-- POWER -->
+    <div class="section">
+      <p class="section-label">13 — Power Budget</p>
+      <h2>Battery Life</h2>
+      <p>
+        With a measured system current of <strong>~40 mA</strong>, a 4×AA pack (2500 mAh series configuration) delivers approximately <strong>62.5 hours (~2.6 days)</strong> of continuous runtime — adequate for multi-day field deployments without recharging.
+      </p>
+    </div>
+
+    <!-- HARDWARE -->
+    <div class="section">
+      <p class="section-label">14 — Hardware</p>
+      <h2>Final PCB Implementation</h2>
+      <p>
+        The final hardware is a custom compact PCB integrating the LDO excitation supply, multi-channel ADC interface, and STM32 control — all designed to fit within the <strong>27 mm diameter cylindrical housing</strong> constraint. Component placement and routing were driven by that constraint alongside the need to minimise noise coupling between the excitation, analog signal, and digital sections.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/strain gauge adc board.png" alt="Final strain gauge ADC PCB">
+        <figcaption>Fig. 6 — Compact strain acquisition PCB: excitation supply, multi-channel 24-bit ADC interface, and STM32 control, designed for 27 mm housing deployment.</figcaption>
+      </figure>
+    </div>
+
+    <!-- OUTCOME -->
+    <div class="section">
+      <p class="section-label">15 — Outcome</p>
+      <h2>Engineering Result</h2>
+      <div class="outcome-box">
+        <p>
+          A fully validated multi-channel strain measurement system for in-situ rock stress measurement in pilot boreholes. Key results: 17.8-bit effective resolution, 2.33 µε RMSE against Euler–Bernoulli beam theory, 22.50 ppm/°C thermal drift after reference subtraction (down from 41.97 ppm/°C), measured over a 39.6°C temperature swing across 67 hours, and UCS machine testing confirming physically consistent multi-channel response across a ~1250 µε load range with per-channel RMS noise of 0.60–1.83 µε — well within the 1–5 µε target for reliable stress inversion in stiff rock. All of this within a 27 mm diameter form factor at ~40 mA operating current, validated across beam bending, overnight drift characterisation, a 147-gauge real-sample gain selection study, and full-system rosette testing on a UCS machine.
+        </p>
       </div>
     </div>
 
   </div>
 
-  <!-- ===================================================== -->
-  <!-- END PROJECT 1 -->
-  <!-- ===================================================== -->
-
-
 </body>
 </html>
-
