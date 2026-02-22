@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydrostatic Pressure Test Rig — Dr. Utkarsh Jadli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Fraunces:ital,wght@0,300;0,600;0,700;1,300&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0e0f11;
+      --bg2: #13151a;
+      --bg3: #1a1d24;
+      --border: #2a2d35;
+      --accent: #e8a040;
+      --accent2: #c47820;
+      --text: #d4d6db;
+      --text-dim: #7a7e8a;
+      --text-bright: #f0f1f3;
+      --green: #4ec98a;
+      --blue: #6ab0e0;
+      --red: #e07070;
+      --mono: 'IBM Plex Mono', monospace;
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'Inter', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      background: rgba(19, 21, 26, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .back-link {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .back-link::before { content: '←'; font-size: 1rem; }
+    .header-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid var(--accent2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    /* HERO */
+    .hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 7rem 2rem 3rem;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.05s forwards;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      color: var(--text-bright);
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+    }
+    .hero-role {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero-role span {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--green);
+      background: rgba(78,201,138,0.08);
+      border: 1px solid rgba(78,201,138,0.2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+    }
+    .hero-intro {
+      font-size: 1.05rem;
+      color: var(--text);
+      max-width: 680px;
+      line-height: 1.8;
+    }
+    .hero-intro strong { color: var(--text-bright); font-weight: 500; }
+
+    /* SPECS BAR */
+    .specs-bar {
+      background: var(--bg3);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.25s forwards;
+    }
+    .specs-bar-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    }
+    .spec-item {
+      padding: 1.4rem 1rem;
+      border-right: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.5s ease forwards;
+    }
+    .spec-item:last-child { border-right: none; }
+    .spec-item:nth-child(1) { animation-delay: 0.1s; }
+    .spec-item:nth-child(2) { animation-delay: 0.15s; }
+    .spec-item:nth-child(3) { animation-delay: 0.2s; }
+    .spec-item:nth-child(4) { animation-delay: 0.25s; }
+    .spec-item:nth-child(5) { animation-delay: 0.3s; }
+    .spec-item:nth-child(6) { animation-delay: 0.35s; }
+    .spec-value {
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .spec-label {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* CONTENT */
+    .content {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+    .section {
+      padding: 3.5rem 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.6s ease forwards;
+    }
+    .section:last-of-type { border-bottom: none; }
+    .section:nth-of-type(1)  { animation-delay: 0.2s; }
+    .section:nth-of-type(2)  { animation-delay: 0.25s; }
+    .section:nth-of-type(3)  { animation-delay: 0.3s; }
+    .section:nth-of-type(4)  { animation-delay: 0.35s; }
+    .section:nth-of-type(5)  { animation-delay: 0.4s; }
+    .section:nth-of-type(6)  { animation-delay: 0.45s; }
+    .section:nth-of-type(7)  { animation-delay: 0.5s; }
+    .section:nth-of-type(8)  { animation-delay: 0.55s; }
+    .section:nth-of-type(9)  { animation-delay: 0.6s; }
+    .section:nth-of-type(10) { animation-delay: 0.65s; }
+    .section:nth-of-type(11) { animation-delay: 0.7s; }
+    .section:nth-of-type(12) { animation-delay: 0.75s; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 60px;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.7rem;
+      color: var(--text-bright);
+      margin-bottom: 1.4rem;
+      line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--text-bright);
+      margin: 2rem 0 0.8rem;
+    }
+    p {
+      color: var(--text);
+      margin-bottom: 1rem;
+      max-width: 720px;
+    }
+    p:last-child { margin-bottom: 0; }
+    strong { color: var(--text-bright); font-weight: 500; }
+    em { font-style: italic; }
+    code {
+      font-family: var(--mono);
+      font-size: 0.82em;
+      color: var(--accent);
+      background: rgba(232,160,64,0.08);
+      padding: 0.1em 0.4em;
+      border-radius: 2px;
+    }
+
+    /* FIGURES */
+    .figure { margin: 2rem 0; }
+    .figure img {
+      width: 100%;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .figure figcaption {
+      font-family: var(--sans);
+      font-size: 0.82rem;
+      color: var(--text);
+      margin-top: 0.75rem;
+      line-height: 1.6;
+      padding: 0.6rem 0.8rem;
+      background: var(--bg3);
+      border-left: 2px solid var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .fig-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .fig-pair .figure { margin: 0; }
+
+    /* PARAM CARDS */
+    .param-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+    .param-card { background: var(--bg2); padding: 1.5rem; transition: background 0.2s; }
+    .param-card:hover { background: var(--bg3); }
+    .param-card .pc-tag {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .param-card h4 { font-size: 0.95rem; font-weight: 500; color: var(--text-bright); margin-bottom: 0.5rem; }
+    .param-card p { font-size: 0.85rem; color: var(--text-dim); margin: 0; max-width: none; }
+
+    /* RESULT GRID */
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+    .result-item { background: var(--bg2); padding: 1.2rem 1.4rem; }
+    .result-item .rv {
+      font-family: var(--mono);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .result-item .rl {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* CALLOUT */
+    .callout {
+      background: linear-gradient(135deg, rgba(232,160,64,0.07), rgba(232,160,64,0.02));
+      border: 1px solid rgba(232,160,64,0.3);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 4px 4px 0;
+      padding: 1.4rem 1.6rem;
+      margin: 1.8rem 0;
+    }
+    .callout-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .callout p { margin: 0; color: var(--text-bright); font-size: 0.97rem; max-width: none; }
+
+    /* HONESTY CALLOUT — for transparent engineering notes */
+    .callout-note {
+      background: rgba(224,112,112,0.05);
+      border: 1px solid rgba(224,112,112,0.2);
+      border-left: 3px solid var(--red);
+      border-radius: 0 4px 4px 0;
+      padding: 1.4rem 1.6rem;
+      margin: 1.8rem 0;
+    }
+    .callout-note-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--red);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+    .callout-note p { margin: 0; color: var(--text); font-size: 0.93rem; max-width: none; line-height: 1.75; }
+
+    /* EQUATION */
+    .equation-box {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 3px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.5rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .eq-main { font-family: var(--mono); font-size: 1.1rem; color: var(--accent); letter-spacing: 0.03em; }
+    .eq-terms { display: flex; flex-wrap: wrap; gap: 0.4rem 2.5rem; }
+    .eq-terms span { font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; margin: 1.5rem 0; }
+    table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.8rem; }
+    thead tr { background: var(--bg3); border-bottom: 2px solid var(--accent2); }
+    th { padding: 0.7rem 1rem; text-align: left; color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 400; }
+    td { padding: 0.65rem 1rem; border-bottom: 1px solid var(--border); color: var(--text); }
+    tr.highlight td { background: rgba(232,160,64,0.05); color: var(--text-bright); }
+    tr.outlier td { background: rgba(224,112,112,0.05); }
+    .tag-good {
+      display: inline-block; font-size: 0.65rem;
+      background: rgba(78,201,138,0.1); color: var(--green);
+      border: 1px solid rgba(78,201,138,0.25);
+      padding: 0.1rem 0.45rem; border-radius: 2px; letter-spacing: 0.05em;
+    }
+    .tag-warn {
+      display: inline-block; font-size: 0.65rem;
+      background: rgba(224,112,112,0.1); color: var(--red);
+      border: 1px solid rgba(224,112,112,0.25);
+      padding: 0.1rem 0.45rem; border-radius: 2px; letter-spacing: 0.05em;
+    }
+
+    /* CHALLENGE GRID */
+    .challenge-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+    .challenge-item {
+      background: var(--bg2);
+      padding: 1.3rem 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      transition: background 0.2s;
+    }
+    .challenge-item:hover { background: var(--bg3); }
+    .ch-tag { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+    .ch-tag.problem { color: #e07070; }
+    .ch-tag.solution { color: var(--green); }
+    .ch-text { font-size: 0.87rem; color: var(--text); line-height: 1.6; }
+
+    /* OUTCOME */
+    .outcome-box {
+      background: linear-gradient(135deg, rgba(232,160,64,0.08), rgba(232,160,64,0.03));
+      border: 1px solid rgba(232,160,64,0.25);
+      border-radius: 4px;
+      padding: 2rem;
+      margin-top: 1.5rem;
+    }
+    .outcome-box p { font-size: 1rem; color: var(--text); margin-bottom: 0.8rem; max-width: none; }
+    .outcome-box p:last-child { margin-bottom: 0; }
+
+    /* STEP LIST */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 1.5rem;
+    }
+    .step-item {
+      background: var(--bg2);
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+      transition: background 0.2s;
+    }
+    .step-item:hover { background: var(--bg3); }
+    .step-num {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(232,160,64,0.1);
+      border: 1px solid rgba(232,160,64,0.2);
+      border-radius: 2px;
+      padding: 0.15rem 0.5rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .step-text { font-size: 0.9rem; color: var(--text); line-height: 1.7; }
+    .step-text strong { color: var(--text-bright); }
+
+    @media (max-width: 640px) {
+      .fig-pair { grid-template-columns: 1fr; }
+      .challenge-item { grid-template-columns: 1fr; }
+      .specs-bar-inner { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="../index.html" class="back-link">Back to Portfolio</a>
+      <span class="header-tag">Materials Characterisation</span>
+    </div>
+  </header>
+
+  <div class="hero">
+    <p class="hero-eyebrow">Project 04 — Closed-Loop Instrumentation</p>
+    <h1>Hydrostatic Pressure Test Rig with PID Control</h1>
+    <div class="hero-role">
+      <span>PCB Design (Altium)</span>
+      <span>PID Control</span>
+      <span>Embedded Firmware</span>
+      <span>Sensor Integration</span>
+      <span>Python Analysis</span>
+      <span>Materials Characterisation</span>
+    </div>
+    <p class="hero-intro">
+      A complete closed-loop hydrostatic pressure test rig designed to characterise the mechanical properties of materials under controlled hydrostatic loading. The system combines a <strong>PID-controlled electropneumatic pressure regulator</strong>, a <strong>6-channel strain gauge instrumentation system</strong>, real-time data logging, and a Python post-processing pipeline to extract Young's modulus from measured strain response. Starting from a breadboard prototype, the design was progressed into a custom Altium PCB. The system achieved a measured Young's modulus of <strong>70.8 GPa</strong> on an aluminium sample — a <strong>2.65% error</strong> against the accepted textbook value of 69.0 GPa.
+    </p>
+  </div>
+
+  <div class="specs-bar">
+    <div class="specs-bar-inner">
+      <div class="spec-item">
+        <span class="spec-value">70.8 GPa</span>
+        <span class="spec-label">Measured E (Al)</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">2.65%</span>
+        <span class="spec-label">Error vs Textbook</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">0–22 MPa</span>
+        <span class="spec-label">Pressure Range</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">6 Ch</span>
+        <span class="spec-label">Strain Gauges</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">PID</span>
+        <span class="spec-label">Closed-Loop Control</span>
+      </div>
+      <div class="spec-item">
+        <span class="spec-value">ESP32-S3</span>
+        <span class="spec-label">Controller MCU</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- 01 APPLICATION -->
+    <div class="section">
+      <p class="section-label">01 — Application</p>
+      <h2>Why Hydrostatic Testing and What It Measures</h2>
+      <p>
+        Young's modulus — the ratio of stress to strain in the elastic region of a material — is one of the most fundamental mechanical properties in engineering. It determines how much a structure deflects under load, how energy is stored and released during elastic deformation, and whether a material is suitable for a given structural application. Accurate experimental measurement of Young's modulus requires applying a known, controlled stress to a sample and measuring the resulting strain with sufficient precision to extract the stress-strain slope reliably.
+      </p>
+      <p>
+        Hydrostatic testing applies uniform pressure to a sample from all directions simultaneously using a pressurised fluid medium. This is particularly useful for characterising materials in conditions that simulate deep subsurface environments — the primary application context for this rig, which was developed to support materials characterisation work in a geotechnical and mining engineering setting. Unlike uniaxial compression or tensile testing, hydrostatic loading produces a well-defined, isotropic stress state that is easier to model theoretically and simpler to apply uniformly across a sample surface.
+      </p>
+      <p>
+        The key engineering challenge is that extracting Young's modulus from a hydrostatic test requires very precise strain measurement — the strain values involved are small (tens of microstrains at the pressures tested), and any systematic error in the pressure control or strain measurement chain propagates directly into the computed modulus. This motivated the design choices made throughout the system: a closed-loop PID pressure controller to ensure the applied stress is accurate and stable, and a <a href="./strain-gauge.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(232,160,64,0.3);">low-noise 24-bit strain gauge instrumentation system</a> to ensure the measured strain is reliable.
+      </p>
+
+      <div class="callout">
+        <p class="callout-label">Design Goal</p>
+        <p>Apply controlled hydrostatic pressure to a sample in known increments, measure the resulting strain on 6 gauges simultaneously, and extract Young's modulus from the stress-strain relationship with sufficient accuracy to validate against known material properties. The system validates itself: if E_measured ≈ E_textbook, the entire chain — pressure control, strain measurement, and analysis pipeline — is working correctly end-to-end.</p>
+      </div>
+    </div>
+
+    <!-- 02 SYSTEM ARCHITECTURE -->
+    <div class="section">
+      <p class="section-label">02 — System Architecture</p>
+      <h2>Closed-Loop System Overview</h2>
+      <p>
+        The system is built around two tightly coupled subsystems: a <strong>pressure control loop</strong> that sets and maintains the hydrostatic pressure inside the test vessel, and a <strong>strain measurement chain</strong> that records the mechanical response of the sample at each pressure level. These are integrated through the ESP32-S3 MCU, which runs the PID control loop, manages data acquisition timing, logs all measurements to an SD card, and communicates with the strain gauge board over UART.
+      </p>
+
+      <div class="param-grid">
+        <div class="param-card">
+          <p class="pc-tag">Pressure Control</p>
+          <h4>PID + Electropneumatic Regulator</h4>
+          <p>ESP32-S3 reads pressure from transducer via ADS1115 ADC, computes PID output, and drives an MCP4725 12-bit DAC → op-amp voltage amplifier → EP211-X120-10V electropneumatic transducer to set chamber pressure. Solenoid valve controlled via MOSFET for pressure release.</p>
+        </div>
+        <div class="param-card">
+          <p class="pc-tag">Strain Measurement</p>
+          <h4>6-Channel Strain Gauge System</h4>
+          <p>The <a href="./strain-gauge.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(232,160,64,0.3);">24-bit strain gauge instrumentation system (Project 01)</a> connects over UART/5V to the hydrostatic controller PCB. It provides 6 channels of calibrated microstrain data at each pressure setpoint, logged synchronously with the pressure reading.</p>
+        </div>
+        <div class="param-card">
+          <p class="pc-tag">Data Logging</p>
+          <h4>SD Card + Serial Stream</h4>
+          <p>All pressure and strain data is logged to an SD card in real time via the ESP32-S3 SPI interface. A serial stream is simultaneously available for live monitoring and Python post-processing.</p>
+        </div>
+        <div class="param-card">
+          <p class="pc-tag">Post-Processing</p>
+          <h4>Python Analysis Pipeline</h4>
+          <p>Python scripts ingest the logged dataset, extract strain values at each stable pressure hold, fit linear stress-strain relationships per gauge, and compute per-gauge and averaged Young's modulus with ν = 0.33 (aluminium Poisson's ratio).</p>
+        </div>
+      </div>
+
+      <!-- SVG Block Diagram -->
+      <div style="margin: 2.5rem 0; overflow-x: auto;">
+      <svg viewBox="0 0 740 520" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="harr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+            <polygon points="0 0, 7 3.5, 0 7" fill="#6a7585"/>
+          </marker>
+          <marker id="harr-rev" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto">
+            <polygon points="7 0, 0 3.5, 7 7" fill="#6a7585"/>
+          </marker>
+        </defs>
+
+        <!-- PRESSURE SENSOR: x=20 y=20 w=160 h=60 -->
+        <rect x="20" y="20" width="160" height="60" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="20" y="20" width="160" height="3" rx="2" fill="#6ab0e0"/>
+        <text x="100" y="45" fill="#f0f1f3" font-size="11" font-weight="500" text-anchor="middle" font-family="Inter,sans-serif">Pressure Transducer</text>
+        <text x="100" y="62" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">0–22 MPa · 5V supply</text>
+
+        <!-- ADS1115: x=20 y=130 w=160 h=60 -->
+        <rect x="20" y="130" width="160" height="60" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="20" y="130" width="160" height="3" rx="2" fill="#a070d0"/>
+        <text x="100" y="155" fill="#f0f1f3" font-size="11" font-weight="500" text-anchor="middle" font-family="Inter,sans-serif">ADS1115 ADC</text>
+        <text x="100" y="172" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">16-bit · 4-ch · I²C</text>
+
+        <!-- arrow: transducer → ADS1115 -->
+        <line x1="100" y1="80" x2="100" y2="130" stroke="#6a7585" stroke-width="1.5" marker-end="url(#harr)"/>
+
+        <!-- ESP32-S3: x=280 y=190 w=180 h=100 -->
+        <rect x="280" y="190" width="180" height="100" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="280" y="190" width="180" height="3" rx="2" fill="#a070d0"/>
+        <text x="370" y="217" fill="#f0f1f3" font-size="12" font-weight="500" text-anchor="middle" font-family="Inter,sans-serif">ESP32-S3 MCU</text>
+        <text x="370" y="234" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">PID control loop</text>
+        <text x="370" y="250" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">Acquisition timing</text>
+        <text x="370" y="266" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">SD card logging · UART</text>
+        <text x="370" y="282" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">SPI · I²C master</text>
+
+        <!-- ADS1115 → ESP32 (I2C) -->
+        <line x1="180" y1="160" x2="280" y2="230" stroke="#6a7585" stroke-width="1.5" marker-end="url(#harr)"/>
+        <rect x="192" y="178" width="50" height="14" rx="2" fill="#1a1d24"/>
+        <text x="217" y="189" fill="#a070d0" font-size="8" font-family="IBM Plex Mono,monospace" text-anchor="middle">I²C</text>
+
+        <!-- MCP4725: x=20 y=310 w=160 h=60 -->
+        <rect x="20" y="310" width="160" height="60" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="20" y="310" width="160" height="3" rx="2" fill="#a070d0"/>
+        <text x="100" y="335" fill="#f0f1f3" font-size="11" font-weight="500" text-anchor="middle" font-family="Inter,sans-serif">MCP4725 DAC</text>
+        <text x="100" y="352" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">12-bit · I²C · 0–3.3V out</text>
+
+        <!-- ESP32 → MCP4725 (I2C) -->
+        <line x1="280" y1="260" x2="180" y2="340" stroke="#6a7585" stroke-width="1.5" marker-end="url(#harr)"/>
+        <rect x="192" y="282" width="50" height="14" rx="2" fill="#1a1d24"/>
+        <text x="217" y="293" fill="#a070d0" font-size="8" font-family="IBM Plex Mono,monospace" text-anchor="middle">I²C</text>
+
+        <!-- Op-Amp: x=20 y=420 w=160 h=60 -->
+        <rect x="20" y="420" width="160" height="60" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="20" y="420" width="160" height="3" rx="2" fill="#e8a040"/>
+        <text x="100" y="445" fill="#f0f1f3" font-size="11" font-weight="500" text-anchor="middle" font-family="Inter,sans-serif">LM358N Voltage Amp</text>
+        <text x="100" y="462" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">0–3.3V → 0–10V output</text>
+
+        <!-- MCP4725 → OpAmp -->
+        <line x1="100" y1="370" x2="100" y2="420" stroke="#6a7585" stroke-width="1.5" marker-end="url(#harr)"/>
+
+        <!-- Electropneumatic regulator: x=240 y=420 w=200 h=60 -->
+        <rect x="240" y="420" width="200" height="60" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="240" y="420" width="200" height="3" rx="2" fill="#e8a040"/>
+        <text x="340" y="445" fill="#f0f1f3" font-size="11" font-weight="500" text-anchor="middle" font-family="Inter,sans-serif">EP211-X120-10V</text>
+        <text x="340" y="462" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">Electropneumatic regulator</text>
+
+        <!-- OpAmp → Regulator -->
+        <line x1="180" y1="450" x2="240" y2="450" stroke="#6a7585" stroke-width="1.5" marker-end="url(#harr)"/>
+
+        <!-- Test Chamber: x=490 y=310 w=210 h=80 -->
+        <rect x="490" y="310" width="210" height="80" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="490" y="310" width="210" height="3" rx="2" fill="#6ab0e0"/>
+        <text x="595" y="337" fill="#f0f1f3" font-size="11" font-weight="500" text-anchor="middle" font-family="Inter,sans-serif">Hydrostatic Test Chamber</text>
+        <text x="595" y="354" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">Sample + 6 strain gauges</text>
+        <text x="595" y="371" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">0–22 MPa hydraulic pressure</text>
+
+        <!-- Regulator → Chamber -->
+        <line x1="440" y1="450" x2="595" y2="450" stroke="#6a7585" stroke-width="1.5"/>
+        <line x1="595" y1="450" x2="595" y2="390" stroke="#6a7585" stroke-width="1.5" marker-end="url(#harr)"/>
+
+        <!-- Pressure feedback arrow: Chamber → Transducer (curved right side) -->
+        <line x1="700" y1="350" x2="700" y2="50" stroke="#6a7585" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="595" y1="310" x2="700" y2="310" stroke="#6a7585" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <line x1="700" y1="50" x2="180" y2="50" stroke="#6a7585" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#harr)"/>
+        <rect x="680" y="150" width="80" height="14" rx="2" fill="#1a1d24"/>
+        <text x="720" y="161" fill="#7a7e8a" font-size="8" font-family="IBM Plex Mono,monospace" text-anchor="middle">Feedback</text>
+
+        <!-- Strain gauge board: x=490 y=160 w=210 h=80 -->
+        <rect x="490" y="160" width="210" height="80" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="490" y="160" width="210" height="3" rx="2" fill="#4ec98a"/>
+        <text x="595" y="187" fill="#f0f1f3" font-size="11" font-weight="500" text-anchor="middle" font-family="Inter,sans-serif">Strain Gauge Board</text>
+        <text x="595" y="204" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">24-bit Strain Gauge Board (Project 01)</text>
+        <text x="595" y="221" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">6-ch · 24-bit ADC · UART out</text>
+
+        <!-- Chamber → Strain board (gauges read strain) -->
+        <line x1="595" y1="310" x2="595" y2="240" stroke="#6a7585" stroke-width="1.5" marker-end="url(#harr)"/>
+
+        <!-- Strain board → ESP32 (UART) -->
+        <line x1="490" y1="200" x2="460" y2="200" stroke="#6a7585" stroke-width="1.5"/>
+        <line x1="460" y1="200" x2="460" y2="240" stroke="#6a7585" stroke-width="1.5" marker-end="url(#harr)"/>
+        <rect x="420" y="205" width="50" height="14" rx="2" fill="#1a1d24"/>
+        <text x="445" y="216" fill="#4ec98a" font-size="8" font-family="IBM Plex Mono,monospace" text-anchor="middle">UART</text>
+
+        <!-- SD Card: x=490 y=20 w=140 h=60 -->
+        <rect x="490" y="20" width="140" height="60" rx="4" fill="#13151a" stroke="#2a2d35"/>
+        <rect x="490" y="20" width="140" height="3" rx="2" fill="#60b890"/>
+        <text x="560" y="45" fill="#f0f1f3" font-size="11" font-weight="500" text-anchor="middle" font-family="Inter,sans-serif">SD Card</text>
+        <text x="560" y="62" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">SPI · Data log</text>
+
+        <!-- ESP32 → SD -->
+        <line x1="460" y1="190" x2="460" y2="50" stroke="#6a7585" stroke-width="1.5"/>
+        <line x1="460" y1="50" x2="490" y2="50" stroke="#6a7585" stroke-width="1.5" marker-end="url(#harr)"/>
+        <rect x="420" y="100" width="50" height="14" rx="2" fill="#1a1d24"/>
+        <text x="445" y="111" fill="#60b890" font-size="8" font-family="IBM Plex Mono,monospace" text-anchor="middle">SPI</text>
+
+        <!-- Solenoid: x=280 y=420 moved — label on the right -->
+        <!-- Actually solenoid is connected directly from ESP32 GPIO via MOSFET -->
+        <!-- Add MOSFET/solenoid note -->
+        <rect x="340" y="360" width="120" height="40" rx="3" fill="#1a1d24" stroke="#2a2d35"/>
+        <text x="400" y="377" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">Solenoid valve</text>
+        <text x="400" y="392" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" text-anchor="middle">MOSFET switch</text>
+        <line x1="370" y1="290" x2="370" y2="360" stroke="#6a7585" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#harr)"/>
+
+        <!-- Legend -->
+        <text x="20" y="510" fill="#6ab0e0" font-size="9" font-family="IBM Plex Mono,monospace">■ Sensors</text>
+        <text x="80" y="510" fill="#a070d0" font-size="9" font-family="IBM Plex Mono,monospace">■ Digital (MCU/ADC/DAC)</text>
+        <text x="240" y="510" fill="#e8a040" font-size="9" font-family="IBM Plex Mono,monospace">■ Analog Output</text>
+        <text x="360" y="510" fill="#4ec98a" font-size="9" font-family="IBM Plex Mono,monospace">■ Strain Measurement</text>
+        <text x="500" y="510" fill="#60b890" font-size="9" font-family="IBM Plex Mono,monospace">■ Storage</text>
+        <text x="570" y="510" fill="#7a7e8a" font-size="9" font-family="IBM Plex Mono,monospace" stroke-dasharray="3,2">--- Feedback / Control</text>
+      </svg>
+      </div>
+    </div>
+
+    <!-- 03 PID CONTROL -->
+    <div class="section">
+      <p class="section-label">03 — PID Pressure Control</p>
+      <h2>Closed-Loop Pressure Regulation</h2>
+      <p>
+        The pressure inside the test chamber is controlled using a standard PID algorithm running on the ESP32-S3. The control loop reads actual chamber pressure from the pressure transducer via the ADS1115 16-bit ADC, computes the error against the setpoint, and outputs a corrected control signal through the MCP4725 12-bit DAC. The DAC output (0–3.3V) is amplified by an LM358N op-amp configured as a non-inverting voltage amplifier to produce a 0–10V control signal, which drives the EP211-X120-10V electropneumatic pressure transducer that sets the actual pneumatic output pressure to the test chamber.
+      </p>
+
+      <div class="equation-box">
+        <span class="eq-main">u(t) = Kp·e(t) + Ki·∫e(t)dt + Kd·de(t)/dt</span>
+        <div class="eq-terms">
+          <span>e(t) = P_setpoint − P_measured</span>
+          <span>u(t) → DAC value → op-amp → 0–10V → regulator</span>
+          <span>Kp, Ki, Kd tuned experimentally on the test rig</span>
+        </div>
+      </div>
+
+      <h3>Solenoid Valve for Pressure Release</h3>
+      <p>
+        A solenoid valve is used to release pressure between test steps — returning the chamber to 0 MPa before applying the next setpoint. The solenoid is driven by a MOSFET switch (2N7000 / PMV31X) controlled directly from an ESP32-S3 GPIO pin, with a suppression diode across the solenoid to clamp the inductive kickback on de-energisation. This prevents the high-voltage transient from damaging the GPIO or MCU supply rail.
+      </p>
+
+      <h3>Test Protocol — Stepped Pressure Sequence</h3>
+      <p>
+        The experimental protocol applied pressure in 2 MPa steps from 0 to 22 MPa. At each step, the PID controller ramps to the setpoint and holds it steady for a defined dwell period while strain data is acquired and averaged. The chamber is then returned to 0 MPa (solenoid open) before the next step is applied. This cycle — ramp, hold, release — repeats across the full pressure range, producing the characteristic "staircase and return" waveform visible in the microstrain time-history plot.
+      </p>
+
+      <div class="step-list">
+        <div class="step-item">
+          <span class="step-num">01</span>
+          <span class="step-text"><strong>Ramp to setpoint</strong> — PID drives pressure from 0 to target MPa. The dashed blue PID response curve in the microstrain plot shows clean, well-damped tracking with minimal overshoot.</span>
+        </div>
+        <div class="step-item">
+          <span class="step-num">02</span>
+          <span class="step-text"><strong>Hold and acquire</strong> — once pressure stabilises within tolerance, strain readings are logged across all 6 channels and averaged over the hold window to reduce noise.</span>
+        </div>
+        <div class="step-item">
+          <span class="step-num">03</span>
+          <span class="step-num" style="background:rgba(106,176,224,0.1);border-color:rgba(106,176,224,0.25);color:var(--blue)">03</span>
+          <span class="step-text"><strong>Release to zero</strong> — solenoid opens, chamber pressure drops to 0 MPa. A baseline strain reading is taken at zero pressure before the next step begins. This baseline check confirms gauge stability between steps.</span>
+        </div>
+        <div class="step-item">
+          <span class="step-num">04</span>
+          <span class="step-text"><strong>Repeat to 22 MPa</strong> — the sequence is repeated at 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22 MPa, producing 11 data points per gauge for the stress-strain regression.</span>
+        </div>
+      </div>
+
+      <figure class="figure">
+        <img src="../assets/gauge_microstrain__1_.png" alt="Microstrain vs time with PID pressure setpoint response">
+        <figcaption>Fig. 1 — Microstrain (all 6 gauges) and PID pressure response vs time over the full test sequence. The red stepped line is the pressure setpoint; the dashed blue curve is the measured PID response showing well-behaved tracking. Each vertical drop back to zero corresponds to a pressure release before the next step. The gauge separation visible in the plot is real — Gauge 2 (blue) reads higher than the others across all pressure levels, which is discussed in the Young's modulus results section.</figcaption>
+      </figure>
+    </div>
+
+    <!-- 04 FIRMWARE CHALLENGES -->
+    <div class="section">
+      <p class="section-label">04 — Firmware Challenges</p>
+      <h2>Engineering the Control and Acquisition Loop</h2>
+
+      <div class="challenge-grid">
+        <div class="challenge-item">
+          <div>
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">PID tuning for the electropneumatic regulator — the system has non-linear pressure-flow dynamics, gas compressibility, and dead-band in the regulator, making the step response sensitive to gain settings.</p>
+          </div>
+          <div>
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">PID gains were tuned experimentally on the physical rig using step response observation. Conservative gains were selected to prioritise settling stability over speed — the test protocol has no time constraint, so a slower but clean approach to setpoint was preferred over a faster but oscillatory response.</p>
+          </div>
+        </div>
+        <div class="challenge-item">
+          <div>
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">Determining when pressure has settled sufficiently to begin strain acquisition — acquiring strain during a transient would contaminate the steady-state measurement.</p>
+          </div>
+          <div>
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">A stability window was implemented: the firmware continuously monitors the ADS1115 pressure reading and only triggers strain acquisition once the pressure has remained within a defined tolerance band (±threshold around setpoint) for a minimum hold duration. This ensures all strain readings correspond to genuinely stable pressure states.</p>
+          </div>
+        </div>
+        <div class="challenge-item">
+          <div>
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">DAC output range (0–3.3V from MCP4725) is insufficient to drive the electropneumatic regulator directly, which requires 0–10V for full-scale pressure output.</p>
+          </div>
+          <div>
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">An LM358N non-inverting op-amp stage amplifies the DAC output by a fixed gain to produce the required 0–10V signal. The gain was set by the resistor divider around the op-amp. The 12V rail (from LM340T-12) provides adequate headroom for the op-amp to swing to 10V.</p>
+          </div>
+        </div>
+        <div class="challenge-item">
+          <div>
+            <p class="ch-tag problem">Challenge</p>
+            <p class="ch-text">Synchronising pressure control and strain acquisition — the ESP32-S3 must coordinate the PID loop, UART communication with the strain board, SD card writes, and the solenoid control without timing conflicts.</p>
+          </div>
+          <div>
+            <p class="ch-tag solution">Solution</p>
+            <p class="ch-text">A state-machine architecture was implemented: RAMPING → STABILISING → ACQUIRING → RELEASING → NEXT_STEP. Each state has defined entry/exit conditions and clear ownership of the hardware resources, preventing simultaneous access conflicts between the PID loop and the UART/SD tasks.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 HARDWARE EVOLUTION -->
+    <div class="section">
+      <p class="section-label">05 — Hardware Development</p>
+      <h2>From Breadboard Prototype to Custom PCB</h2>
+      <p>
+        The system was developed in two hardware stages. The initial prototype was built on a breadboard using off-the-shelf modules — an Adafruit ESP32-S3 Feather, an ADS1115 breakout, an MCP4725 DAC module, and a commercial SD card interface — connected using the wiring diagram developed during the design phase. This allowed rapid firmware development and functional validation of the PID loop and data logging before committing to PCB layout.
+      </p>
+      <p>
+        Once the prototype was functionally validated, the design was transferred into Altium Designer as a custom PCB — <strong>Hydrostatic Ver 1.0</strong>. The PCB integrates all modules onto a single board with proper power conditioning, signal protection, and labelled connectors for each subsystem.
+      </p>
+
+
+
+      <h3>Power Supply Architecture</h3>
+      <p>
+        The power supply was designed with separate regulated rails for each subsystem to prevent switching noise and ground currents from coupling into the sensitive strain measurement chain. The S8V9F7 boost converter steps up the input supply to 15V. An LM340T-12 linear regulator then produces 12V for the op-amp voltage amplifier and the solenoid drive circuit. Two independent LM7805 linear regulators produce separate 5V rails — one for the strain gauge board and one for the pressure transducer — isolating their respective ground returns. The 3.3V rail for the ESP32-S3, ADS1115, and MCP4725 is taken directly from the ESP32 Feather's onboard regulator.
+      </p>
+      <p>
+        The choice of separate 5V rails for the strain board and pressure transducer was deliberate: the pressure transducer draws variable current as the sensing element changes under pressure, which can modulate the supply voltage if the rail has finite impedance. Keeping the transducer supply isolated from the strain board supply prevents this modulation from appearing as a supply-induced offset on the strain measurements.
+      </p>
+
+
+
+      <h3>PCB Layout — Hydrostatic Ver 1.0</h3>
+      <figure class="figure">
+        <img src="../assets/1771736213294_image.png" alt="PCB 3D render — Hydrostatic Ver 1.0">
+        <figcaption>Fig. 3 — 3D render of the Hydrostatic Ver 1.0 PCB. Key connector groups are labelled along the top edge: 5V/12V supply, pressure regulator output, four analog inputs, solenoid output, and input supply. The ESP32-S3 Feather and the ADS1115/MCP4725 modules are footprinted as plug-in headers. The LM358N voltage amplifier and power regulation components occupy the upper-left quadrant; the strain gauge board UART connection headers are on the lower section.</figcaption>
+      </figure>
+    </div>
+
+    <!-- 06 STRAIN MEASUREMENT INTEGRATION -->
+    <div class="section">
+      <p class="section-label">06 — Strain Measurement</p>
+      <h2>Integrating the Strain Gauge Instrumentation System</h2>
+      <p>
+        Strain measurement is performed by the <a href="./strain-gauge.html" style="color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(232,160,64,0.3);">24-bit strain gauge instrumentation system from Project 01</a>. The hydrostatic controller connects to this board over UART, requesting calibrated microstrain readings at each pressure hold point. The separation of concerns is deliberate: the strain board handles all analog conditioning, 24-bit ADC acquisition, and microstrain computation, while the hydrostatic controller handles pressure regulation and experimental sequencing.
+      </p>
+      <p>
+        Six strain gauges are bonded to the aluminium sample inside the test chamber. At each pressure setpoint, the ESP32-S3 commands a strain reading over UART, waits for the strain gauge board to return 6 calibrated microstrain values, and logs them alongside the measured pressure. This synchronous acquisition ensures that each strain reading corresponds to a known, stable pressure state.
+      </p>
+
+      <h3>Young's Modulus Derivation</h3>
+      <p>
+        Young's modulus is extracted from the measured strain response using the theoretical relationship between hydrostatic stress and volumetric strain. Under hydrostatic loading with Poisson's ratio ν, the strain ε in any direction of an isotropic material is related to the applied hydrostatic pressure P by:
+      </p>
+
+      <div class="equation-box">
+        <span class="eq-main">ε = P · (1 − 2ν) / E</span>
+        <div class="eq-terms">
+          <span>ε = measured microstrain (µε × 10⁻⁶)</span>
+          <span>P = applied hydrostatic pressure (Pa)</span>
+          <span>ν = Poisson's ratio (0.33 for aluminium)</span>
+          <span>E = Young's modulus (Pa) — solved from slope of ε vs P</span>
+        </div>
+      </div>
+
+      <p>
+        Rearranging: <code>E = P · (1 − 2ν) / ε</code>. In practice, E is extracted by fitting a linear regression to the measured ε vs P dataset for each gauge. The slope of the regression gives dε/dP, and E = (1 − 2ν) / (dε/dP). The Python post-processing pipeline performs this regression independently for each of the 6 gauges, producing per-gauge E values that are then averaged to give the final result.
+      </p>
+    </div>
+
+    <!-- JSON DATA FORMAT -->
+    <div class="section">
+      <p class="section-label">07 — Data Format</p>
+      <h2>JSON Log Format and Python Post-Processing</h2>
+      <p>
+        All data is streamed from the ESP32-S3 and logged to the SD card as a JSON array. Each record in the array captures a single timestamped sample with pressure, all 8 ADC gauge channels, the NTC thermistor reading, and the current ADC gain setting. Python scripts ingest this file and perform all post-processing — baseline subtraction, microstrain conversion, pressure-step segmentation, regression, and Young's modulus extraction.
+      </p>
+
+      <h3>Record Structure</h3>
+      <div style="background:var(--bg3); border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:3px; padding:1.4rem 1.6rem; margin:1.5rem 0; overflow-x:auto;">
+        <pre style="font-family:var(--mono); font-size:0.78rem; color:var(--text); line-height:1.8; margin:0;">{
+  <span style="color:var(--accent)">"time"</span>:     <span style="color:var(--green)">"2025-10-22T00:29:34.357Z"</span>,   <span style="color:var(--text-dim)">// ISO 8601 UTC timestamp</span>
+  <span style="color:var(--accent)">"pressure"</span>: <span style="color:var(--blue)">2059.7</span>,                      <span style="color:var(--text-dim)">// Pressure in kPa (from ADS1115 + transducer)</span>
+  <span style="color:var(--accent)">"gauges"</span>:   <span style="color:var(--blue)">[-8388608, -471952, -461537, -468735, -478853, -464567, -8388608, -465398]</span>,
+                                           <span style="color:var(--text-dim)">// 8 raw 24-bit ADC values (signed integer)</span>
+                                           <span style="color:var(--text-dim)">// Channels 0 and 6 = -8388608 (0x800000) → disconnected/inactive</span>
+                                           <span style="color:var(--text-dim)">// Active channels: indices 1–5 and 7 → Gauges 1–6</span>
+  <span style="color:var(--accent)">"ntc"</span>:      <span style="color:var(--blue)">35234</span>,                       <span style="color:var(--text-dim)">// NTC thermistor raw ADC value for temperature compensation</span>
+  <span style="color:var(--accent)">"gain"</span>:     <span style="color:var(--blue)">5</span>                           <span style="color:var(--text-dim)">// ADC PGA gain setting (gain=5 throughout test)</span>
+}</pre>
+      </div>
+
+      <h3>Active Channels</h3>
+      <p>
+        The 8-element <code>gauges</code> array maps to 8 physical ADC input channels on the strain board. Channels 0 and 6 return the value <code>-8388608</code> (the minimum value of a 24-bit signed integer, equivalent to hex <code>0x800000</code>), which is the sentinel value indicating a disconnected or inactive channel. The 6 active channels are at array indices 1, 2, 3, 4, 5, and 7, corresponding to Gauges 1 through 6 respectively.
+      </p>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(120px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:4px; overflow:hidden; margin:1.2rem 0;">
+        <div style="background:var(--bg2); padding:1rem; text-align:center;">
+          <span style="font-family:var(--mono); font-size:0.7rem; color:var(--text-dim); display:block; margin-bottom:0.3rem;">gauges[0]</span>
+          <span style="font-family:var(--mono); font-size:0.82rem; color:var(--red);">−8388608</span>
+          <span style="font-family:var(--mono); font-size:0.6rem; color:var(--text-dim); display:block; margin-top:0.2rem;">INACTIVE</span>
+        </div>
+        <div style="background:var(--bg2); padding:1rem; text-align:center;">
+          <span style="font-family:var(--mono); font-size:0.7rem; color:var(--text-dim); display:block; margin-bottom:0.3rem;">gauges[1]</span>
+          <span style="font-family:var(--mono); font-size:0.82rem; color:var(--green);">Gauge 1</span>
+          <span style="font-family:var(--mono); font-size:0.6rem; color:var(--text-dim); display:block; margin-top:0.2rem;">ACTIVE</span>
+        </div>
+        <div style="background:var(--bg2); padding:1rem; text-align:center;">
+          <span style="font-family:var(--mono); font-size:0.7rem; color:var(--text-dim); display:block; margin-bottom:0.3rem;">gauges[2]</span>
+          <span style="font-family:var(--mono); font-size:0.82rem; color:var(--green);">Gauge 2</span>
+          <span style="font-family:var(--mono); font-size:0.6rem; color:var(--text-dim); display:block; margin-top:0.2rem;">ACTIVE</span>
+        </div>
+        <div style="background:var(--bg2); padding:1rem; text-align:center;">
+          <span style="font-family:var(--mono); font-size:0.7rem; color:var(--text-dim); display:block; margin-bottom:0.3rem;">gauges[3]</span>
+          <span style="font-family:var(--mono); font-size:0.82rem; color:var(--green);">Gauge 3</span>
+          <span style="font-family:var(--mono); font-size:0.6rem; color:var(--text-dim); display:block; margin-top:0.2rem;">ACTIVE</span>
+        </div>
+        <div style="background:var(--bg2); padding:1rem; text-align:center;">
+          <span style="font-family:var(--mono); font-size:0.7rem; color:var(--text-dim); display:block; margin-bottom:0.3rem;">gauges[4]</span>
+          <span style="font-family:var(--mono); font-size:0.82rem; color:var(--green);">Gauge 4</span>
+          <span style="font-family:var(--mono); font-size:0.6rem; color:var(--text-dim); display:block; margin-top:0.2rem;">ACTIVE</span>
+        </div>
+        <div style="background:var(--bg2); padding:1rem; text-align:center;">
+          <span style="font-family:var(--mono); font-size:0.7rem; color:var(--text-dim); display:block; margin-bottom:0.3rem;">gauges[5]</span>
+          <span style="font-family:var(--mono); font-size:0.82rem; color:var(--green);">Gauge 5</span>
+          <span style="font-family:var(--mono); font-size:0.6rem; color:var(--text-dim); display:block; margin-top:0.2rem;">ACTIVE</span>
+        </div>
+        <div style="background:var(--bg2); padding:1rem; text-align:center;">
+          <span style="font-family:var(--mono); font-size:0.7rem; color:var(--text-dim); display:block; margin-bottom:0.3rem;">gauges[6]</span>
+          <span style="font-family:var(--mono); font-size:0.82rem; color:var(--red);">−8388608</span>
+          <span style="font-family:var(--mono); font-size:0.6rem; color:var(--text-dim); display:block; margin-top:0.2rem;">INACTIVE</span>
+        </div>
+        <div style="background:var(--bg2); padding:1rem; text-align:center;">
+          <span style="font-family:var(--mono); font-size:0.7rem; color:var(--text-dim); display:block; margin-bottom:0.3rem;">gauges[7]</span>
+          <span style="font-family:var(--mono); font-size:0.82rem; color:var(--green);">Gauge 6</span>
+          <span style="font-family:var(--mono); font-size:0.6rem; color:var(--text-dim); display:block; margin-top:0.2rem;">ACTIVE</span>
+        </div>
+      </div>
+
+      <h3>Python Post-Processing Pipeline</h3>
+      <p>
+        The Python pipeline reads the JSON array from the SD card log file and processes it through the following stages:
+      </p>
+      <div style="display:flex; flex-direction:column; gap:1px; background:var(--border); border:1px solid var(--border); border-radius:4px; overflow:hidden; margin:1.2rem 0;">
+        <div style="background:var(--bg2); padding:1.1rem 1.5rem; display:flex; gap:1.2rem; align-items:flex-start;">
+          <span style="font-family:var(--mono); font-size:0.72rem; font-weight:600; color:var(--accent); background:rgba(232,160,64,0.1); border:1px solid rgba(232,160,64,0.2); border-radius:2px; padding:0.15rem 0.5rem; flex-shrink:0; margin-top:0.1rem;">01</span>
+          <span style="font-size:0.88rem; color:var(--text); line-height:1.65;"><strong>Parse and filter</strong> — load JSON array, filter out inactive channels (value == −8388608), convert timestamps to elapsed seconds.</span>
+        </div>
+        <div style="background:var(--bg2); padding:1.1rem 1.5rem; display:flex; gap:1.2rem; align-items:flex-start;">
+          <span style="font-family:var(--mono); font-size:0.72rem; font-weight:600; color:var(--accent); background:rgba(232,160,64,0.1); border:1px solid rgba(232,160,64,0.2); border-radius:2px; padding:0.15rem 0.5rem; flex-shrink:0; margin-top:0.1rem;">02</span>
+          <span style="font-size:0.88rem; color:var(--text); line-height:1.65;"><strong>Baseline subtraction</strong> — subtract the initial zero-pressure gauge readings from all subsequent samples to compute relative change from the zero-strain reference. Temperature drift is compensated using the NTC reading.</span>
+        </div>
+        <div style="background:var(--bg2); padding:1.1rem 1.5rem; display:flex; gap:1.2rem; align-items:flex-start;">
+          <span style="font-family:var(--mono); font-size:0.72rem; font-weight:600; color:var(--accent); background:rgba(232,160,64,0.1); border:1px solid rgba(232,160,64,0.2); border-radius:2px; padding:0.15rem 0.5rem; flex-shrink:0; margin-top:0.1rem;">03</span>
+          <span style="font-size:0.88rem; color:var(--text); line-height:1.65;"><strong>Microstrain conversion</strong> — convert raw 24-bit ADC values to microstrain (µε) using the calibration coefficients from the strain gauge board (gauge factor, bridge excitation, ADC full-scale, PGA gain).</span>
+        </div>
+        <div style="background:var(--bg2); padding:1.1rem 1.5rem; display:flex; gap:1.2rem; align-items:flex-start;">
+          <span style="font-family:var(--mono); font-size:0.72rem; font-weight:600; color:var(--accent); background:rgba(232,160,64,0.1); border:1px solid rgba(232,160,64,0.2); border-radius:2px; padding:0.15rem 0.5rem; flex-shrink:0; margin-top:0.1rem;">04</span>
+          <span style="font-size:0.88rem; color:var(--text); line-height:1.65;"><strong>Pressure step segmentation</strong> — detect stable hold windows at each 2 MPa step using pressure threshold logic. Average strain values within each window to produce one representative strain per gauge per pressure level.</span>
+        </div>
+        <div style="background:var(--bg2); padding:1.1rem 1.5rem; display:flex; gap:1.2rem; align-items:flex-start;">
+          <span style="font-family:var(--mono); font-size:0.72rem; font-weight:600; color:var(--accent); background:rgba(232,160,64,0.1); border:1px solid rgba(232,160,64,0.2); border-radius:2px; padding:0.15rem 0.5rem; flex-shrink:0; margin-top:0.1rem;">05</span>
+          <span style="font-size:0.88rem; color:var(--text); line-height:1.65;"><strong>Linear regression per gauge</strong> — fit a linear model to the 11 (pressure, strain) data points for each gauge. The slope dε/dP is extracted and used to compute Young's modulus: <code>E = (1 − 2ν) / (dε/dP)</code>, with ν = 0.33 for aluminium.</span>
+        </div>
+        <div style="background:var(--bg2); padding:1.1rem 1.5rem; display:flex; gap:1.2rem; align-items:flex-start;">
+          <span style="font-family:var(--mono); font-size:0.72rem; font-weight:600; color:var(--accent); background:rgba(232,160,64,0.1); border:1px solid rgba(232,160,64,0.2); border-radius:2px; padding:0.15rem 0.5rem; flex-shrink:0; margin-top:0.1rem;">06</span>
+          <span style="font-size:0.88rem; color:var(--text); line-height:1.65;"><strong>Results aggregation</strong> — compute per-gauge E values, standard deviation across gauges, noise statistics (std dev and peak-to-peak per pressure level), and generate all output plots.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 NOISE ANALYSIS -->
+    <div class="section">
+      <p class="section-label">08 — Noise Analysis</p>
+      <h2>Signal Stability at Each Pressure Level</h2>
+      <p>
+        Before extracting Young's modulus, the noise performance of the strain measurements was characterised across all pressure levels. For each hold period at each setpoint, the standard deviation and peak-to-peak spread of the strain readings were computed per gauge. This analysis serves two purposes: it confirms that the strain signal is stable enough during each hold to produce a reliable averaged value, and it identifies any gauges or pressure levels where noise is elevated.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/noise_analysis.png" alt="Noise standard deviation and peak-to-peak at each pressure level">
+        <figcaption>Fig. 4 — Noise characterisation across all pressure levels: standard deviation (top) and peak-to-peak (bottom) per gauge at each 2 MPa step and at the zero-pressure return between steps. The highest noise events occur at the initial 2 MPa step and at the 6 MPa step, coinciding with pressure transitions — the transient mechanical disturbance from the pressure ramp excites gauge noise briefly before it settles. At steady-state holds, standard deviation is consistently below 0.5 µε for most gauges.</figcaption>
+      </figure>
+
+      <p>
+        The noise pattern reveals an important characteristic: <strong>the highest noise events occur at pressure transitions, not at steady-state holds</strong>. The 2 MPa step shows std dev up to 1.5 µε (gauge 2), and the 6 MPa step shows a secondary noise peak. Both coincide with the moment the PID controller is actively ramping to a new setpoint and mechanical energy is being introduced into the test chamber. During the steady-state hold periods between ramps, standard deviation drops to below 0.2–0.4 µε for most gauges — confirming that the hold windows used for strain averaging are clean.
+      </p>
+      <p>
+        Gauge 5 (orange) shows persistently elevated noise across most pressure levels, with peak-to-peak values consistently higher than the other channels. This is likely related to gauge bonding quality or placement on the sample — a point that is reflected in the spread of Young's modulus results discussed next.
+      </p>
+
+      <div class="result-grid">
+        <div class="result-item"><span class="rv">&lt;0.5 µε</span><span class="rl">Steady-State Std Dev</span></div>
+        <div class="result-item"><span class="rv">&lt;2.0 µε</span><span class="rl">Peak Std Dev (transition)</span></div>
+        <div class="result-item"><span class="rv">&lt;1.5 µε</span><span class="rl">Typical Peak-to-Peak</span></div>
+        <div class="result-item"><span class="rv">11</span><span class="rl">Pressure Steps (0–22 MPa)</span></div>
+      </div>
+    </div>
+
+    <!-- 09 YOUNG'S MODULUS RESULTS -->
+    <div class="section">
+      <p class="section-label">09 — Results</p>
+      <h2>Young's Modulus — Aluminium Sample (ν = 0.33)</h2>
+      <p>
+        Young's modulus was computed independently for all 6 gauges by fitting a linear regression to the microstrain vs pressure data across all 11 pressure steps. The slope of each gauge's regression gives the strain-per-pressure sensitivity, from which E is derived using the hydrostatic stress-strain relationship. The results are compared against the textbook value for aluminium (69.0 GPa).
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/youngs_modulus_v033.png" alt="Young's modulus results and strain vs pressure linear fits">
+        <figcaption>Fig. 5 — Left: Young's modulus per gauge compared against the textbook aluminium value (69.0 GPa, red dotted line) and the measured average (70.8 GPa, black dashed). Right: Strain vs pressure linear fits for all 6 gauges — the slope of each fit is the basis for the per-gauge E calculation. The spread in slopes reflects the gauge-to-gauge variation in sensitivity.</figcaption>
+      </figure>
+
+      <h3>Per-Gauge Results</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Gauge</th>
+              <th>E (GPa)</th>
+              <th>vs Textbook (69.0 GPa)</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Gauge 1</td><td>68.2</td><td>−1.2%</td><td><span class="tag-good">Close</span></td></tr>
+            <tr class="outlier"><td>Gauge 2</td><td>50.8</td><td>−26.4%</td><td><span class="tag-warn">Outlier — bonding suspect</span></td></tr>
+            <tr><td>Gauge 3</td><td>66.3</td><td>−4.0%</td><td><span class="tag-good">Close</span></td></tr>
+            <tr><td>Gauge 4</td><td>81.5</td><td>+18.1%</td><td>Above average</td></tr>
+            <tr><td>Gauge 5</td><td>81.8</td><td>+18.6%</td><td>Above average</td></tr>
+            <tr><td>Gauge 6</td><td>76.4</td><td>+10.7%</td><td>Within ±1σ</td></tr>
+            <tr class="highlight"><td><strong>Average</strong></td><td><strong>70.8</strong></td><td><strong>+2.65%</strong></td><td><span class="tag-good">2.65% error</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <p class="callout-label">Key Result</p>
+        <p>The averaged Young's modulus across all 6 gauges is <strong>70.8 GPa</strong>, giving a <strong>2.65% error</strong> against the textbook aluminium value of 69.0 GPa. This validates the entire system end-to-end — the PID pressure control is applying the correct stress, the strain gauge instrumentation is measuring the correct strain, and the analysis pipeline is deriving the correct modulus. A 2.65% error is a strong result for a lab-built instrument measuring a physical material constant.</p>
+      </div>
+
+      <div class="callout-note">
+        <p class="callout-note-label">Engineering Honesty — Gauge Spread</p>
+        <p>The per-gauge spread is wide: <strong>50.8 to 81.8 GPa, with a standard deviation of ±10.8 GPa</strong>. Gauge 2 at 50.8 GPa is a clear outlier — 26% below the textbook value — and is the primary driver of the large std dev. The most likely causes are imperfect gauge bonding (inadequate surface preparation, adhesive voids, or misalignment during curing), slight gauge misorientation relative to the principal stress direction, or residual mechanical stress in the bonding adhesive. Gauges 1 and 3, which are closest to the textbook value (68.2 and 66.3 GPa), likely have the best bonding quality. The averaged result is strong despite the spread because the over- and under-estimating gauges partially cancel — this is mathematically convenient but masks the underlying gauge-to-gauge inconsistency. In a production measurement system, the outlier gauge would be rejected and re-bonded, and a more rigorous bonding procedure (proper surface preparation, calibrated curing pressure, and bond quality checks) would be applied before testing.</p>
+      </div>
+    </div>
+
+    <!-- 10 OUTCOME -->
+    <div class="section">
+      <p class="section-label">10 — Outcome</p>
+      <h2>Engineering Result</h2>
+      <div class="outcome-box">
+        <p>
+          A complete closed-loop hydrostatic pressure test rig capable of applying controlled pneumatic pressure to a test sample in defined increments and measuring the mechanical strain response across 6 independent channels. The PID controller tracks a 0–22 MPa stepped pressure profile using an electropneumatic regulator driven by a 12-bit DAC through an op-amp voltage amplifier, with a solenoid valve for pressure release between steps. All pressure and strain data is logged in real time to an SD card.
+        </p>
+        <p>
+          The system was validated by measuring Young's modulus on an aluminium sample, yielding <strong>E = 70.8 ± 10.8 GPa</strong> averaged across 6 gauges — a <strong>2.65% error</strong> against the accepted textbook value of 69.0 GPa. This end-to-end validation confirms that the pressure control, strain measurement, and analysis pipeline are all functioning correctly as an integrated system. The wide per-gauge spread (50.8–81.8 GPa) is attributed to gauge bonding quality variability and is a known limitation of the current experimental setup.
+        </p>
+        <p>
+          The design was progressed from a breadboard prototype to a custom Altium PCB (Hydrostatic Ver 1.0), integrating the ESP32-S3, ADS1115 ADC, MCP4725 DAC, LM358N voltage amplifier, solenoid MOSFET driver, SD card interface, strain gauge board UART connection, and a multi-rail power supply with isolated 5V rails for the strain board and pressure transducer.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
