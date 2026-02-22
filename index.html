@@ -175,6 +175,55 @@
     .btn-blue { color: var(--blue); border-color: var(--blue); }
     .btn-blue:hover { border-color: var(--blue); color: var(--bg); background: var(--blue); }
 
+    .hero-seeking {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.6s forwards;
+    }
+    .seeking-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .seeking-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .seeking-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--green);
+      background: rgba(78,201,138,0.06);
+      border: 1px solid rgba(78,201,138,0.25);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .open-to-work {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--green);
+      border: 1px solid rgba(78,201,138,0.35);
+      background: rgba(78,201,138,0.07);
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      letter-spacing: 0.06em;
+      animation: blink 1.4s step-start infinite;
+    }
+    .open-to-work::before { content: '● '; }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
     /* STATS STRIP */
     .stats-strip {
       background: var(--bg3);
@@ -321,9 +370,9 @@
     .pc-tag {
       font-family: var(--mono);
       font-size: 0.62rem;
-      color: var(--green);                      /* #4ec98a — green */
-      background: rgba(78,201,138,0.07);        /* green tint */
-      border: 1px solid rgba(78,201,138,0.2);   /* green tint border */
+      color: var(--green);
+      background: rgba(78,201,138,0.07);
+      border: 1px solid rgba(78,201,138,0.2);
       padding: 0.15rem 0.5rem;
       border-radius: 2px;
       letter-spacing: 0.03em;
@@ -548,61 +597,16 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
-
-    .open-to-work {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--green);
-      border: 1px solid rgba(78,201,138,0.35);
-      background: rgba(78,201,138,0.07);
-      padding: 0.2rem 0.6rem;
-      border-radius: 3px;
-      letter-spacing: 0.06em;
-      animation: blink 1.4s step-start infinite;
-    }
-    .open-to-work::before { content: '● '; }
-    .hero-seeking {
-      margin-top: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      opacity: 0;
-      animation: fadeUp 0.6s ease 0.6s forwards;
-    }
-    .seeking-label {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--accent);        /* amber — same as View Projects */
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-    .seeking-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-    .seeking-tag {
-      font-family: var(--mono);
-      font-size: 0.65rem;
-      color: var(--green);
-      background: rgba(78,201,138,0.06);
-      border: 1px solid rgba(78,201,138,0.25);
-      padding: 0.2rem 0.6rem;
-      border-radius: 2px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
   </style>
 </head>
 <body>
 
   <nav>
     <div class="nav-inner">
-      <a href="#" class="nav-logo">UJ<span>.</span></a>
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <a href="#" class="nav-logo">UJ<span>.</span></a>
+        <span class="open-to-work">Open to Work</span>
+      </div>
       <ul class="nav-links">
         <li><a href="#projects">Projects</a></li>
         <li><a href="#skills">Skills</a></li>
@@ -611,19 +615,6 @@
       </ul>
     </div>
   </nav>
-  <div class="hero-seeking">
-    <span class="seeking-label">Seeking →</span>
-    <div class="seeking-tags">
-      <span class="seeking-tag">Instrumentation Engineer</span>
-      <span class="seeking-tag">Measurement &amp; Control Engineer</span>
-      <span class="seeking-tag">Embedded Electronics Engineer (Mining / Industrial)</span>
-      <span class="seeking-tag">Sensor Systems Engineer</span>
-      <span class="seeking-tag">Electronics Engineer — Downhole / Subsurface</span>
-      <span class="seeking-tag">R&amp;D Electronics Engineer (Industrial)</span>
-      <span class="seeking-tag">Test &amp; Validation Engineer</span>
-      <span class="seeking-tag">Power Electronics / WBG Devices Engineer</span>
-    </div>
-  </div>
 
   <!-- HERO -->
   <div class="hero">
@@ -637,13 +628,26 @@
       <a href="#projects" class="btn-primary">View Projects</a>
       <a href="#contact" class="btn-secondary btn-blue">Get in Touch</a>
     </div>
+    <div class="hero-seeking">
+      <span class="seeking-label">Seeking →</span>
+      <div class="seeking-tags">
+        <span class="seeking-tag">Instrumentation Engineer</span>
+        <span class="seeking-tag">Measurement &amp; Control Engineer</span>
+        <span class="seeking-tag">Embedded Electronics Engineer (Mining / Industrial)</span>
+        <span class="seeking-tag">Sensor Systems Engineer</span>
+        <span class="seeking-tag">Electronics Engineer — Downhole / Subsurface</span>
+        <span class="seeking-tag">R&amp;D Electronics Engineer (Industrial)</span>
+        <span class="seeking-tag">Test &amp; Validation Engineer</span>
+        <span class="seeking-tag">Power Electronics / WBG Devices Engineer</span>
+      </div>
+    </div>
   </div>
 
   <!-- STATS STRIP -->
   <div class="stats-strip">
     <div class="stats-inner">
       <div class="stat-item">
-        <span class="stat-val">4+</span>
+        <span class="stat-val">5+</span>
         <span class="stat-lbl">Years Industry</span>
       </div>
       <div class="stat-item">
@@ -652,7 +656,6 @@
       </div>
       <div class="stat-item">
         <span class="stat-val">IEC 60079</span>
-        <span class="stat-val">IEC 80079</span>
         <span class="stat-lbl">IS Compliance</span>
       </div>
       <div class="stat-item">
@@ -736,7 +739,7 @@
         </div>
       </a>
 
-      <!-- Project 3: Hydrostatic -->
+      <!-- Project 4: Hydrostatic -->
       <a href="./projects/hydrostatic.html" class="project-card">
         <div>
           <p class="pc-number">03 — Closed-Loop Instrumentation</p>
@@ -767,7 +770,7 @@
         </div>
       </a>
 
-      <!-- Project 4: Chuck Sensing -->
+      <!-- Project 3: Chuck Sensing -->
       <a href="./projects/chuck_sensing.html" class="project-card">
         <div>
           <p class="pc-number">04 — Industrial Sensing</p>
