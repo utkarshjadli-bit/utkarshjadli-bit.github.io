@@ -172,6 +172,8 @@
       transition: border-color 0.2s, color 0.2s;
     }
     .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-blue { color: var(--blue); border-color: var(--blue); }
+    .btn-blue:hover { border-color: var(--blue); color: var(--bg); background: var(--blue); }
 
     /* STATS STRIP */
     .stats-strip {
@@ -557,7 +559,7 @@
         <li><a href="#projects">Projects</a></li>
         <li><a href="#skills">Skills</a></li>
         <li><a href="#experience">Experience</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#contact" style="color:var(--blue)">Contact</a></li>
       </ul>
     </div>
   </nav>
@@ -572,8 +574,7 @@
     </p>
     <div class="hero-cta">
       <a href="#projects" class="btn-primary">View Projects</a>
-      <a href="#contact" class="btn-secondary">Get in Touch</a>
-      <a href="https://scholar.google.com.au/citations?user=kmwQvPQAAAAJ&hl=en&oi=ao" target="_blank" class="btn-secondary">Google Scholar →</a>
+      <a href="#contact" class="btn-secondary btn-blue">Get in Touch</a>
     </div>
   </div>
 
