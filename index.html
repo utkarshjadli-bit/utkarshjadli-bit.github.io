@@ -548,6 +548,54 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+    .open-to-work {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--green);
+      border: 1px solid rgba(78,201,138,0.35);
+      background: rgba(78,201,138,0.07);
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      letter-spacing: 0.06em;
+      animation: blink 1.4s step-start infinite;
+    }
+    .open-to-work::before { content: '● '; }
+    .hero-seeking {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 0.6s forwards;
+    }
+    .seeking-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--accent);        /* amber — same as View Projects */
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .seeking-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .seeking-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--green);
+      background: rgba(78,201,138,0.06);
+      border: 1px solid rgba(78,201,138,0.25);
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
   </style>
 </head>
 <body>
@@ -563,6 +611,19 @@
       </ul>
     </div>
   </nav>
+  <div class="hero-seeking">
+    <span class="seeking-label">Seeking →</span>
+    <div class="seeking-tags">
+      <span class="seeking-tag">Instrumentation Engineer</span>
+      <span class="seeking-tag">Measurement &amp; Control Engineer</span>
+      <span class="seeking-tag">Embedded Electronics Engineer (Mining / Industrial)</span>
+      <span class="seeking-tag">Sensor Systems Engineer</span>
+      <span class="seeking-tag">Electronics Engineer — Downhole / Subsurface</span>
+      <span class="seeking-tag">R&amp;D Electronics Engineer (Industrial)</span>
+      <span class="seeking-tag">Test &amp; Validation Engineer</span>
+      <span class="seeking-tag">Power Electronics / WBG Devices Engineer</span>
+    </div>
+  </div>
 
   <!-- HERO -->
   <div class="hero">
