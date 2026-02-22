@@ -572,7 +572,7 @@
     </p>
     <div class="hero-cta">
       <a href="#projects" class="btn-primary">View Projects</a>
-      <a href="mailto:utkarshjadli@gmail.com" class="btn-secondary">Get in Touch</a>
+      <a href="#contact" class="btn-secondary">Get in Touch</a>
       <a href="https://scholar.google.com.au/citations?user=kmwQvPQAAAAJ&hl=en&oi=ao" target="_blank" class="btn-secondary">Google Scholar →</a>
     </div>
   </div>
@@ -672,10 +672,41 @@
         </div>
       </a>
 
+      <!-- Project 4: Hydrostatic -->
+      <a href="./projects/hydrostatic.html" class="project-card">
+        <div>
+          <p class="pc-number">03 — Closed-Loop Instrumentation</p>
+          <p class="pc-title">Hydrostatic Pressure Test Rig with PID Control</p>
+          <p class="pc-desc">Closed-loop hydrostatic pressure test rig combining a PID-controlled electropneumatic regulator with the 24-bit strain gauge instrumentation system (Project 01) to characterise material mechanical properties. Two pressure sequences (step-and-release and cumulative ramp) applied 0–22 MPa to an aluminium sample across 6 waterproof 120Ω gauges. Data logged as JSON via ESP32-S3 to SD card and post-processed in Python to extract Young's modulus. PCB housed in an IP-rated steel enclosure with shielded cabling for EMI protection.</p>
+          <div class="pc-tags">
+            <span class="pc-tag">PID Control</span>
+            <span class="pc-tag">ESP32-S3 Firmware</span>
+            <span class="pc-tag">Altium PCB</span>
+            <span class="pc-tag">Python Analysis</span>
+            <span class="pc-tag">Materials Characterisation</span>
+          </div>
+          <span class="pc-arrow">Read full technical deep-dive →</span>
+        </div>
+        <div class="pc-stats">
+          <div>
+            <span class="pc-stat-val">70.8 GPa</span>
+            <span class="pc-stat-lbl">Measured E (Al)</span>
+          </div>
+          <div>
+            <span class="pc-stat-val">2.65%</span>
+            <span class="pc-stat-lbl">Error vs Textbook</span>
+          </div>
+          <div>
+            <span class="pc-stat-val">0–22 MPa</span>
+            <span class="pc-stat-lbl">Pressure Range</span>
+          </div>
+        </div>
+      </a>
+
       <!-- Project 3: Chuck Sensing -->
       <a href="./projects/chuck_sensing.html" class="project-card">
         <div>
-          <p class="pc-number">03 — Industrial Sensing</p>
+          <p class="pc-number">04 — Industrial Sensing</p>
           <p class="pc-title">Drill Rig Chuck Sensing System</p>
           <p class="pc-desc">Intrinsically safe sensing module for drill rig chuck monitoring — RPM, CW/CCW direction, and linear feed stroke. A key contribution was a novel magnet geometry enabling reliable direction detection from just 4 discrete magnets, using duty-cycle signature (~10% forward, ~94% reverse), validated across 10–700 RPM on a lathe.</p>
           <div class="pc-tags">
@@ -702,7 +733,6 @@
           </div>
         </div>
       </a>
-
     </div>
   </div>
 
