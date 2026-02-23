@@ -896,6 +896,11 @@
       <p>
         Six strain gauges are bonded to the aluminium sample inside the test chamber. At each pressure setpoint, the ESP32-S3 commands a strain reading over UART, waits for the strain gauge board to return 6 calibrated microstrain values, and logs them alongside the measured pressure. This synchronous acquisition ensures that each strain reading corresponds to a known, stable pressure state.
       </p>
+      
+      <figure class="figure">
+        <img src="../assets/gauge_microstrain.png" alt=" Microstrain (all 6 gauges) and PID pressure response vs time">
+        <figcaption>Fig. 4 — Microstrain response (µε, left axis) of all 6 gauges and PID pressure (kPa, right axis) over the full test sequence. The red stepped line is the pressure setpoint; the dashed blue curve is the measured PID response. The left portion of the plot (00:45–02:15) shows Sequence A — each pressure step is followed by a full release to 0 MPa. The right portion (02:15–03:15) shows Sequence B — pressure is applied cumulatively from 0 to 22 MPa with a single release at the end. Gauge-to-gauge spread in the microstrain traces is consistent across both sequences and reflects bonding quality variability, discussed further in the Results section.</figcaption>
+      </figure>
 
       <h3>Young's Modulus Derivation</h3>
       <p>
