@@ -210,7 +210,7 @@
     .open-to-work {
       font-family: var(--mono);
       font-size: 0.65rem;
-      color: #e8420e;                           /* vivid orange-red */
+      color: #e8420e;
       border: 1px solid rgba(232,66,14,0.35);
       background: rgba(232,66,14,0.07);
       padding: 0.2rem 0.6rem;
@@ -321,7 +321,7 @@
     }
     .project-card {
       background: var(--bg2);
-      padding: 2rem 2rem 2rem 2rem;
+      padding: 2rem;
       display: grid;
       grid-template-columns: 1fr auto;
       gap: 1.5rem;
@@ -407,11 +407,38 @@
       display: block;
       text-align: right;
     }
+    .pc-title-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.6rem;
+    }
+    .pc-title-row .pc-title { margin-bottom: 0; }
+    .pc-badge {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      border: 1px solid;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .pc-badge::before { content: '●'; font-size: 0.5rem; }
+    .badge-deployed  { color: var(--accent); border-color: rgba(232,160,64,0.4); background: rgba(232,160,64,0.07); }
+    .badge-validated { color: var(--accent); border-color: rgba(232,160,64,0.4); background: rgba(232,160,64,0.07); }
+    .badge-field     { color: var(--blue);   border-color: rgba(106,176,224,0.4); background: rgba(106,176,224,0.07); }
+    .badge-bench     { color: #e8420e; border-color: rgba(232,66,14,0.4); background: rgba(232,66,14,0.07); }
 
     /* SKILLS */
     .skills-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
@@ -533,9 +560,10 @@
 
     /* CONTACT */
     .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0;
       background: var(--border);
       border: 1px solid var(--border);
       border-radius: 4px;
@@ -543,17 +571,21 @@
     }
     .contact-item {
       background: var(--bg2);
-      padding: 1.4rem 1.6rem;
+      padding: 1.1rem 1.8rem;
       text-decoration: none;
       transition: background 0.2s;
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
+      gap: 0.25rem;
+      border-right: 1px solid var(--border);
+      flex: 1;
+      min-width: 0;
     }
+    .contact-item:last-child { border-right: none; }
     .contact-item:hover { background: var(--bg3); }
     .contact-label {
       font-family: var(--mono);
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       color: var(--text-dim);
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -562,8 +594,9 @@
       font-family: var(--mono);
       font-size: 0.82rem;
       color: var(--accent);
-      word-break: break-all;
-      overflow-wrap: break-word;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* FOOTER */
@@ -622,7 +655,7 @@
     <h1 class="hero-name">Dr. Utkarsh Jadli</h1>
     <p class="hero-title">PCB Design · Analog & Mixed-Signal · Intrinsically Safe Systems</p>
     <p class="hero-bio">
-      I design electronics that work in the field — not just on the bench. With a <strong>Ph.D. in Power Semiconductor Devices</strong> from Griffith University and over five years of industry experience at Sigra, I build precision instrumentation, embedded sensing systems, and intrinsically safe electronics for mining and industrial applications. My work spans from sub-micron device physics to deployed field instruments, with a consistent focus on measurement accuracy, signal integrity, and engineering rigour.
+      I design electronics that work in the field — not just on the bench. With a <strong>Ph.D. in Power Semiconductor Devices</strong> from Griffith University and over four years of industry experience at Sigra, I build precision instrumentation, embedded sensing systems, and intrinsically safe electronics for mining and industrial applications. My work spans from sub-micron device physics to deployed field instruments, with a consistent focus on measurement accuracy, signal integrity, and engineering rigour.
     </p>
     <div class="hero-cta">
       <a href="#projects" class="btn-primary">View Projects</a>
@@ -680,7 +713,10 @@
       <a href="./projects/strain-gauge.html" class="project-card">
         <div>
           <p class="pc-number">01 — Strain Gauge Instrumentation</p>
-          <p class="pc-title">Multi-Channel Strain Gauge System</p>
+          <div class="pc-title-row">
+            <p class="pc-title">Multi-Channel Strain Gauge System</p>
+            <span class="pc-badge badge-deployed">DEPLOYED</span>
+          </div>
           <p class="pc-desc">8-channel quarter-bridge strain instrumentation system with 24-bit ADC, integrated PGA, thermal drift compensation via reference subtraction, and 67-hour field thermal characterisation. Validated on a UCS machine with a rectangular rosette gauge configuration.</p>
           <div class="pc-tags">
             <span class="pc-tag">PCB Design</span>
@@ -711,7 +747,10 @@
       <a href="./projects/imu_survey.html" class="project-card">
         <div>
           <p class="pc-number">02 — Downhole Survey Instrument</p>
-          <p class="pc-title">IMU-Based Downhole Survey System</p>
+          <div class="pc-title-row">
+            <p class="pc-title">IMU-Based Downhole Survey System</p>
+            <span class="pc-badge badge-deployed">DEPLOYED</span>
+          </div>
           <p class="pc-desc">Complete intrinsically safe borehole survey instrument measuring azimuth, inclination, and toolface. Redundant multi-sensor IMU architecture with hard-iron/soft-iron magnetometer calibration, gyroscope-based drill rotation detection, and HART telemetry validated over 1.4 km of armoured drilling cable. Cross-validated across three independent tool builds.</p>
           <div class="pc-tags">
             <span class="pc-tag">Sensor Fusion</span>
@@ -739,12 +778,15 @@
         </div>
       </a>
 
-      <!-- Project 4: Hydrostatic -->
+      <!-- Project 3: Hydrostatic -->
       <a href="./projects/hydrostatic.html" class="project-card">
         <div>
           <p class="pc-number">03 — Closed-Loop Instrumentation</p>
-          <p class="pc-title">Hydrostatic Pressure Test Rig with PID Control</p>
-          <p class="pc-desc">Closed-loop hydrostatic pressure test rig combining a PID-controlled electropneumatic regulator with the 24-bit strain gauge instrumentation system (Project 01) to characterise material mechanical properties. Data logged as JSON via ESP32-S3 to SD card and post-processed in Python to extract Young's modulus. PCB housed in an IP-rated steel enclosure with shielded cabling for EMI protection.</p>
+          <div class="pc-title-row">
+            <p class="pc-title">Hydrostatic Pressure Test Rig with PID Control</p>
+            <span class="pc-badge badge-deployed">DEPLOYED</span>
+          </div>
+          <p class="pc-desc">Closed-loop hydrostatic pressure test rig with PID-controlled electropneumatic regulator and 6-channel 24-bit strain measurement. Applied 0–22 MPa across two pressure sequences to characterise Young's modulus of an aluminium sample — result: 70.8 GPa (2.65% error vs textbook). Data logged as JSON via ESP32-S3 and post-processed in Python. PCB in IP-rated steel enclosure with shielded cabling.</p>
           <div class="pc-tags">
             <span class="pc-tag">PID Control</span>
             <span class="pc-tag">ESP32-S3 Firmware</span>
@@ -770,11 +812,14 @@
         </div>
       </a>
 
-      <!-- Project 3: Chuck Sensing -->
+      <!-- Project 4: Chuck Sensing -->
       <a href="./projects/chuck_sensing.html" class="project-card">
         <div>
           <p class="pc-number">04 — Industrial Sensing</p>
-          <p class="pc-title">Drill Rig Chuck Sensing System</p>
+          <div class="pc-title-row">
+            <p class="pc-title">Drill Rig Chuck Sensing System</p>
+            <span class="pc-badge badge-bench">BENCH TESTED</span>
+          </div>
           <p class="pc-desc">Intrinsically safe sensing module for drill rig chuck monitoring — RPM, CW/CCW direction, and linear feed stroke. A key contribution was a novel magnet geometry enabling reliable direction detection from just 4 discrete magnets, using duty-cycle signature (~10% forward, ~94% reverse), validated across 10–700 RPM on a lathe.</p>
           <div class="pc-tags">
             <span class="pc-tag">Hall-Effect Sensing</span>
@@ -800,9 +845,9 @@
           </div>
         </div>
       </a>
+
     </div>
   </div>
-
   <!-- SKILLS -->
   <div class="section" id="skills">
     <p class="section-label">Skills & Tools</p>
@@ -900,7 +945,7 @@
         <div>
           <p class="exp-role">Ph.D. — Power Semiconductor Devices</p>
           <p class="exp-org">Griffith University, Brisbane, Australia</p>
-          <p class="exp-desc">Thesis: <em>"Parasitic Capacitances of Power Transistors and their Effects in Power Electronics Systems."</em> Designed an in-house Double Pulse Tester for SiC MOSFET and GaN HEMT characterisation. Applied advanced PCB techniques to minimise parasitic inductance — optimised gate-loop layouts, Kelvin-source connections, ground-plane segmentation. Developed and validated SPICE semiconductor models against experimental DPT data.</p>
+          <p class="exp-desc">Thesis: <em>"Parasitic Capacitances of Power Transistors and their Effects in Power Electronics Systems."</em> Performed advanced characterization (I-V, C-V &amp; traps) of semiconductor power devices (Si MOSFETs, SiC MOSFETs, GaN-HEMTs, 4H-SiC MOS capacitor wafer and GaN-HEMT wafer) using Agilent power device analyzer. Developed SPICE-based semiconductor models for SiC MOSFETs and GaN-HEMTs.</p>
         </div>
         <span class="exp-period">2018 — 2021</span>
       </div>
@@ -937,11 +982,7 @@
         <span class="contact-label">LinkedIn</span>
         <span class="contact-value">linkedin.com/in/utkarshjadli</span>
       </a>
-      <a href="https://scholar.google.com.au/citations?user=kmwQvPQAAAAJ&hl=en&oi=ao" target="_blank" class="contact-item">
-        <span class="contact-label">Google Scholar</span>
-        <span class="contact-value">Published Research</span>
-      </a>
-      <div class="contact-item">
+<div class="contact-item">
         <span class="contact-label">Location</span>
         <span class="contact-value">Brisbane, QLD, Australia</span>
       </div>
