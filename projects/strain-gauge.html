@@ -1412,10 +1412,7 @@
       <p>
         The enable signal drives a high-side load switch, which gates the battery supply to the downstream instrumentation with negligible quiescent draw in the off state. A low-dropout regulator provides a clean, regulated supply once the switch closes. The result is a fully passive activation system — no firmware, no timers, no user interaction — that wakes the instrument precisely when the operational event occurs.
       </p>
-      <p>
-        The design went through four hardware revisions (Ver 1.0 → Ver 4.0), driven by real field deployment issues including layout optimisation for the 27 mm cylindrical form factor, sensor placement tuning to match the magnetic geometry of different core barrel sizes, and power sequencing improvements.
-      </p>
-
+      
       <figure class="figure">
         <img src="../assets/magnetic_switch.png" alt="Magnetic Switch Ver 4.0 PCB 3D render">
         <figcaption>Fig. 7 — Magnetic Switch PCB. The left semicircular board carries the three Hall-effect sensors arranged around the circumference to match the cylindrical tool housing geometry. The right rectangular board houses the NAND gate logic, high-side load switch, LDO regulator, and output connector. </figcaption>
@@ -1429,12 +1426,12 @@
 
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1.5rem 0;">
         <figure class="figure" style="margin:0;">
-          <img src="../assets/magnetic_switch_on.jpg" alt=" Magnetic switch — magnet within detection range, LED on">
-          <figcaption>Magnet within detection range — load switch held open, instrumentation off. LED lit confirms the circuit is holding in the inactive state while the magnetic field is present, simulating the core barrel surrounding the tool.</figcaption>
+          <img src="../assets/magnetic_switch_off.jpg" alt=" Magnetic switch — magnet within detection range, LED on">
+          <figcaption>Fig. 8 — Magnet within detection range — load switch held open, instrumentation off. LED lit confirms the circuit is holding in the inactive state while the magnetic field is present, simulating the core barrel surrounding the tool.</figcaption>
         </figure>
         <figure class="figure" style="margin:0;">
-          <img src="../assets/magnetic_switch_off.jpg" alt=" Magnetic switch — magnet removed, LED off">
-          <figcaption>Magnet moved beyond activation threshold — load switch closes, instrumentation powers on. LED extinguishes, confirming clean state transition. This replicates the moment the core barrel is pulled from the borehole and stress relief begins.</figcaption>
+          <img src="../assets/magnetic_switch_on.jpg" alt=" Magnetic switch — magnet removed, LED off">
+          <figcaption>Fig. 9 — Magnet moved beyond activation threshold — load switch closes, instrumentation powers on. LED extinguishes, confirming clean state transition. This replicates the moment the core barrel is pulled from the borehole and stress relief begins.</figcaption>
         </figure>
       </div>
 
