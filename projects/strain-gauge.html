@@ -505,7 +505,10 @@
       <span>Validation Testing</span>
     </div>
     <p class="hero-intro">
-      A multi-channel, low-noise strain measurement system designed and validated for in-situ rock stress measurement in pilot boreholes — constrained to fit inside a 27 mm diameter cylindrical housing. The system spans the full acquisition chain: bridge excitation, analog front-end conditioning, 24-bit ADC acquisition, embedded firmware, and thermal drift compensation. Validated through beam bending against Euler–Bernoulli theory, 67-hour thermal drift characterisation, and full-system UCS machine testing with a rectangular rosette gauge configuration.
+      A multi-channel, low-noise strain measurement system designed and validated for in-situ rock stress measurement in pilot boreholes — constrained to fit inside a 27 mm diameter cylindrical housing. 
+      The system spans the full acquisition chain: bridge excitation, analog front-end conditioning, 24-bit ADC acquisition, embedded firmware, and thermal drift compensation. 
+      Validated through beam bending against Euler–Bernoulli theory, 67-hour thermal drift characterisation, and full-system UCS machine testing with a rectangular rosette gauge configuration.
+      A companion magnetic switch sub-system is designed to provide passive, battery-preserving activation — using the core barrel's own magnetic field to keep the strain measurement system dormant until the overcoring event occurs.
     </p>
   </div>
 
@@ -1390,13 +1393,65 @@
       </figure>
     </div>
 
+    <!-- MAGNETIC SWITCH -->
+    <div class="section">
+      <p class="section-label">15 — Downhole Activation</p>
+      <h2>Magnetic Switch — Battery-Preserving Activation</h2>
+      <p>
+        A practical deployment problem with any battery-operated downhole tool is premature power consumption. During the overcoring operation, the drill core barrel surrounds the tool for an extended period — potentially hours at depth. If the strain instrumentation is active throughout this time, the battery pack can be significantly depleted before the critical stress-relief measurement window even begins.
+      </p>
+      <p>
+        To solve this, a dedicated magnetic switch was designed to sit between the battery pack and the instrumentation circuit. The switch uses the magnetic field of the core barrel itself as the activation signal: when the core barrel is present and surrounding the tool, the circuit remains off. The moment the core barrel is removed — exposing the pilot hole and allowing stress relief to begin — the magnetic field collapses, and the switch powers the instrumentation on automatically, with no manual intervention required downhole.
+      </p>
+
+      <h3>How It Works</h3>
+      <p>
+        Three omnipolar Hall-effect sensors are arranged around the circumference of a custom circular PCB, matched to the cylindrical housing geometry. Their outputs are logically combined through a quad NAND gate to produce a single enable signal — requiring all three sensors to agree on field absence before asserting power. This majority-logic approach provides redundancy: a single sensor failure or localised field anomaly cannot inadvertently trigger the switch in either direction.
+      </p>
+      <p>
+        The enable signal drives a high-side load switch, which gates the battery supply to the downstream instrumentation with negligible quiescent draw in the off state. A low-dropout regulator provides a clean, regulated supply once the switch closes. The result is a fully passive activation system — no firmware, no timers, no user interaction — that wakes the instrument precisely when the operational event occurs.
+      </p>
+      <p>
+        The design went through four hardware revisions (Ver 1.0 → Ver 4.0), driven by real field deployment issues including layout optimisation for the 27 mm cylindrical form factor, sensor placement tuning to match the magnetic geometry of different core barrel sizes, and power sequencing improvements.
+      </p>
+
+      <figure class="figure">
+        <img src="../assets/magnetic_switch.png" alt="Magnetic Switch Ver 4.0 PCB 3D render">
+        <figcaption>Fig. 7 — Magnetic Switch PCB. The left semicircular board carries the three Hall-effect sensors arranged around the circumference to match the cylindrical tool housing geometry. The right rectangular board houses the NAND gate logic, high-side load switch, LDO regulator, and output connector. </figcaption>
+      </figure>
+
+      <h3>Bench Validation</h3>
+      <p>
+        Detection range was characterised using a stack of neodymium disc magnets as a proxy for the core barrel magnetic field, with grid paper as a calibrated distance reference. The LED indicator was used as a proxy for the load switch output — confirming clean switching behaviour at defined distances. Two test states were recorded:
+      </p>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:1.5rem 0;">
+        <figure class="figure" style="margin:0;">
+          <img src="../assets/magnetic_switch_on.jpg" alt="Magnetic switch — magnet within detection range, LED on">
+          <figcaption>Magnet within detection range — load switch held open, instrumentation off. LED lit confirms the circuit is holding in the inactive state while the magnetic field is present, simulating the core barrel surrounding the tool.</figcaption>
+        </figure>
+        <figure class="figure" style="margin:0;">
+          <img src="../assets/magnetic_switch_off.jpg" alt="Magnetic switch — magnet removed, LED off">
+          <figcaption>Magnet moved beyond activation threshold — load switch closes, instrumentation powers on. LED extinguishes, confirming clean state transition. This replicates the moment the core barrel is pulled from the borehole and stress relief begins.</figcaption>
+        </figure>
+      </div>
+
+      <p>
+        The test confirmed reliable, repeatable switching across multiple insertion and removal cycles, with no false triggering or bounce in the Hall-effect output path.
+      </p>
+    </div>
+
     <!-- OUTCOME -->
     <div class="section">
       <p class="section-label">15 — Outcome</p>
       <h2>Engineering Result</h2>
       <div class="outcome-box">
         <p>
-          A fully validated multi-channel strain measurement system for in-situ rock stress measurement in pilot boreholes. Key results: 17.8-bit effective resolution, 2.33 µε RMSE against Euler–Bernoulli beam theory, 22.50 ppm/°C thermal drift after reference subtraction (down from 41.97 ppm/°C), measured over a 39.6°C temperature swing across 67 hours, and UCS machine testing confirming physically consistent multi-channel response across a ~1250 µε load range with per-channel RMS noise of 0.60–1.83 µε — well within the 1–5 µε target for reliable stress inversion in stiff rock. All of this within a 27 mm diameter form factor at ~40 mA operating current, validated across beam bending, overnight drift characterisation, a 147-gauge real-sample gain selection study, and full-system rosette testing on a UCS machine.
+          A fully validated multi-channel strain measurement system for in-situ rock stress measurement in pilot boreholes. 
+          Key results: 17.8-bit effective resolution, 2.33 µε RMSE against Euler–Bernoulli beam theory, 22.50 ppm/°C thermal drift after reference subtraction (down from 41.97 ppm/°C), measured over a 39.6°C temperature swing across 67 hours, 
+          and UCS machine testing confirming physically consistent multi-channel response across a ~1250 µε load range with per-channel RMS noise of 0.60–1.83 µε — well within the 1–5 µε target for reliable stress inversion in stiff rock. 
+          All of this within a 27 mm diameter form factor at ~40 mA operating current, validated across beam bending, overnight drift characterisation, a 147-gauge real-sample gain selection study, and full-system rosette testing on a UCS machine.
+          A dedicated magnetic switch sub-system — provides fully passive, core-barrel-triggered activation, preserving battery capacity for the measurement window and eliminating any need for manual intervention downhole.
         </p>
       </div>
     </div>
