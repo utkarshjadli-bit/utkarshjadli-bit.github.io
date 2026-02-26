@@ -989,7 +989,67 @@
       </p>
     </div>
 
-    <!-- 10 HARDWARE -->
+    <!-- 10 IS BATTERY -->
+    <div class="section">
+      <p class="section-label">10 — Power System</p>
+      <h2>Intrinsically Safe Rechargeable Battery PCB</h2>
+      <p>
+        The complete downhole instrument — Survey PCB, COMMS PCB, and all associated sensing — is powered by a custom IS rechargeable battery PCB designed in-house. This is not a commercial battery pack with an IS barrier in front of it; it is a purpose-designed PCB where the charge management, energy limiting, cell protection, and IS compliance are all integrated into a single certified assembly, with <strong>Um = 6V</strong> and all output parameters defined by the IS entity concept under IEC 60079.
+      </p>
+      <p>
+        The battery chemistry is a 4-cell NiMH stack. The charge controller governs a defined fast-charge current of <strong>~360 mA</strong>, a <strong>6-hour fast-charge timeout</strong>, and a <strong>3-hour top-off period</strong> — all set by external passive components selected and calculated for precise, repeatable behaviour across the operating temperature range. Dual thermistors monitor both ends of the cell stack continuously, providing thermal cutoff protection against runaway in both charge and discharge states.
+      </p>
+      <p>
+        The 6-hour fast-charge timeout is a deliberate design choice, not a capacity-matched calculation. With 2400 mAh cells at 360 mA, a mathematically full charge would require approximately 6 hours 40 minutes — but the timeout is intentionally set short, delivering ~2160 mAh (~90% of rated capacity) before cutoff. This is consistent with established NiMH longevity practice: consistently charging to 100% accelerates electrode degradation over repeated cycles, whereas limiting charge to 80–90% meaningfully extends cycle life with only a marginal reduction in available runtime. For a downhole tool cycled regularly across drilling campaigns, that tradeoff favours longevity over absolute capacity. The subsequent 3-hour top-off period provides a low-current recovery phase without pushing the cells to a full-charge stress state.
+      </p>
+
+      <h3>Three-Zone PCB Architecture</h3>
+      <p>
+        The PCB is physically and electrically partitioned into three distinct compliance zones, each with independent construction and spacing requirements — a layout discipline that is visible in the PCB itself, not just in the schematic.
+      </p>
+      <p>
+        The first zone is the <strong>charger interface</strong>. 
+        The tool is charged on the surface through dedicated charging contacts before being lowered into the borehole. 
+        This charging circuit operates from a 277V AC / DC supply — a voltage source that is fundamentally incompatible with the IS boundary it sits next to. 
+        The challenge is that this interface must safely accept charging energy from a non-IS source and deliver it to a certified IS circuit, without any fault condition on the charger side being able to inject unsafe energy into the downhole electronics. This is achieved through proper fusing, proper clearance and creepage, and transient suppression to clamp any voltage spikes at the input. 
+        The assembly carries a mandatory "DO NOT CHARGE IN HAZARDOUS LOCATION" marking — the charger interface is a surface-only operation by design, not just by instruction.
+      </p>
+      <p>
+        The second zone is the <strong>IS energy-limited circuit</strong> — the region that directly powers the Survey and COMMS PCBs downhole. Every component in this zone is selected and derated to ensure that under any single fault condition, including short circuit and component failure, the energy available at any point in the circuit cannot ignite a flammable atmosphere. This means defined maximum voltage (Um = 6V), current-limiting resistors at the output, and fuse protection sized to the IS entity parameters. The cell voltage is sensed via a precision resistor divider scaled to the 4-cell stack, feeding the charge controller with an accurate per-cell equivalent voltage. A high-side MOSFET gates the IS output — providing a clean, controlled disconnect between the battery and the load without introducing switching transients onto the supply rail.
+      </p>
+      <p>
+        The third zone is the <strong>potted region</strong>. Sections of the PCB that cannot achieve IEC 60079 creepage and clearance requirements through PCB spacing alone — particularly around the charge controller, the output switch, and the thermistor interface — are encapsulated in potting compound. Potting serves two functions: it physically prevents contact with live conductors, and it eliminates the air gap that would otherwise require larger clearance distances under IEC 60079 rules. The potting boundary was one of the key areas refined across hardware revisions, as the thermal and mechanical behaviour of the compound under downhole temperature cycling had to be validated before certification could proceed.
+      </p>
+
+      <h3>Key Design Decisions</h3>
+      <p>
+        <strong>Linear mode over switch-mode charging.</strong> The charge controller supports both operating modes, and switch-mode would have improved thermal efficiency. Linear mode was selected deliberately. A switch-mode converter operating at tens or hundreds of kilohertz on the same PCB as the Survey board's magnetometer and IMU front-end introduces conducted and radiated noise directly into the most sensitive part of the measurement chain. The magnetometer is measuring Earth's field — on the order of 50 µT — and any switching artefact coupling into that signal path would corrupt the azimuth reading. Linear mode draws more quiescent current and runs warmer, but it produces no switching frequency harmonics. For a precision orientation instrument, that tradeoff is straightforward.
+      </p>
+      <p>
+        <strong>Supply disconnect.</strong> The charge controller uses an external resistor on its timing pin to set the fast-charge timeout. When the external charger supply is disconnected, the voltage on this pin can float to an undefined state, which in some controllers causes them to re-enter fast-charge mode erroneously when the supply is reconnected — potentially overcharging cells that are already full. A small transistor circuit was added to actively pull the timing pin to a defined state whenever the charger supply is absent. This ensures the controller always enters a known, safe initialisation sequence at the start of each charge cycle regardless of how long the tool has been deployed or how the supply was connected.
+      </p>
+      <p>
+        <strong>Maintenance charge path.</strong> After the top-off period completes, the cells are not simply left floating. A low-current maintenance path provides a continuous trickle — defined by a dedicated resistor in series with a diode — to compensate for self-discharge in tools stored on the surface between deployments. NiMH cells self-discharge at a meaningful rate; without maintenance charging, a tool left for several weeks could arrive at the borehole with insufficient capacity for the full measurement run. The maintenance current is sized to exactly offset the typical self-discharge rate without overcharging.
+      </p>
+      <p>
+        <strong>Voltage divider scaling for multi-cell sensing.</strong> The charge controller's battery voltage sensing input expects a voltage representative of a single cell. 
+        With a 4-cell series stack, a direct connection would present four times the expected voltage and corrupt the charge termination logic. 
+        A precision resistor divider scales the full-stack voltage down to the single-cell equivalent, with the divider ratio calculated as (Cell Stack Size − 1) × 100 kω = 3 × 100 kω = 300 kω. This ensures accurate delta-V and voltage threshold detection across the full charge cycle.
+      </p>
+      <p>
+        The design reached <strong>Rev 5.0</strong> through iterative certification and field deployment feedback. Revisions addressed potting compound selection and boundary geometry for thermal cycling compliance, thermistor placement relative to the cell stack for accurate temperature tracking, IS spacing violations identified during certification review on the charger input side, and output rail behaviour during rapid supply disconnection and reconnection events encountered in field use.
+      </p>
+
+      <div class="outcome-box" style="margin-top:1.5rem;">
+        <p>
+          A purpose-designed, IS rechargeable battery PCB providing fully regulated, thermistor-supervised power to the complete downhole survey instrument. 
+          Three physically distinct compliance zones — charger isolation, IS energy-limited output, and potted encapsulation — are each governed by independent construction rules and validated through certification testing. Linear-mode charge control (360 mA fast-charge, 6-hour timeout, 3-hour top-off) was chosen to protect the magnetometer and IMU measurement chain from switching noise. 
+          The precision voltage divider, maintenance charge path, and foalting circuit reflect the level of detail required to make a battery management system reliable across the full operational lifecycle of a deployed field instrument. Rev 5.0 was reached through certification feedback.
+        </p>
+      </div>
+    </div>
+    
+    <!-- 11 HARDWARE -->
     <div class="section">
       <p class="section-label">10 — Hardware</p>
       <h2>Final PCB Implementation</h2>
@@ -1006,15 +1066,24 @@
         <img src="../assets/comms_pcb.png" alt="Final COMMS PCB prototype">
         <figcaption>Fig. 17 — IS Comms PCB: the intrinsically safe telemetry front-end implementing HART modulation on a 24V 4–20 mA current loop. Designed for reliable long-distance surface telemetry from downhole deployments in hazardous environments.</figcaption>
       </figure>
+      <figure class="figure">
+        <img src="../assets/is_battery_pcb.png" alt="IS Rechargeable Battery PCB layout Rev 5.0">
+        <figcaption>Fig. 18 — IS Rechargeable Battery PCB: Manages NiMH cell charging from a surface supply, enforces IEC 60079 energy-limiting constraints on the downhole output, and provides thermistor-supervised cell protection across charge and discharge states.</figcaption>
+      </figure>
     </div>
+    
 
-    <!-- 11 OUTCOME -->
+    <!-- 12 OUTCOME -->
     <div class="section">
       <p class="section-label">11 — Outcome</p>
       <h2>Engineering Result</h2>
       <div class="outcome-box">
         <p>
-          A complete, intrinsically safe IMU-based downhole survey system delivering azimuth accuracy within ±0.33°, inclination within ±0.11°, and toolface within ±0.25°, validated across three independently built tools on a dedicated calibration rig. Gyroscope-based drill rotation detection achieved 0.564 RPM RMS error — providing reliable survey gating to prevent readings during active drilling. HART telemetry was validated over 1.4 km of armoured drilling cable, and accuracy was confirmed to be unaffected by active telemetry operation — demonstrating adequate electrical isolation between the communication system and the sensitive sensor measurement chain. The final platform, comprising a Survey PCB and an IS Comms PCB, forms a practical and scalable foundation for field-ready downhole survey deployment in hazardous mining environments.
+          A complete, intrinsically safe IMU-based downhole survey system delivering azimuth accuracy within ±0.33°, inclination within ±0.11°, and toolface within ±0.25°, validated across three independently built tools on a dedicated calibration rig. 
+          Gyroscope-based drill rotation detection achieved 0.564 RPM RMS error — providing reliable survey gating to prevent readings during active drilling. 
+          HART telemetry was validated over 1.4 km of armoured drilling cable, and accuracy was confirmed to be unaffected by active telemetry operation — demonstrating adequate electrical isolation between the communication system and the sensitive sensor measurement chain.
+          The IS battery provides regulated, thermistor-supervised power within a fully potted, IEC 60079-compliant enclosure, with a 6-hour charge cycle and linear-mode operation chosen specifically to eliminate switching noise from the sensitive IMU.         
+          The final platform, comprising a Survey PCB, an IS Comms PCB, and an IS rechargeable battery PCB  forms a practical and scalable foundation for field-ready downhole survey deployment in hazardous mining environments.
         </p>
       </div>
     </div>
