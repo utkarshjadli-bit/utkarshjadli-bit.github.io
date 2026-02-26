@@ -1027,18 +1027,16 @@
 
       <h3>Key Design Decisions</h3>
       <p>
-        <strong>Linear mode over switch-mode charging.</strong> The charge controller supports both operating modes, and switch-mode would have improved thermal efficiency. Linear mode was selected deliberately. A switch-mode converter operating at tens or hundreds of kilohertz on the same PCB as the Survey board's magnetometer and IMU front-end introduces conducted and radiated noise directly into the most sensitive part of the measurement chain. The magnetometer is measuring Earth's field — on the order of 50 µT — and any switching artefact coupling into that signal path would corrupt the azimuth reading. Linear mode draws more quiescent current and runs warmer, but it produces no switching frequency harmonics. For a precision orientation instrument, that tradeoff is straightforward.
+        <strong>Linear mode over switch-mode charging:</strong> Although less efficient, linear charging was deliberately selected to eliminate switching noise coupling into the magnetometer and IMU front-end. With Earth’s magnetic field at ~50 µT, even small conducted harmonics could corrupt azimuth readings. Noise immunity was prioritised over efficiency.
       </p>
       <p>
-        <strong>Supply disconnect.</strong> The charge controller uses an external resistor on its timing pin to set the fast-charge timeout. When the external charger supply is disconnected, the voltage on this pin can float to an undefined state, which in some controllers causes them to re-enter fast-charge mode erroneously when the supply is reconnected — potentially overcharging cells that are already full. A small transistor circuit was added to actively pull the timing pin to a defined state whenever the charger supply is absent. This ensures the controller always enters a known, safe initialisation sequence at the start of each charge cycle regardless of how long the tool has been deployed or how the supply was connected.
+        <strong>Defined Controller Reset Behaviour:</strong> A transistor-based timing pin clamp ensures predictable charge-cycle initialisation after supply reconnection, preventing unintended re-entry into fast-charge mode.
       </p>
       <p>
-        <strong>Maintenance charge path.</strong> After the top-off period completes, the cells are not simply left floating. A low-current maintenance path provides a continuous trickle — defined by a dedicated resistor in series with a diode — to compensate for self-discharge in tools stored on the surface between deployments. NiMH cells self-discharge at a meaningful rate; without maintenance charging, a tool left for several weeks could arrive at the borehole with insufficient capacity for the full measurement run. The maintenance current is sized to exactly offset the typical self-discharge rate without overcharging.
+        <strong>Maintenance charge path:</strong> A controlled trickle current compensates for NiMH self-discharge during storage without overcharging, ensuring field readiness across drilling campaigns.
       </p>
       <p>
-        <strong>Voltage divider scaling for multi-cell sensing.</strong> The charge controller's battery voltage sensing input expects a voltage representative of a single cell. 
-        With a 4-cell series stack, a direct connection would present four times the expected voltage and corrupt the charge termination logic. 
-        A precision resistor divider scales the full-stack voltage down to the single-cell equivalent, with the divider ratio calculated as (Cell Stack Size − 1) × 100 kω = 3 × 100 kω = 300 kω. This ensures accurate delta-V and voltage threshold detection across the full charge cycle.
+        <strong>Scaled Multi-Cell Voltage Sensing:</strong> A precision resistor divider scales 4-cell stack voltage to single-cell equivalent for accurate charge termination logic and delta-V detection.
       </p>
       <p>
         The design reached the final stage through iterative certification feedback. Revisions addressed potting compound selection and boundary geometry for thermal cycling compliance, thermistor placement relative to the cell stack for accurate temperature tracking, IS spacing violations identified during certification review on the charger input side, and output rail behaviour during rapid supply disconnection and reconnection events encountered in field use.
@@ -1047,8 +1045,8 @@
       <div class="outcome-box" style="margin-top:1.5rem;">
         <p>
           A purpose-designed, IS rechargeable battery PCB providing fully regulated, thermistor-supervised power to the complete downhole survey instrument. 
-          Three physically distinct compliance zones — charger isolation, IS energy-limited output, and potted encapsulation — are each governed by independent construction rules and validated through certification testing. Linear-mode charge control (360 mA fast-charge, 6-hour timeout, 3-hour top-off) was chosen to protect the magnetometer and IMU measurement chain from switching noise. 
-          The precision voltage divider, maintenance charge path, and foalting circuit reflect the level of detail required to make a battery management system reliable across the full operational lifecycle of a deployed field instrument. The final design was reached through certification feedback.
+          Three physically distinct compliance zones — charger isolation, IS energy-limited output, and potted encapsulation — are each governed by independent construction rules and validated through certification testing. Linear-mode charge control was chosen to protect the magnetometer and IMU measurement chain from switching noise. 
+          The precision voltage divider, maintenance charge path, and foalting circuit reflect the level of detail required to make a battery management system reliable across the full operational lifecycle of a deployed field instrument. 
         </p>
       </div>
     </div>
